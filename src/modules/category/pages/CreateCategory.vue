@@ -1,10 +1,11 @@
 <script lang="ts">
   import { defineComponent, toRefs } from 'vue'
   import { useCategoryService } from '@modules/category/service'
+  import { categoryStore } from '@modules/category/store'
 
   export default defineComponent({
     setup(){
-      const { category, createCategory } = useCategoryService()
+      const { category, createCategory, getAllCategories } = useCategoryService()
 
       const onSend = (validate) => {
         validate()
@@ -12,9 +13,12 @@
           .catch(err => console.log(err))
       }
 
+      getAllCategories()
+
       return {
         ...toRefs(category),
-        onSend
+        onSend,
+        categoryStore
       }
     }
   })
@@ -23,7 +27,7 @@
   <v-layout column>
     <v-row class="pa-1">
       <v-col
-        xl="3"
+        xl="4"
         lg="6"
         md="6"
         sm="12"
@@ -61,6 +65,11 @@
                 v-model="seo.keywords"
                 label="seo keywords"
                 :rules="[val => !!val || 'Required']"
+              />
+              <v-select
+                label="Родительская категория"
+                :items="categoryStore.state.categories"
+                value-key="title"
               />
               <v-file-input
                 label="загрузите изображения"

@@ -13,6 +13,7 @@ export const useCategoryService = () => {
       keywords: ''
     },
     parent: '',
+    children: [],
     order: 0
   })
 
@@ -21,8 +22,14 @@ export const useCategoryService = () => {
     console.log(data)
   }
 
+  const getAllCategories = async () => {
+    const data = await categoryStore.dispatch('getAllCategories')
+    console.log(data)
+  }
+
   return {
     category,
-    createCategory
+    createCategory,
+    getAllCategories
   }
 }
