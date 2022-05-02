@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
-  import { AppHeader } from '@shared/components/AppHeader'
-  import { AppNavigation } from '@shared/components/AppNavigation'
+import { defineComponent, ref } from 'vue'
+import { AppHeader } from '@shared/components/AppHeader'
+import { AppNavigation } from '@shared/components/AppNavigation'
 
-  export default defineComponent({
-    components: { AppHeader, AppNavigation },
-    setup(){
-      const name = ref('sdsdf')
+export default defineComponent({
+  components: { AppHeader, AppNavigation },
+  setup() {
+    const name = ref('sdsdf')
 
-      return {
-        name
-      }
+    return {
+      name,
     }
-  })
+  },
+})
 </script>
 <template>
   <v-app>
@@ -26,5 +26,5 @@
   </v-app>
 </template>
 <style lang="scss">
-  @import '../shared/assets/scss/main';
+@import '../shared/assets/scss/main';
 </style>

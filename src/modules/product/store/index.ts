@@ -8,7 +8,7 @@ import { createStore } from 'vue-v-store'
 const productStore = createStore({
   state,
   mutations,
-  actions
+  actions,
 })
 
 export const useProductStore = () => productStore

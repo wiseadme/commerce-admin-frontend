@@ -15,6 +15,10 @@ export class Repository implements IRepository {
   async read(id = '') {
     return await this.rest.get('/v1/category', { query: { id } })
   }
+
+  async update(updates) {
+    return await this.rest.patch('/v1/category', updates)
+  }
 }
 
 export const categoryRepository = new Repository(rest)

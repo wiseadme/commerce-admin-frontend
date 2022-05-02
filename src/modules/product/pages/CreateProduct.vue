@@ -1,38 +1,38 @@
 <script lang="ts">
-  import { reactive, toRefs, defineComponent } from 'vue'
-  import { useProductService } from '../composables/use-product-service'
-  import { useProductStore } from '@modules/product/store'
+import { reactive, toRefs, defineComponent } from 'vue'
+import { useProductService } from '../composables/use-product-service'
+import { useProductStore } from '@modules/product/store'
 
-  export default defineComponent({
-    async setup(){
-      // const attribute = { name: null, value: null }
-      // const asset = { url: null, type: null }
+export default defineComponent({
+  async setup() {
+    // const attribute = { name: null, value: null }
+    // const asset = { url: null, type: null }
 
-      const product = reactive({
-        name: null,
-        price: 0,
-        categories: [],
-        image: null,
-        seo: {
-          title: null,
-          description: null,
-          keywords: null
-        },
-        attributes: [],
-        assets: [],
-        variants: []
-      })
+    const product = reactive({
+      name: null,
+      price: 0,
+      categories: [],
+      image: null,
+      seo: {
+        title: null,
+        description: null,
+        keywords: null,
+      },
+      attributes: [],
+      assets: [],
+      variants: [],
+    })
 
-      const service = useProductService()
-      const store = useProductStore()
+    const service = useProductService()
+    const store = useProductStore()
 
-      return {
-        ...toRefs(product),
-        service,
-        store
-      }
+    return {
+      ...toRefs(product),
+      service,
+      store,
     }
-  })
+  },
+})
 </script>
 <template>
   <v-layout column>
@@ -47,9 +47,7 @@
           class="elevation-3"
           width="100%"
         >
-          <v-card-title>
-            Создание продукта
-          </v-card-title>
+          <v-card-title> Создание продукта </v-card-title>
           <v-card-content>
             <v-form>
               <v-text-field

@@ -2,34 +2,44 @@ import { categoryStore } from '@modules/category/store'
 import { reactive } from 'vue'
 
 export const useCategoryService = () => {
-
   const category = reactive({
-    title: '',
-    url: '',
-    image: '',
+    title: null,
+    url: null,
+    image: null,
     seo: {
-      title: '',
-      description: '',
-      keywords: ''
+      title: null,
+      description: null,
+      keywords: null,
     },
-    parent: '',
+    parent: null,
     children: [],
-    order: 0
+    order: 0,
   })
 
+  const updates = {}
+
+  const prepareCategory = () => {
+    category.parent ? (category.parent = (category.parent as any)._id) : false
+  }
+
   const createCategory = async () => {
-    const data = await categoryStore.dispatch('createCategory', category)
-    console.log(data)
+    prepareCategory()
+    return await categoryStore.dispatch('createCategory', category)
+  }
+
+  const updateCategory = async (updates) => {
+    return await categoryStore.dispatch('updateCategory', updates)
   }
 
   const getAllCategories = async () => {
-    const data = await categoryStore.dispatch('getAllCategories')
-    console.log(data)
+    return await categoryStore.dispatch('getAllCategories')
   }
 
   return {
+    updates,
     category,
     createCategory,
-    getAllCategories
+    updateCategory,
+    getAllCategories,
   }
 }

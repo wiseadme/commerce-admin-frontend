@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { defineComponent } from 'vue'
+import { defineComponent } from 'vue'
 
-  export default defineComponent({
-    name: 'product-layout',
-    setup(){
-      return {}
-    }
-  })
+export default defineComponent({
+  name: 'product-layout',
+  setup() {
+    return {}
+  },
+})
 </script>
 <template>
   <v-main>
@@ -29,14 +29,14 @@
   </v-main>
 </template>
 <style lang="scss">
-  .routes-container {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-  }
+.routes-container {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
 
-  .screen {
-    width: 100%;
-    height: 100%;
-  }
+.screen {
+  width: 100%;
+  height: 100%;
+}
 </style>
