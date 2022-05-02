@@ -1,38 +1,47 @@
 <script lang="ts">
-  import { defineComponent, toRefs } from 'vue'
-  import { useCategoryService } from '@modules/category/service'
+  import { defineComponent, reactive, toRefs } from 'vue'
   import { useCategoryStore } from '@modules/category/store'
 
   export default defineComponent({
-    async setup(){
+    props: {
+      modelValue: Boolean
+    },
+    emits: [ 'update:modelValue', 'send' ],
+    async setup(_, { emit }){
       const store = useCategoryStore()
 
-      const {
-        category,
-        createCategory,
-        updateParentCategory,
-        getAllCategories
-      } = useCategoryService()
+      const category = reactive({
+        title: null,
+        url: null,
+        image: null,
+        seo: {
+          title: null,
+          description: null,
+          keywords: null
+        },
+        parent: null,
+        children: [],
+        order: 0
+      })
 
       const onSend = async (validate) => {
-        validate()
-          .then(createCategory)
-          .then(updateParentCategory)
-          .catch((err) => console.log(err))
+        validate().then(() => emit('send', category))
       }
-
-      await getAllCategories()
 
       return {
         ...toRefs(category),
-        onSend,
-        store
+        store,
+        onSend
       }
     }
   })
 </script>
 <template>
-  <v-layout column>
+  <v-modal
+    :model-value="modelValue"
+    transition="scale-in"
+    overlay
+  >
     <v-row class="pa-1">
       <v-col
         xl="6"
@@ -43,7 +52,8 @@
         <v-form v-slot="{ validate }">
           <v-card
             class="elevation-3"
-            width="100%"
+            width="600"
+            color="white"
           >
             <v-card-title> Создание категории</v-card-title>
             <v-card-content>
@@ -83,15 +93,22 @@
             </v-card-content>
             <v-card-actions>
               <v-button
-                color="primary"
+                color="orange darken-3"
                 @click="onSend(validate)"
               >
                 Создать
+              </v-button>
+              <v-button
+                color="error"
+                class="ml-2"
+                @click="$emit('update:modelValue', false)"
+              >
+                Закрыть
               </v-button>
             </v-card-actions>
           </v-card>
         </v-form>
       </v-col>
     </v-row>
-  </v-layout>
+  </v-modal>
 </template>

@@ -20,7 +20,9 @@ export default defineComponent({
               </div>
             </template>
             <template #fallback>
-              <span style="position: absolute">loading...</span>
+              <h1 style="position: absolute">
+                Загрузка...
+              </h1>
             </template>
           </Suspense>
         </transition>

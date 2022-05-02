@@ -1,60 +1,35 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useRouter } from 'vue-router'
+  import { defineComponent } from 'vue'
+  import { useRouter } from 'vue-router'
 
-export default defineComponent({
-  setup() {
-    const $router = useRouter()
-    const items = [
-      {
-        title: 'Категории',
-        icon: 'fas fa-cubes',
-        children: [
-          {
-            title: 'создать',
-            path: '/category/create',
-            icon: 'fas fa-plus',
-            active: ref(false),
-          },
-          {
-            title: 'редактировать',
-            path: '/category/edit',
-            icon: 'fas fa-pen',
-            active: ref(false),
-          },
-        ],
-      },
-      {
-        title: 'Товары',
-        icon: 'fas fa-boxes',
-        children: [
-          {
-            title: 'создать товар',
-            path: '/product/create',
-            icon: 'fas fa-plus',
-            active: ref(false),
-          },
-        ],
-      },
-    ]
+  export default defineComponent({
+    setup(){
+      const $router = useRouter()
+      const items = [
+        {
+          title: 'Категории',
+          icon: 'fas fa-cubes',
+          path: '/category'
+        },
+        {
+          title: 'Товары',
+          icon: 'fas fa-boxes',
+          path: '/product/create'
+        }
+      ]
 
-    let current
+      let current = null
 
-    const onSelect = (it) => {
-      if (current) current.active.value = false
-
-      requestAnimationFrame(() => {
-        current = it
-        it.active.value = true
-        $router.push(current.path)
-      })
+      const onSelect = (it) => {
+        $router.push(it.path)
+      }
+      return {
+        current,
+        items,
+        onSelect
+      }
     }
-    return {
-      items,
-      onSelect,
-    }
-  },
-})
+  })
 </script>
 <template>
   <v-navigation
@@ -64,38 +39,29 @@ export default defineComponent({
     offset-top="56"
     class="elevation-2"
   >
-    <v-group
-      v-for="it in items"
-      :key="it.title"
-      :prepend-icon="it.icon"
-      class="white--text text--white"
-      active-class="elevation-3"
+    <v-list
+      v-model="current"
+      active-class="white orange--text text--darken-3"
+      active
+      text-color="#ffffff"
     >
-      <template #header>
-        {{ it.title }}
-      </template>
-      <v-list>
-        <v-list-item
-          v-for="c in it.children"
-          :key="c.path"
-          :class="['nav-item', { 'white orange--text text--darken-3': c.active.value }]"
-          @click="onSelect(c)"
-        >
-          <v-list-item-icon>
-            <v-icon>
-              {{ c.icon }}
-            </v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ c.title }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-group>
+      <v-list-item
+        v-for="it in items"
+        :key="it.title"
+        @click="onSelect(it)"
+      >
+        <v-list-item-icon>
+          <v-icon>{{ it.icon }}</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ it.title }}
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
   </v-navigation>
 </template>
 <style lang="scss">
-@import 'AppNavigation';
+  @import 'AppNavigation';
 </style>
