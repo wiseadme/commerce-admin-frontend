@@ -28,5 +28,5 @@ export const actions = {
     } catch (err) {
       return Promise.reject(err)
     }
-  }
+  },
 }

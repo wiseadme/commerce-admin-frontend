@@ -1,39 +1,32 @@
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue'
 import { useCategoryService } from '@modules/category/service'
-import { categoryStore as $store } from '@modules/category/store'
+import { useCategoryStore } from '@modules/category/store'
 
 export default defineComponent({
-  setup() {
+  async setup() {
+    const store = useCategoryStore()
+
     const {
       category,
       createCategory,
-      updateCategory,
+      updateParentCategory,
       getAllCategories
     } = useCategoryService()
 
     const onSend = async (validate) => {
       validate()
-        .then(() => createCategory())
-        .then((ctg) => {
-          if (ctg.parent) {
-            const parent = $store.state.categories!.find(c => c._id === ctg.parent)
-
-            updateCategory({
-              _id: ctg.parent,
-              children: [ ...parent.children, ctg._id ]
-            })
-          }
-        })
+        .then(createCategory)
+        .then(updateParentCategory)
         .catch((err) => console.log(err))
     }
 
-    getAllCategories()
+    await getAllCategories()
 
     return {
       ...toRefs(category),
       onSend,
-      $store
+      store
     }
   }
 })
@@ -42,7 +35,7 @@ export default defineComponent({
   <v-layout column>
     <v-row class="pa-1">
       <v-col
-        xl="4"
+        xl="6"
         lg="6"
         md="6"
         sm="12"
@@ -80,9 +73,10 @@ export default defineComponent({
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-select
+                v-if="store && store.state.categories"
                 v-model="parent"
                 label="Родительская категория"
-                :items="$store.state.categories"
+                :items="store.state.categories"
                 value-key="title"
               />
               <v-file-input label="загрузите изображения" />

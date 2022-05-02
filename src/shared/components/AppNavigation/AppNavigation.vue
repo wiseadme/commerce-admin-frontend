@@ -5,18 +5,21 @@ import { useRouter } from 'vue-router'
 export default defineComponent({
   setup() {
     const $router = useRouter()
-
-    let current
-
     const items = [
       {
         title: 'Категории',
         icon: 'fas fa-cubes',
         children: [
           {
-            title: 'создать категорию',
+            title: 'создать',
             path: '/category/create',
-            icon: '',
+            icon: 'fas fa-plus',
+            active: ref(false),
+          },
+          {
+            title: 'редактировать',
+            path: '/category/edit',
+            icon: 'fas fa-pen',
             active: ref(false),
           },
         ],
@@ -28,15 +31,18 @@ export default defineComponent({
           {
             title: 'создать товар',
             path: '/product/create',
-            icon: '',
+            icon: 'fas fa-plus',
             active: ref(false),
           },
         ],
       },
     ]
 
+    let current
+
     const onSelect = (it) => {
       if (current) current.active.value = false
+
       requestAnimationFrame(() => {
         current = it
         it.active.value = true
@@ -54,6 +60,7 @@ export default defineComponent({
   <v-navigation
     fixed
     expand
+    color="orange darken-3"
     offset-top="56"
     class="elevation-2"
   >
@@ -61,7 +68,8 @@ export default defineComponent({
       v-for="it in items"
       :key="it.title"
       :prepend-icon="it.icon"
-      active-class="blue--text text--darken-1"
+      class="white--text text--white"
+      active-class="elevation-3"
     >
       <template #header>
         {{ it.title }}
@@ -70,11 +78,11 @@ export default defineComponent({
         <v-list-item
           v-for="c in it.children"
           :key="c.path"
-          :class="{ 'primary white--text text--white': c.active.value }"
+          :class="['nav-item', { 'white orange--text text--darken-3': c.active.value }]"
           @click="onSelect(c)"
         >
           <v-list-item-icon>
-            <v-icon color="red">
+            <v-icon>
               {{ c.icon }}
             </v-icon>
           </v-list-item-icon>

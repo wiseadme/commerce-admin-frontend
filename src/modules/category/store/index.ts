@@ -3,7 +3,9 @@ import { createStore } from 'vue-v-store'
 import { state } from './state'
 import { actions } from './actions'
 
-export const categoryStore = createStore({
+const categoryStore = createStore({
   state,
-  actions,
+  actions
 })
+
+export const useCategoryStore = () => categoryStore

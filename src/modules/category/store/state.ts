@@ -5,5 +5,5 @@ type State = {
 }
 
 export const state: State = {
-  categories: null
+  categories: null,
 }
