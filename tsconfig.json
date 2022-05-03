@@ -4,6 +4,7 @@
     "module": "esnext",
     "strict": true,
     "noImplicitAny": false,
+    "noImplicitThis": false,
     "noEmitOnError": true,
     "strictNullChecks": true,
     "strictFunctionTypes": false,

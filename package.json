@@ -61,6 +61,7 @@
     "axios": "^0.27.2",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12",
-    "vueland": "github:vueland/vueland-next"
+    "vueland": "github:vueland/vueland-next",
+    "vuezone": "github:wiseadme/vuezone"
   }
 }

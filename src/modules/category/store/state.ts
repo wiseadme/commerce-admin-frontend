@@ -1,3 +1,4 @@
 export const state = () => ({
-  users: null
-})
+  categories: null
+}) as any
+

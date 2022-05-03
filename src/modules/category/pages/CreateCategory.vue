@@ -1,31 +1,34 @@
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue'
-import { useCategoryService } from '@modules/category/service'
-import { useCategoryStore } from '@modules/category/store'
+  import { defineComponent, toRefs } from 'vue'
+  import { useCategoryService } from '@modules/category/service'
+  import { state } from '@modules/category/store'
 
-export default defineComponent({
-  async setup() {
-    const store = useCategoryStore()
+  export default defineComponent({
+    async setup(){
 
-    const { category, createCategory, updateParentCategory, getAllCategories } =
-      useCategoryService()
+      const {
+        category,
+        createCategory,
+        updateParentCategory,
+        getAllCategories
+      } = useCategoryService()
 
-    const onSend = async (validate) => {
-      validate()
-        .then(createCategory)
-        .then(updateParentCategory)
-        .catch((err) => console.log(err))
+      const onSend = async (validate) => {
+        validate()
+          .then(createCategory)
+          .then(updateParentCategory)
+          .catch((err) => console.log(err))
+      }
+
+      await getAllCategories()
+
+      return {
+        ...toRefs(category),
+        onSend,
+        state,
+      }
     }
-
-    await getAllCategories()
-
-    return {
-      ...toRefs(category),
-      onSend,
-      store,
-    }
-  },
-})
+  })
 </script>
 <template>
   <v-layout column>
@@ -69,10 +72,10 @@ export default defineComponent({
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-select
-                v-if="store && store.state.categories"
+                v-if="state && state.categories"
                 v-model="parent"
                 label="Родительская категория"
-                :items="store.state.categories"
+                :items="state.categories"
                 value-key="title"
               />
               <v-file-input label="загрузите изображения" />

@@ -1,100 +1,101 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useCategoryService } from '@modules/category/service'
-import { useCategoryStore } from '@modules/category/store'
+  import { defineComponent, ref } from 'vue'
+  import { useCategoryService } from '@modules/category/service'
+  import { state } from '@modules/category/store'
 
-import CreateModal from '../components/CreateModal.vue'
+  import CreateModal from '../components/CreateModal.vue'
 
-export default defineComponent({
-  components: { CreateModal },
+  export default defineComponent({
+    components: { CreateModal },
 
-  async setup() {
-    const { createCategory, getAllCategories, updateParentCategory } =
-      useCategoryService()
+    async setup(){
+      const {
+        createCategory,
+        getAllCategories,
+        updateParentCategory
+      } = useCategoryService()
 
-    const store = useCategoryStore()
+      const showCreateModal = ref(false)
 
-    const showCreateModal = ref(false)
+      const onSend = (category) => {
+        createCategory(category)
+          .then(updateParentCategory)
+          .catch((err) => console.log(err))
+      }
 
-    const onSend = (category) => {
-      createCategory(category)
-        .then(updateParentCategory)
-        .catch((err) => console.log(err))
-    }
-
-    const cols = ref([
-      {
-        key: 'actions',
-        title: 'Действия',
-        align: 'center',
-      },
-      {
-        key: 'title',
-        title: 'Название',
-        width: '300',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.title,
-        filter: ({ value, col }) => {
-          return data.users.filter((user) => user[col.key].includes(value))
+      const cols = ref([
+        {
+          key: 'actions',
+          title: 'Действия',
+          align: 'center'
         },
-      },
-      {
-        key: 'url',
-        title: 'Url категории',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.url,
-      },
-      {
-        key: 'image',
-        title: 'Картинка',
-        width: '150',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-      },
-      {
-        key: 'parent',
-        title: 'Родительская категория',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.parent?.title,
-      },
-      {
-        key: 'seo',
-        title: 'SEO',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.title,
-      },
-      {
-        key: 'order',
-        title: 'Порядковый номер',
-        width: '200',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-      },
-    ])
+        {
+          key: 'title',
+          title: 'Название',
+          width: '300',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: row => row.title,
+          filter: ({ value, col }) => {
+            return data.users.filter(user => user[col.key].includes(value))
+          }
+        },
+        {
+          key: 'url',
+          title: 'Url категории',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: row => row.url
+        },
+        {
+          key: 'image',
+          title: 'Картинка',
+          width: '150',
+          resizeable: true,
+          sortable: true,
+          filterable: true
+        },
+        {
+          key: 'parent',
+          title: 'Родительская категория',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: row => row.parent?.title
+        },
+        {
+          key: 'seo',
+          title: 'SEO',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: row => row.title
+        },
+        {
+          key: 'order',
+          title: 'Порядковый номер',
+          width: '200',
+          resizeable: true,
+          sortable: true,
+          filterable: true
+        }
+      ])
 
-    await getAllCategories()
+      await getAllCategories()
 
-    return {
-      store,
-      cols,
-      showCreateModal,
-      onSend,
+      return {
+        state,
+        cols,
+        showCreateModal,
+        onSend
+      }
     }
-  },
-})
+  })
 </script>
 <template>
   <v-main>
@@ -105,11 +106,11 @@ export default defineComponent({
       >
         <v-data-table
           :cols="cols"
-          :rows="store.state.categories"
+          :rows="state.categories"
           class="elevation-2"
           :header-options="{
             color: 'grey darken-3',
-            contentColor: 'white',
+            contentColor: 'white'
           }"
         >
           <template #toolbar>

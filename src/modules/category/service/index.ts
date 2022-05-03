@@ -1,7 +1,6 @@
-import { useCategoryStore } from '@modules/category/store'
+import { state, actions } from '@modules/category/store'
 
 export const useCategoryService = () => {
-  const store = useCategoryStore()
 
   const updates = {}
 
@@ -11,28 +10,28 @@ export const useCategoryService = () => {
 
   const createCategory = (category) => {
     prepareCategory(category)
-    return store.createCategory(category)
+    return actions.createCategory(category)
   }
 
   const updateParentCategory = (category) => {
     if (category.parent) {
-      const parent = store.state.categories!.find(
-        (c) => c._id === category.parent._id
+      const parent = state.categories!.find(
+        (c) => c._id === category.parent
       )
 
       updateCategory({
-        _id: category.parent._id,
-        children: [...parent.children, category._id],
+        _id: category.parent,
+        children: [ ...parent.children, category._id ]
       })
     }
   }
 
   const updateCategory = (updates) => {
-    return store.updateCategory(updates)
+    return actions.updateCategory(updates)
   }
 
   const getAllCategories = () => {
-    return store.getAllCategories()
+    return actions.getAllCategories()
   }
 
   return {
@@ -40,6 +39,6 @@ export const useCategoryService = () => {
     createCategory,
     updateParentCategory,
     updateCategory,
-    getAllCategories,
+    getAllCategories
   }
 }

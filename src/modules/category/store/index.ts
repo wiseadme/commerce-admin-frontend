@@ -1,53 +1,18 @@
-import { reactive } from 'vue'
-import { Maybe } from '@shared/types/utils'
-import { categoryRepository } from '@modules/category/repository'
+import { defineState, defineActions, defineStore } from 'vuezone'
+import { state as ctgState } from '@modules/category/store/state'
+import { actions as ctgActions } from '@modules/category/store/actions'
 
-type State = {
-  categories: Maybe<Array<any>>
-}
+// type CategoryState = {
+//   categories: Maybe<Array<any>>
+// }
+//
+// type CategoryActions = {
+//   createCategory: (ctg: any) => Promise<any>
+//   updateCategory: (upd: any) => Promise<any>
+//   getAllCategories: () => Promise<any>
+// }
 
-export const createCategoryStore = () => {
-  const state = reactive<State>({
-    categories: null
-  })
+export const state = defineState('category', ctgState)
+export const actions = defineActions('category', ctgActions)
 
-  const createCategory = async (category) => {
-    try {
-      const { data } = await categoryRepository.create(category)
-      state.categories?.push(data.data)
-      return data.data
-    } catch (err) {
-      return Promise.reject(err)
-    }
-  }
-
-  const updateCategory = async (updates) => {
-    try {
-      const { data } = await categoryRepository.update(updates)
-      return data.data
-    } catch (err) {
-      return Promise.reject(err)
-    }
-  }
-
-  const getAllCategories = async () => {
-    try {
-      const { data } = await categoryRepository.read()
-      state.categories = data.data
-      return data.data
-    } catch (err) {
-      return Promise.reject(err)
-    }
-  }
-
-  return {
-    state,
-    createCategory,
-    updateCategory,
-    getAllCategories
-  }
-}
-
-const store = createCategoryStore()
-
-export const useCategoryStore = () => store
+export const useCategoryStore = defineStore('category')
