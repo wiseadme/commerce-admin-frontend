@@ -1,35 +1,35 @@
 <script lang="ts">
-  import { defineComponent } from 'vue'
-  import { useRouter } from 'vue-router'
+import { defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
 
-  export default defineComponent({
-    setup(){
-      const $router = useRouter()
-      const items = [
-        {
-          title: 'Категории',
-          icon: 'fas fa-cubes',
-          path: '/category'
-        },
-        {
-          title: 'Товары',
-          icon: 'fas fa-boxes',
-          path: '/product/create'
-        }
-      ]
+export default defineComponent({
+  setup() {
+    const $router = useRouter()
+    const items = [
+      {
+        title: 'Категории',
+        icon: 'fas fa-cubes',
+        path: '/category',
+      },
+      {
+        title: 'Товары',
+        icon: 'fas fa-boxes',
+        path: '/product/create',
+      },
+    ]
 
-      let current = null
+    let current = null
 
-      const onSelect = (it) => {
-        $router.push(it.path)
-      }
-      return {
-        current,
-        items,
-        onSelect
-      }
+    const onSelect = (it) => {
+      $router.push(it.path)
     }
-  })
+    return {
+      current,
+      items,
+      onSelect,
+    }
+  },
+})
 </script>
 <template>
   <v-navigation
@@ -63,5 +63,5 @@
   </v-navigation>
 </template>
 <style lang="scss">
-  @import 'AppNavigation';
+@import 'AppNavigation';
 </style>

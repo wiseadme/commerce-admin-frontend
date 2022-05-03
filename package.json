@@ -61,7 +61,6 @@
     "axios": "^0.27.2",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12",
-    "vue-v-store": "^1.0.8",
     "vueland": "github:vueland/vueland-next"
   }
 }

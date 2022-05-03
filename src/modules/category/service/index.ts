@@ -11,28 +11,28 @@ export const useCategoryService = () => {
 
   const createCategory = (category) => {
     prepareCategory(category)
-    return store.dispatch('createCategory', category)
+    return store.createCategory(category)
   }
 
   const updateParentCategory = (category) => {
     if (category.parent) {
       const parent = store.state.categories!.find(
-        (c) => c._id === category.parent
+        (c) => c._id === category.parent._id
       )
 
       updateCategory({
-        _id: category.parent,
-        children: [ ...parent.children, category._id ]
+        _id: category.parent._id,
+        children: [...parent.children, category._id],
       })
     }
   }
 
   const updateCategory = (updates) => {
-    return store.dispatch('updateCategory', updates)
+    return store.updateCategory(updates)
   }
 
   const getAllCategories = () => {
-    return store.dispatch('getAllCategories')
+    return store.getAllCategories()
   }
 
   return {
@@ -40,6 +40,6 @@ export const useCategoryService = () => {
     createCategory,
     updateParentCategory,
     updateCategory,
-    getAllCategories
+    getAllCategories,
   }
 }

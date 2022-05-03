@@ -1,35 +1,31 @@
 <script lang="ts">
-  import { defineComponent, toRefs } from 'vue'
-  import { useCategoryService } from '@modules/category/service'
-  import { useCategoryStore } from '@modules/category/store'
+import { defineComponent, toRefs } from 'vue'
+import { useCategoryService } from '@modules/category/service'
+import { useCategoryStore } from '@modules/category/store'
 
-  export default defineComponent({
-    async setup(){
-      const store = useCategoryStore()
+export default defineComponent({
+  async setup() {
+    const store = useCategoryStore()
 
-      const {
-        category,
-        createCategory,
-        updateParentCategory,
-        getAllCategories
-      } = useCategoryService()
+    const { category, createCategory, updateParentCategory, getAllCategories } =
+      useCategoryService()
 
-      const onSend = async (validate) => {
-        validate()
-          .then(createCategory)
-          .then(updateParentCategory)
-          .catch((err) => console.log(err))
-      }
-
-      await getAllCategories()
-
-      return {
-        ...toRefs(category),
-        onSend,
-        store
-      }
+    const onSend = async (validate) => {
+      validate()
+        .then(createCategory)
+        .then(updateParentCategory)
+        .catch((err) => console.log(err))
     }
-  })
+
+    await getAllCategories()
+
+    return {
+      ...toRefs(category),
+      onSend,
+      store,
+    }
+  },
+})
 </script>
 <template>
   <v-layout column>

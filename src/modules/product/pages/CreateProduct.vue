@@ -1,7 +1,6 @@
 <script lang="ts">
 import { reactive, toRefs, defineComponent } from 'vue'
 import { useProductService } from '../composables/use-product-service'
-import { useProductStore } from '@modules/product/store'
 
 export default defineComponent({
   async setup() {
@@ -24,12 +23,10 @@ export default defineComponent({
     })
 
     const service = useProductService()
-    const store = useProductStore()
 
     return {
       ...toRefs(product),
       service,
-      store,
     }
   },
 })
