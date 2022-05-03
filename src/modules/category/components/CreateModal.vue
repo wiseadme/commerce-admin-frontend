@@ -1,6 +1,6 @@
 <script lang="ts">
   import { defineComponent, reactive, toRefs } from 'vue'
-  import { useCategoryStore } from '@modules/category/store'
+  import { state } from '@modules/category/store'
 
   export default defineComponent({
     props: {
@@ -8,7 +8,6 @@
     },
     emits: [ 'update:modelValue', 'send' ],
     async setup(_, { emit }){
-      const store = useCategoryStore()
 
       const category = reactive({
         title: null,
@@ -30,7 +29,7 @@
 
       return {
         ...toRefs(category),
-        store,
+        state,
         onSend
       }
     }
@@ -83,10 +82,10 @@
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-select
-                v-if="store && store.state.categories"
+                v-if="state && state.categories"
                 v-model="parent"
                 label="Родительская категория"
-                :items="store.state.categories"
+                :items="state.categories"
                 value-key="title"
               />
               <v-file-input label="загрузите изображения" />

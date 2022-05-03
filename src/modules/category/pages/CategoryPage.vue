@@ -1,7 +1,7 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue'
   import { useCategoryService } from '@modules/category/service'
-  import { useCategoryStore } from '@modules/category/store'
+  import { state } from '@modules/category/store'
 
   import CreateModal from '../components/CreateModal.vue'
 
@@ -14,8 +14,6 @@
         getAllCategories,
         updateParentCategory
       } = useCategoryService()
-
-      const store = useCategoryStore()
 
       const showCreateModal = ref(false)
 
@@ -91,7 +89,7 @@
       await getAllCategories()
 
       return {
-        store,
+        state,
         cols,
         showCreateModal,
         onSend
@@ -108,7 +106,7 @@
       >
         <v-data-table
           :cols="cols"
-          :rows="store.state.categories"
+          :rows="state.categories"
           class="elevation-2"
           :header-options="{
             color: 'grey darken-3',

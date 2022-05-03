@@ -1,11 +1,10 @@
 <script lang="ts">
   import { defineComponent, toRefs } from 'vue'
   import { useCategoryService } from '@modules/category/service'
-  import { useCategoryStore } from '@modules/category/store'
+  import { state } from '@modules/category/store'
 
   export default defineComponent({
     async setup(){
-      const store = useCategoryStore()
 
       const {
         category,
@@ -26,7 +25,7 @@
       return {
         ...toRefs(category),
         onSend,
-        store
+        state,
       }
     }
   })
@@ -73,10 +72,10 @@
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-select
-                v-if="store && store.state.categories"
+                v-if="state && state.categories"
                 v-model="parent"
                 label="Родительская категория"
-                :items="store.state.categories"
+                :items="state.categories"
                 value-key="title"
               />
               <v-file-input label="загрузите изображения" />
