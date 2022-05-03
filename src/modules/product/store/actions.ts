@@ -1,11 +1,7 @@
-import { api } from '../api'
-import { IUsersActions, Users } from '@modules/product/types/store'
-
-export const actions: IUsersActions = {
-  async getUsers({ commit }): Promise<Users> {
+export const actions = {
+  async getUsers() {
     try {
-      const data = (await api.getUsers()) as Users
-      commit('setUsers', data)
+      const data = null
       return data
     } catch (err) {
       return Promise.reject(err)

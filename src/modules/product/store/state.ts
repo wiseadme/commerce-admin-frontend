@@ -1,5 +1,3 @@
-import { IUsersState } from '../types/store'
-
-export const state: IUsersState = {
-  users: null,
-}
+export const state = () => ({
+  users: null
+})

@@ -1,14 +1,8 @@
-import { state } from './state'
-import { mutations } from './mutations'
-import { actions } from './actions'
-import { createStore } from 'vue-v-store'
+import { defineStore } from 'vuezone'
+import { actions } from '@modules/product/store/actions'
+import { state } from '@modules/product/store/state'
 
-// import { IProductStore } from '@modules/product/@types/store'
-
-const productStore = createStore({
+export const useProductStore = defineStore('product', {
   state,
-  mutations,
-  actions,
+  actions
 })
-
-export const useProductStore = () => productStore

@@ -11,7 +11,7 @@ export const useCategoryService = () => {
 
   const createCategory = (category) => {
     prepareCategory(category)
-    return store.dispatch('createCategory', category)
+    return store.createCategory(category)
   }
 
   const updateParentCategory = (category) => {
@@ -28,11 +28,11 @@ export const useCategoryService = () => {
   }
 
   const updateCategory = (updates) => {
-    return store.dispatch('updateCategory', updates)
+    return store.updateCategory(updates)
   }
 
   const getAllCategories = () => {
-    return store.dispatch('getAllCategories')
+    return store.getAllCategories()
   }
 
   return {
