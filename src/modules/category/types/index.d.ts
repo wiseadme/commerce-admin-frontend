@@ -27,5 +27,5 @@ declare interface ICategoryActions {
 }
 
 declare interface ICategoryService {
-
+  createCategory: (category: ICategory) => Promise<ICategory & { _id: string }>
 }

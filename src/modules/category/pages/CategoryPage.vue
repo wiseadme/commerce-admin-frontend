@@ -1,93 +1,97 @@
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
-  import { service } from '@modules/category/service/category.service'
-  import { state } from '@modules/category/store'
+import { defineComponent, ref } from 'vue'
+import { service } from '@modules/category/service/category.service'
+import { useCategoryStore } from '@modules/category/store'
+import { categoryModel } from '@modules/category/model/category.model'
 
-  import { CreateModal } from '../components/CreateModal'
+import { CreateModal } from '../components/CreateModal'
 
-  export default defineComponent({
-    components: { CreateModal },
+export default defineComponent({
+  components: { CreateModal },
 
-    async setup(){
-      const showCreateModal = ref<boolean>(false)
+  async setup() {
+    const store = useCategoryStore()
+    const showCreateModal = ref<boolean>(false)
 
-      const onSend = () => {
-        service.createCategory()
-          .then(ctg => service.updateParentCategory(ctg))
-          .catch((err) => console.log(err))
-      }
-
-      const cols = ref([
-        {
-          key: 'actions',
-          title: 'Действия',
-          align: 'center'
-        },
-        {
-          key: 'title',
-          title: 'Название',
-          width: '300',
-          resizeable: true,
-          sortable: true,
-          filterable: true,
-          format: row => row.title
-        },
-        {
-          key: 'url',
-          title: 'Url категории',
-          width: '250',
-          resizeable: true,
-          sortable: true,
-          filterable: true,
-          format: row => row.url
-        },
-        {
-          key: 'image',
-          title: 'Картинка',
-          width: '150',
-          resizeable: true,
-          sortable: true,
-          filterable: true
-        },
-        {
-          key: 'parent',
-          title: 'Родительская категория',
-          width: '250',
-          resizeable: true,
-          sortable: true,
-          filterable: true,
-          format: row => row.parent?.title
-        },
-        {
-          key: 'seo',
-          title: 'SEO',
-          width: '250',
-          resizeable: true,
-          sortable: true,
-          filterable: true,
-          format: row => row.title
-        },
-        {
-          key: 'order',
-          title: 'Порядковый номер',
-          width: '200',
-          resizeable: true,
-          sortable: true,
-          filterable: true
-        }
-      ])
-
-      await service.getAllCategories()
-
-      return {
-        state,
-        cols,
-        showCreateModal,
-        onSend,
-        service
-      }
+    const onSend = () => {
+      service
+        .createCategory(categoryModel)
+        .then((ctg) => service.updateParentCategory(ctg))
+        .catch((err) => console.log(err))
     }
-  })
+
+    const cols = ref([
+      {
+        key: 'actions',
+        title: 'Действия',
+        align: 'center',
+      },
+      {
+        key: 'title',
+        title: 'Название',
+        width: '300',
+        resizeable: true,
+        sortable: true,
+        filterable: true,
+        format: (row) => row.title,
+      },
+      {
+        key: 'url',
+        title: 'Url категории',
+        width: '250',
+        resizeable: true,
+        sortable: true,
+        filterable: true,
+        format: (row) => row.url,
+      },
+      {
+        key: 'image',
+        title: 'Картинка',
+        width: '150',
+        resizeable: true,
+        sortable: true,
+        filterable: true,
+      },
+      {
+        key: 'parent',
+        title: 'Родительская категория',
+        width: '250',
+        resizeable: true,
+        sortable: true,
+        filterable: true,
+        format: (row) => row.parent?.title,
+      },
+      {
+        key: 'seo',
+        title: 'SEO',
+        width: '250',
+        resizeable: true,
+        sortable: true,
+        filterable: true,
+        format: (row) => row.title,
+      },
+      {
+        key: 'order',
+        title: 'Порядковый номер',
+        width: '200',
+        resizeable: true,
+        sortable: true,
+        filterable: true,
+      },
+    ])
+
+    await service.getAllCategories()
+
+    return {
+      store,
+      cols,
+      showCreateModal,
+      onSend,
+      categoryModel,
+      service,
+    }
+  },
+})
 </script>
 <template>
   <v-main>
@@ -98,11 +102,11 @@
       >
         <v-data-table
           :cols="cols"
-          :rows="state.categories"
+          :rows="store.state.categories"
           class="elevation-2"
           :header-options="{
             color: 'grey darken-3',
-            contentColor: 'white'
+            contentColor: 'white',
           }"
         >
           <template #toolbar>
@@ -128,13 +132,13 @@
               <v-icon>fas fa-trash-alt</v-icon>
             </v-button>
           </template>
-          <template #image="{row}">
+          <template #image="{ row }">
             <div class="d-flex justify-center align-center">
               <img
                 style="height: 30px; width: auto"
                 :src="`http://anar.com/${row.image}`"
                 :alt="row.title"
-              >
+              />
             </div>
           </template>
         </v-data-table>
@@ -142,8 +146,17 @@
     </v-row>
     <create-modal
       v-model="showCreateModal"
-      @upload="service.uploadCategoryImage"
+      v-model:title="categoryModel.title"
+      v-model:url="categoryModel.url"
+      v-model:image="categoryModel.image"
+      v-model:seo-title="categoryModel.seo.title"
+      v-model:seo-description="categoryModel.seo.description"
+      v-model:seo-keywords="categoryModel.seo.keywords"
+      v-model:parent="categoryModel.parent"
+      v-model:order="categoryModel.order"
+      :categories="store.state.categories"
       @send="onSend"
+      @upload="service.uploadCategoryImage"
     />
   </v-main>
 </template>

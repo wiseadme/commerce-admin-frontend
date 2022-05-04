@@ -4,5 +4,5 @@ import { state } from '@modules/product/store/state'
 
 export const useProductStore = defineStore('product', {
   state,
-  actions
+  actions,
 })

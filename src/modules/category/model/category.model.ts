@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
 
-class CategoryModel implements ICategory{
+class CategoryModel implements ICategory {
   title: ICategory['title']
   url: ICategory['url']
   image: ICategory['image']
@@ -19,7 +19,7 @@ class CategoryModel implements ICategory{
     this.seo = {
       title: null,
       description: null,
-      keywords: null
+      keywords: null,
     }
   }
 }

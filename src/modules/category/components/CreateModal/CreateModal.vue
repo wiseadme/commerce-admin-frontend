@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { defineCreateModal } from './define-create-modal'
+import { defineCreateModal } from './define-create-modal'
 
-  export default defineCreateModal()
+export default defineCreateModal
 </script>
 <template>
   <v-modal
@@ -23,37 +23,43 @@
             color="white"
           >
             <v-card-title> Создание категории</v-card-title>
-            <v-card-content>
+            <v-card-content style="max-height: 50vh; overflow: auto">
               <v-text-field
-                v-model="title"
+                v-model="computedTitleProp"
                 label="название"
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
-                v-model="url"
+                v-model="computedUrlProp"
                 label="url категории"
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
-                v-model="seo.title"
+                v-model="computedSeoTitleProp"
                 label="seo title"
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
-                v-model="seo.description"
+                v-model="computedSeoDescProp"
                 label="seo description"
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
-                v-model="seo.keywords"
+                v-model="computedSeoKeywordsProp"
                 label="seo keywords"
                 :rules="[(val) => !!val || 'Required']"
               />
+              <v-text-field
+                v-model.number="computedOrderProp"
+                label="порядковый номер"
+                :rules="[(val) => !!val || 'Required']"
+                type="number"
+              />
               <v-select
-                v-if="state && state.categories"
-                v-model="computedParentId"
+                v-if="categories"
+                v-model="computedParentProp"
                 label="Родительская категория"
-                :items="store.state.categories"
+                :items="categories"
                 value-key="title"
               />
               <v-file-input

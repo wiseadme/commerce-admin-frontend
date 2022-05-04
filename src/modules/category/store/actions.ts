@@ -1,7 +1,7 @@
 import { categoryRepository } from '@modules/category/repository/category.repository'
 
 export const actions = {
-  async createCategory(category: ICategory){
+  async createCategory(category: ICategory) {
     try {
       const { data } = await categoryRepository.create(category)
       this.categories.push(data.data)
@@ -11,10 +11,10 @@ export const actions = {
     }
   },
 
-  async updateCategory(updates){
+  async updateCategory(updates) {
     try {
       const { data } = await categoryRepository.update(updates)
-      const ind = this.categories.findIndex(c => c._id === data.data._id)
+      const ind = this.categories.findIndex((c) => c._id === data.data._id)
       this.categories.splice(ind, 1, data.data)
       return data.data
     } catch (err) {
@@ -22,7 +22,7 @@ export const actions = {
     }
   },
 
-  async getAllCategories(){
+  async getAllCategories() {
     try {
       const { data } = await categoryRepository.read()
       this.categories = data.data
@@ -30,5 +30,5 @@ export const actions = {
     } catch (err) {
       return Promise.reject(err)
     }
-  }
+  },
 }

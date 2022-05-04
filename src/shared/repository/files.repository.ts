@@ -4,12 +4,12 @@ import { IRest, IRepository } from '@shared/types/app'
 class Repository implements IRepository {
   private rest: IRest
 
-  constructor(rest){
+  constructor(rest) {
     this.rest = rest
   }
 
-  create(fileName, formData){
-    return this.rest.post(`/v1/assets?fileName=${ fileName }`, formData)
+  create(fileName, formData) {
+    return this.rest.post(`/v1/assets?fileName=${fileName}`, formData)
   }
 }
 

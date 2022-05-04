@@ -3,34 +3,32 @@ import { useUploadsStore } from '@shared/store/files'
 import { categoryModel } from '@modules/category/model/category.model'
 import { Store } from 'vuezone'
 
-class Service {
+class Service implements ICategoryService {
   private _store: Store<ICategoryState, ICategoryActions>
-  private _model: ICategory
 
-  constructor(store, model) {
-    this._model = model
+  constructor(store) {
     this._store = store
   }
 
-  createCategory() {
-    return this._store.createCategory(this._model)
+  createCategory(category) {
+    return this._store.createCategory(category)
   }
 
-  async updateParentCategory(category) {
+  updateParentCategory(category) {
     if (!category.parent) return
 
-    const parent = this._store.state.categories!.find(
-      (c) => c._id === category.parent._id
-    )
+    const { categories } = this._store.state
 
-    await this._store.updateCategory({
+    const parent = categories!.find((c) => c._id === category.parent._id)
+
+    parent.children.push(category._id)
+
+    const updates = {
       _id: category.parent._id,
-      children: [ ...parent.children, category._id ]
-    })
-  }
+      children: parent.children,
+    }
 
-  updateCategory(updates) {
-    return this._store.updateCategory(updates)
+    this._store.updateCategory(updates)
   }
 
   getAllCategories() {
@@ -44,14 +42,10 @@ class Service {
 
     formData.append('image', file)
 
-    upload.uploadImage(file.name, formData)
-      .then(file => {
-        categoryModel.image = file.url
-      })
+    upload
+      .uploadImage(file.name, formData)
+      .then((file) => (categoryModel.image = file.url))
   }
 }
 
-export const service = new Service(
-  useCategoryStore(),
-  categoryModel
-)
+export const service = new Service(useCategoryStore())
