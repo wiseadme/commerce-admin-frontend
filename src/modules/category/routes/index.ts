@@ -11,11 +11,6 @@ export const categoryRoutes = [
         component: () => import('@modules/category/pages/CategoryPage.vue'),
         name: 'category',
       },
-      {
-        path: 'create',
-        component: () => import('@modules/category/pages/CreateCategory.vue'),
-        name: 'create-category',
-      },
     ],
   },
 ]

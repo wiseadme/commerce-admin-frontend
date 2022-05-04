@@ -1,34 +1,21 @@
 <script lang="ts">
-  import { defineComponent, reactive, toRefs } from 'vue'
+  import { defineComponent, toRefs } from 'vue'
   import { state } from '@modules/category/store'
+  import { categoryModel } from '../model/category.model'
 
   export default defineComponent({
     props: {
       modelValue: Boolean
     },
-    emits: [ 'update:modelValue', 'send' ],
+    emits: [ 'update:modelValue', 'send', 'upload' ],
     async setup(_, { emit }){
 
-      const category = reactive({
-        title: null,
-        url: null,
-        image: null,
-        seo: {
-          title: null,
-          description: null,
-          keywords: null
-        },
-        parent: null,
-        children: [],
-        order: 0
-      })
-
       const onSend = async (validate) => {
-        validate().then(() => emit('send', category))
+        validate().then(() => emit('send', categoryModel))
       }
 
       return {
-        ...toRefs(category),
+        ...toRefs(categoryModel),
         state,
         onSend
       }
@@ -88,7 +75,10 @@
                 :items="state.categories"
                 value-key="title"
               />
-              <v-file-input label="загрузите изображения" />
+              <v-file-input
+                label="загрузите изображения"
+                @update:model-value="$emit('upload', $event)"
+              />
             </v-card-content>
             <v-card-actions>
               <v-button

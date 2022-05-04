@@ -6,5 +6,5 @@ export interface IRest {
 }
 
 export interface IRepository {
-  create: (category: any) => Promise<{ data: any }>
+  create: (...args: any[]) => Promise<{ data: any }>
 }

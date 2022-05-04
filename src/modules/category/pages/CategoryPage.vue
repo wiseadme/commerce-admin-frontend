@@ -12,7 +12,8 @@
       const {
         createCategory,
         getAllCategories,
-        updateParentCategory
+        updateParentCategory,
+        uploadCategoryImage
       } = useCategoryService()
 
       const showCreateModal = ref(false)
@@ -37,9 +38,9 @@
           sortable: true,
           filterable: true,
           format: row => row.title,
-          filter: ({ value, col }) => {
-            return data.users.filter(user => user[col.key].includes(value))
-          }
+          // filter: ({ value, col }) => {
+          //   return data.users.filter(user => user[col.key].includes(value))
+          // }
         },
         {
           key: 'url',
@@ -92,7 +93,8 @@
         state,
         cols,
         showCreateModal,
-        onSend
+        onSend,
+        uploadCategoryImage
       }
     }
   })
@@ -136,11 +138,21 @@
               <v-icon>fas fa-trash-alt</v-icon>
             </v-button>
           </template>
+          <template #image="{row}">
+            <div class="d-flex justify-center align-center">
+              <img
+                style="height: 30px; width: auto"
+                :src="`http://anar.com/${row.image}`"
+                :alt="row.title"
+              >
+            </div>
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
     <create-modal
       v-model="showCreateModal"
+      @upload="uploadCategoryImage"
       @send="onSend"
     />
   </v-main>
