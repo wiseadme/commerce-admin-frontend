@@ -1,26 +1,7 @@
 <script lang="ts">
-  import { defineComponent, toRefs } from 'vue'
-  import { state } from '@modules/category/store'
-  import { categoryModel } from '../model/category.model'
+  import { defineCreateModal } from './define-create-modal'
 
-  export default defineComponent({
-    props: {
-      modelValue: Boolean
-    },
-    emits: [ 'update:modelValue', 'send', 'upload' ],
-    async setup(_, { emit }){
-
-      const onSend = async (validate) => {
-        validate().then(() => emit('send', categoryModel))
-      }
-
-      return {
-        ...toRefs(categoryModel),
-        state,
-        onSend
-      }
-    }
-  })
+  export default defineCreateModal()
 </script>
 <template>
   <v-modal
@@ -70,7 +51,7 @@
               />
               <v-select
                 v-if="state && state.categories"
-                v-model="parent"
+                v-model="computedParentId"
                 label="Родительская категория"
                 :items="state.categories"
                 value-key="title"

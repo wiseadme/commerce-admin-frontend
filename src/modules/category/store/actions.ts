@@ -1,7 +1,7 @@
 import { categoryRepository } from '@modules/category/repository'
 
 export const actions = {
-  async createCategory(category){
+  async createCategory(category: ICategory){
     try {
       const { data } = await categoryRepository.create(category)
       this.categories.push(data.data)

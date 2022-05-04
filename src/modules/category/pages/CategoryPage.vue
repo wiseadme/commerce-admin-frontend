@@ -3,7 +3,7 @@
   import { useCategoryService } from '@modules/category/service'
   import { state } from '@modules/category/store'
 
-  import CreateModal from '../components/CreateModal.vue'
+  import { CreateModal } from '../components/CreateModal'
 
   export default defineComponent({
     components: { CreateModal },
@@ -16,7 +16,7 @@
         uploadCategoryImage
       } = useCategoryService()
 
-      const showCreateModal = ref(false)
+      const showCreateModal = ref<boolean>(false)
 
       const onSend = (category) => {
         createCategory(category)
@@ -37,10 +37,7 @@
           resizeable: true,
           sortable: true,
           filterable: true,
-          format: row => row.title,
-          // filter: ({ value, col }) => {
-          //   return data.users.filter(user => user[col.key].includes(value))
-          // }
+          format: row => row.title
         },
         {
           key: 'url',
