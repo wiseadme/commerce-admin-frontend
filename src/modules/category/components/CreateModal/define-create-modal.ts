@@ -1,5 +1,5 @@
 import { defineComponent, toRefs, ref, computed } from 'vue'
-import { state } from '@modules/category/store'
+import { useCategoryStore } from '@modules/category/store'
 import { categoryModel } from '@modules/category/model/category.model'
 
 export const defineCreateModal = () => defineComponent({
@@ -8,12 +8,12 @@ export const defineCreateModal = () => defineComponent({
   },
   emits: [ 'update:modelValue', 'send', 'upload' ],
   async setup(_, { emit }){
+    const store = useCategoryStore()
     let parent = ref<Maybe<ParentCategory>>(null)
 
-    const onSend = async (validate) => {
+    const onSend = (validate) => {
       validate().then(() => emit('send', categoryModel))
     }
-
 
     const computedParentId = computed({
       get(){
@@ -27,8 +27,8 @@ export const defineCreateModal = () => defineComponent({
 
     return {
       ...toRefs(categoryModel),
-      state,
       onSend,
+      store,
       computedParentId
     }
   }

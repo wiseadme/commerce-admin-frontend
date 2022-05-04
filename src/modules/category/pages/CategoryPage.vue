@@ -1,6 +1,6 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue'
-  import { useCategoryService } from '@modules/category/service'
+  import { service } from '@modules/category/service/category.service'
   import { state } from '@modules/category/store'
 
   import { CreateModal } from '../components/CreateModal'
@@ -9,18 +9,11 @@
     components: { CreateModal },
 
     async setup(){
-      const {
-        createCategory,
-        getAllCategories,
-        updateParentCategory,
-        uploadCategoryImage
-      } = useCategoryService()
-
       const showCreateModal = ref<boolean>(false)
 
-      const onSend = (category) => {
-        createCategory(category)
-          .then(updateParentCategory)
+      const onSend = () => {
+        service.createCategory()
+          .then(ctg => service.updateParentCategory(ctg))
           .catch((err) => console.log(err))
       }
 
@@ -84,14 +77,14 @@
         }
       ])
 
-      await getAllCategories()
+      await service.getAllCategories()
 
       return {
         state,
         cols,
         showCreateModal,
         onSend,
-        uploadCategoryImage
+        service
       }
     }
   })
@@ -149,7 +142,7 @@
     </v-row>
     <create-modal
       v-model="showCreateModal"
-      @upload="uploadCategoryImage"
+      @upload="service.uploadCategoryImage"
       @send="onSend"
     />
   </v-main>

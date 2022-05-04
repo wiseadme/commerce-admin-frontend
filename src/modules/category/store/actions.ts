@@ -1,4 +1,4 @@
-import { categoryRepository } from '@modules/category/repository'
+import { categoryRepository } from '@modules/category/repository/category.repository'
 
 export const actions = {
   async createCategory(category: ICategory){

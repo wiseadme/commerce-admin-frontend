@@ -53,7 +53,7 @@
                 v-if="state && state.categories"
                 v-model="computedParentId"
                 label="Родительская категория"
-                :items="state.categories"
+                :items="store.state.categories"
                 value-key="title"
               />
               <v-file-input

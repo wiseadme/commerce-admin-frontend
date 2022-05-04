@@ -1,15 +1,27 @@
 import { reactive } from 'vue'
 
-export const categoryModel = reactive<ICategory>({
-  title: '',
-  url: '',
-  image: null,
-  parent: null,
-  children: [],
-  order: 0,
-  seo: {
-    title: null,
-    description: null,
-    keywords: null
+class CategoryModel implements ICategory{
+  title: ICategory['title']
+  url: ICategory['url']
+  image: ICategory['image']
+  parent: ICategory['parent']
+  children: ICategory['children']
+  order: ICategory['order']
+  seo: ICategory['seo']
+
+  constructor() {
+    this.title = ''
+    this.url = ''
+    this.image = null
+    this.parent = null
+    this.children = null
+    this.order = 0
+    this.seo = {
+      title: null,
+      description: null,
+      keywords: null
+    }
   }
-})
+}
+
+export const categoryModel = reactive<ICategory>(new CategoryModel())
