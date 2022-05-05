@@ -14,18 +14,31 @@ declare interface ICategoryModel {
   seo: CategorySeo
 }
 
-declare type ICategory = ICategoryModel & { _id: string }
+declare type ICategory = {
+  _id: string
+  title: string
+  url: string
+  image: string
+  parent: ICategory
+  children: Array<ICategory>
+  order: number
+  seo: CategorySeo
+}
 
 declare interface ICategoryState {
-  categories: Maybe<Array<any>>
+  categories: Maybe<Array<ICategory>>
 }
 
 declare interface ICategoryActions {
-  createCategory: (category: ICategoryModel) => Promise<any>
-  updateCategory: (updates: any) => Promise<any>
-  getAllCategories: () => Promise<any>
+  createCategory: (category: ICategoryModel) => Promise<ICategory>
+  updateCategory: (updates: Partial<ICategory>) => Promise<ICategory>
+  getCategories: (id?: string) => Promise<Array<ICategory>>
+  deleteCategory: (category: ICategory) => Promise<boolean>
+  uploadCategoryImage: (fileName: string, data: FormData) => Promise<{ url: string }>
+  deleteCategoryImage: (fileName: string) => Promise<boolean>
 }
 
 declare interface ICategoryService {
-  createCategory: (category: ICategoryModel) => Promise<ICategoryModel & { _id: string }>
+  createCategory: (category: ICategoryModel) => void
+  updateParentCategory: (category: ICategory) => Promise<ICategory> | undefined
 }

@@ -18,10 +18,7 @@
       }
 
       const onSend = () => {
-        service
-          .createCategory(categoryModel)
-          .then((ctg) => service.updateParentCategory(ctg))
-          .catch((err) => console.log(err))
+        service.createCategory(categoryModel)
       }
 
       const cols = ref([
@@ -90,10 +87,10 @@
         cols,
         compRef,
         showCreateModal,
-        onSend,
-        onUploadImage,
         service,
-        categoryModel
+        categoryModel,
+        onSend,
+        onUploadImage
       }
     }
   })
@@ -122,7 +119,7 @@
               <v-icon>fas fa-plus</v-icon>
             </v-button>
           </template>
-          <template #actions>
+          <template #actions="{row}">
             <v-button
               color="orange"
               elevation="2"
@@ -133,6 +130,7 @@
               class="ml-1"
               color="red darken-1"
               elevation="2"
+              @click="service.deleteCategory(row)"
             >
               <v-icon>fas fa-trash-alt</v-icon>
             </v-button>

@@ -1,16 +1,25 @@
 import { fileApi } from '@shared/plugins/axios'
 import { IRest, IRepository } from '@shared/types/app'
 
-class Repository implements IRepository {
+interface FilesRepository extends Omit<IRepository, 'read' | 'update'> {
+  create: (fileName: string, formData: FormData) => Promise<{ data: { data: any } }>
+  delete: (fileName: string) => Promise<{ data: { data: boolean } }>
+}
+
+class Repository implements FilesRepository {
   private rest: IRest
 
-  constructor(rest) {
+  constructor(rest){
     this.rest = rest
   }
 
-  create(fileName, formData) {
-    return this.rest.post(`/v1/assets?fileName=${fileName}`, formData)
+  create(fileName, formData){
+    return this.rest.post(`/v1/assets?fileName=${ fileName }`, formData)
+  }
+
+  delete(fileName){
+    return this.rest.delete(`/v1/assets/${ fileName }`)
   }
 }
 
-export const filesRepository = new Repository(fileApi)
+export const filesRepository: FilesRepository = new Repository(fileApi)

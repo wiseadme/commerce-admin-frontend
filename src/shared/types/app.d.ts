@@ -7,4 +7,7 @@ export interface IRest {
 
 export interface IRepository {
   create: (...args: any[]) => Promise<{ data: any }>
+  read: (...args: any[]) => Promise<{ data: any }>
+  update: (...args: any[]) => Promise<{ data: any }>
+  delete: (...args: any[]) => Promise<{ data: any }>
 }

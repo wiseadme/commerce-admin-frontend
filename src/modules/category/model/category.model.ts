@@ -22,6 +22,10 @@ class CategoryModel implements ICategoryModel {
       keywords: null,
     }
   }
+
+  static create() {
+    return new CategoryModel()
+  }
 }
 
-export const categoryModel = reactive<ICategoryModel>(new CategoryModel())
+export const categoryModel = reactive<ICategoryModel>(CategoryModel.create())
