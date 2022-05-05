@@ -1,0 +1,3 @@
+class FilesService {
+  store: any
+}

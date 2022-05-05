@@ -1,13 +1,13 @@
 import { reactive } from 'vue'
 
-class CategoryModel implements ICategory {
-  title: ICategory['title']
-  url: ICategory['url']
-  image: ICategory['image']
-  parent: ICategory['parent']
-  children: ICategory['children']
-  order: ICategory['order']
-  seo: ICategory['seo']
+class CategoryModel implements ICategoryModel {
+  title: ICategoryModel['title']
+  url: ICategoryModel['url']
+  image: ICategoryModel['image']
+  parent: ICategoryModel['parent']
+  children: ICategoryModel['children']
+  order: ICategoryModel['order']
+  seo: ICategoryModel['seo']
 
   constructor() {
     this.title = ''
@@ -24,4 +24,4 @@ class CategoryModel implements ICategory {
   }
 }
 
-export const categoryModel = reactive<ICategory>(new CategoryModel())
+export const categoryModel = reactive<ICategoryModel>(new CategoryModel())

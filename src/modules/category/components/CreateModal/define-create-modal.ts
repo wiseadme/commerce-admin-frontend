@@ -29,7 +29,7 @@ export const defineCreateModal = defineComponent({
   ],
 
   async setup(props, { emit }) {
-    const parent = ref<Maybe<ParentCategory>>(null)
+    const parent = ref<Maybe<ICategory>>(null)
 
     const onSend = (validate) => {
       validate().then(() => emit('send'))
@@ -89,11 +89,11 @@ export const defineCreateModal = defineComponent({
       },
     })
 
-    const computedParentProp = computed<Maybe<ParentCategory>>({
+    const computedParentProp = computed<Maybe<ICategory>>({
       get() {
         return parent.value
       },
-      set(val: ParentCategory) {
+      set(val: ICategory) {
         parent.value = val
         emit('update:parent', parent.value._id)
       },
