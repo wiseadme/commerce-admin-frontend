@@ -19,9 +19,9 @@ export default defineComponent({
                 <component :is="Component" />
               </div>
             </template>
-            <template #fallback>
-              <span style="position: absolute">loading...</span>
-            </template>
+            <!--            <template #fallback>-->
+            <!--              <span style="position: absolute">loading...</span>-->
+            <!--            </template>-->
           </Suspense>
         </transition>
       </router-view>

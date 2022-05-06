@@ -17,11 +17,11 @@
             <component :is="Component" />
           </v-layout>
         </template>
-        <template #fallback>
-          <div style="position: absolute">
-            Загрузка...
-          </div>
-        </template>
+        <!--        <template #fallback>-->
+        <!--          <div style="position: absolute">-->
+        <!--            Загрузка...-->
+        <!--          </div>-->
+        <!--        </template>-->
       </Suspense>
     </transition>
   </router-view>

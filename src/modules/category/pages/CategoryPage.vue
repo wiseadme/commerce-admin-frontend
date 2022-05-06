@@ -107,13 +107,14 @@
           :rows="service.store.state.categories"
           class="elevation-2"
           :header-options="{
-            color: 'grey darken-3',
-            contentColor: 'white',
+            // color: 'grey darken-3',
+            // contentColor: 'white',
           }"
         >
           <template #toolbar>
             <v-button
-              color="green darken-2"
+              color="orange darken-2"
+              elevation="3"
               @click="showCreateModal = true"
             >
               <v-icon>fas fa-plus</v-icon>

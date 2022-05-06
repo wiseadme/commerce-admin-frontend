@@ -27,32 +27,37 @@ export default defineCreateModal
               <v-text-field
                 v-model="computedTitleProp"
                 label="название"
+                color="orange darken-2"
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
                 v-model="computedUrlProp"
                 label="url категории"
+                color="orange darken-2"
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
                 v-model="computedSeoTitleProp"
                 label="seo title"
+                color="orange darken-2"
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
                 v-model="computedSeoDescProp"
                 label="seo description"
+                color="orange darken-2"
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
                 v-model="computedSeoKeywordsProp"
                 label="seo keywords"
+                color="orange darken-2"
                 :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
                 v-model.number="computedOrderProp"
                 label="порядковый номер"
-                :rules="[(val) => !!val || 'Required']"
+                color="orange darken-2"
                 type="number"
               />
               <v-select
@@ -60,10 +65,14 @@ export default defineCreateModal
                 v-model="computedParentProp"
                 label="Родительская категория"
                 :items="categories"
+                color="orange darken-2"
                 value-key="title"
+                disabled
               />
               <v-file-input
                 label="загрузите изображения"
+                color="orange darken-2"
+                disabled
                 @update:model-value="$emit('upload', $event)"
               />
             </v-card-content>

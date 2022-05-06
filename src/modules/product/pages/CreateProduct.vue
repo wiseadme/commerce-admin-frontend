@@ -43,6 +43,7 @@ export default defineComponent({
         <v-card
           class="elevation-3"
           width="100%"
+          color="#ffffff"
         >
           <v-card-title> Создание продукта </v-card-title>
           <v-card-content>
