@@ -35,11 +35,12 @@ class Service implements ICategoryService {
     return this.store.getCategories()
   }
 
-  deleteCategory(category){
-    this.store.deleteCategory(category)
-      .then(() => {
-        this.store.deleteCategoryImage(category.image.split('/')[2])
-      })
+  async deleteCategory(category: ICategory){
+    await this.store.deleteCategory(category)
+
+    if (category.image) {
+      this.store.deleteCategoryImage(category.image.split('/')[2])
+    }
   }
 
   uploadCategoryImage = (files: File[]) => {

@@ -67,12 +67,10 @@ export default defineCreateModal
                 :items="categories"
                 color="orange darken-2"
                 value-key="title"
-                disabled
               />
               <v-file-input
                 label="загрузите изображения"
                 color="orange darken-2"
-                disabled
                 @update:model-value="$emit('upload', $event)"
               />
             </v-card-content>
