@@ -2,7 +2,6 @@ const path = require('path')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 // const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin')
@@ -21,10 +20,7 @@ module.exports = (env = {}) => {
     target: env.dev ? 'web' : 'browserslist',
     mode: env.dev ? 'development' : 'production',
     entry: {
-      main: [
-        'regenerator-runtime/runtime.js',
-        resolve('../src/app/main.ts')
-      ]
+      main: resolve('../src/app/main.ts')
     },
     output: {
       path: PATH.dist,
@@ -146,31 +142,16 @@ module.exports = (env = {}) => {
         '@app': `${ PATH.src }/app`,
         '@modules': `${ PATH.src }/modules`,
         '@shared': `${ PATH.src }/shared`,
-        '/': PATH.public,
         vue: env.dev ? 'vue/dist/vue.runtime.esm-browser.js' : 'vue/dist/vue.runtime.esm-browser.prod.js'
       }
     },
     plugins: [
-      // new ModuleFederationPlugin({
-      //   name: 'app',
-      //   filename: 'library.js',
-      //   shared: {
-      //     // ...require('../package.json').dependencies,
-      //     vue: {
-      //       eager: true,
-      //       singleton: true
-      //     }
-      //   },
-      //   remotes: {
-      //     evo: 'evo@http://localhost:8080/library.js'
-      //   }
-      // }),
       new MiniCssExtractPlugin({
         filename: `css/[name].${ env.dev ? '' : '[hash]' }.css`,
-        chunkFilename: `css/chunk.[name].css`
+        chunkFilename: `css/chunk.[name].css`,
       }),
       new HtmlWebpackPlugin({
-        title: 'webpack Boilerplate',
+        title: 'ecommerce-admin',
         hash: false,
         template: PATH.public + 'index.html',
         filename: 'index.html',
@@ -182,7 +163,6 @@ module.exports = (env = {}) => {
         removeStyleLinkTypeAttributes: true,
         useShortDoctype: true
       }),
-      new CleanWebpackPlugin(),
       new webpack.DefinePlugin({
         __VUE_OPTIONS_API__: false,
         __VUE_PROD_DEVTOOLS__: false
