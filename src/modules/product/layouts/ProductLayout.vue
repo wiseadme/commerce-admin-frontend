@@ -5,27 +5,20 @@ export default defineComponent({
   name: 'product-layout',
   setup() {
     return {}
-  },
+  }
 })
 </script>
 <template>
   <v-main>
-    <div class="routes-container">
-      <router-view v-slot="{ Component }">
-        <transition name="fade">
-          <Suspense>
-            <template #default>
-              <div class="screen">
-                <component :is="Component" />
-              </div>
-            </template>
-            <!--            <template #fallback>-->
-            <!--              <span style="position: absolute">loading...</span>-->
-            <!--            </template>-->
-          </Suspense>
-        </transition>
-      </router-view>
-    </div>
+    <router-view v-slot="{ Component }">
+      <transition name="fade">
+        <Suspense>
+          <template #default>
+            <component :is="Component" />
+          </template>
+        </Suspense>
+      </transition>
+    </router-view>
   </v-main>
 </template>
 <style lang="scss">

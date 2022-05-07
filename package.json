@@ -5,7 +5,7 @@
   "sideEffects": true,
   "main": "src/app/main.ts",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack serve --config ./build/webpack.dev.config.js",
+    "dev": "cross-env NODE_ENV=development webpack serve --hot --config ./build/webpack.dev.config.js",
     "build": "webpack --config ./build/webpack.prod.config.js",
     "start": "serve dist",
     "prettier": "prettier --write --config ./.prettierrc './src'",
@@ -26,7 +26,7 @@
     "@testing-library/cypress": "^8.0.2",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
-    "@vue/compiler-sfc": "^3.2.31",
+    "@vue/compiler-sfc": "^3.2.1",
     "babel-loader": "^8.2.3",
     "cross-env": "^7.0.3",
     "css-loader": "^6.6.0",
@@ -58,8 +58,8 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "vue": "^3.2.31",
-    "vue-router": "^4.0.12",
+    "vue": "^3.2.1",
+    "vue-router": "^4.0.15",
     "vueland": "github:vueland/vueland-next",
     "vuezone": "github:wiseadme/vuezone"
   }

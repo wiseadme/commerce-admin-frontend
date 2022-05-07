@@ -5,11 +5,13 @@ const path = require('path')
 
 const devConfig = (env = {}) => merge(baseConfig(env), {
   devtool: 'eval-cheap-module-source-map',
-  // output: {
-  //   publicPath: 'http://localhost:8081/'
-  // },
+  output: {
+    publicPath: '/'
+  },
   devServer: {
     host: 'localhost',
+    watchFiles: path.resolve(__dirname, '../src/'),
+    allowedHosts: 'all',
     proxy: {
       '/v1': {
         target: 'http://localhost:5000/',
@@ -18,9 +20,7 @@ const devConfig = (env = {}) => merge(baseConfig(env), {
         changeOrigin: true
       }
     },
-    static: {
-      directory: path.join(__dirname, 'public'),
-    },
+    static: true,
     open: false,
     port: 8081,
     hot: true,
@@ -31,7 +31,7 @@ const devConfig = (env = {}) => merge(baseConfig(env), {
     }
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin()
   ]
 })
 

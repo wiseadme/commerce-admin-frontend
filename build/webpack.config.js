@@ -20,7 +20,10 @@ module.exports = (env = {}) => {
     target: env.dev ? 'web' : 'browserslist',
     mode: env.dev ? 'development' : 'production',
     entry: {
-      main: resolve('../src/app/main.ts')
+      main: [
+        'regenerator-runtime/runtime.js',
+        resolve('../src/app/main.ts')
+      ]
     },
     output: {
       path: PATH.dist,

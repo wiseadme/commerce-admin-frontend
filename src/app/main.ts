@@ -6,7 +6,7 @@ import 'vueland/dist/vueland-base.css'
 import 'vueland/dist/themes/vueland-theme.css'
 
 const app = createApp(App)
-app.use(router)
 app.use(vueland)
+app.use(router)
 
 router.isReady().then(() => app.mount('#app'))

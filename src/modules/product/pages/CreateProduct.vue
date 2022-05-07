@@ -15,20 +15,20 @@ export default defineComponent({
       seo: {
         title: null,
         description: null,
-        keywords: null,
+        keywords: null
       },
       attributes: [],
       assets: [],
-      variants: [],
+      variants: []
     })
 
     const service = useProductService()
 
     return {
       ...toRefs(product),
-      service,
+      service
     }
-  },
+  }
 })
 </script>
 <template>
@@ -45,23 +45,23 @@ export default defineComponent({
           width="100%"
           color="#ffffff"
         >
-          <v-card-title> Создание продукта </v-card-title>
+          <v-card-title>
+            <h2>Создание продукта</h2>
+          </v-card-title>
           <v-card-content>
-            <v-form>
-              <v-text-field
-                v-model="name"
-                label="Название"
-              />
-              <v-text-field
-                v-model="price"
-                label="Цена"
-                type="number"
-              />
-              <v-select
-                label="категории"
-                :items="categories"
-              />
-            </v-form>
+            <v-text-field
+              v-model="name"
+              label="Название"
+            />
+            <v-text-field
+              v-model="price"
+              label="Цена"
+              type="number"
+            />
+            <v-select
+              label="категории"
+              :items="categories"
+            />
           </v-card-content>
         </v-card>
       </v-col>
