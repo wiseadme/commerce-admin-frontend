@@ -27,7 +27,7 @@
 
       const onUploadImage = (files) => {
         service.uploadCategoryImage(
-          currentItem.value._id,
+          currentItem.value!._id,
           files
         )
           .then((file) => (updates.value.image = file.url))
@@ -42,7 +42,7 @@
 
       const onUpdate = (update) => {
         updates.value = { ...update, ...updates.value }
-        updates.value._id = currentItem.value._id
+        updates.value._id = currentItem.value!._id
 
         service.updateCategory(updates.value)
           .then(item => currentItem.value = item)
@@ -134,9 +134,25 @@
         cols="12"
         class="pa-1"
       >
+        <h1>table</h1>
         <v-data-table
           :cols="cols"
           :rows="service.store.state.categories"
+          :header-options="{
+            resizerColor: 'orange darken-2'
+          }"
+          :footer-options="{
+            color: '#171717',
+            contentColor: '#ffffff',
+            counts: {
+              displayColor: 'red',
+              rowsPerPageText: 'строк на странице'
+            },
+            pagination: {
+              buttonsColor: 'orange darken-2',
+              displayColor: 'orange darken-2'
+            }
+          }"
           class="elevation-2"
         >
           <template #toolbar>

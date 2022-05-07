@@ -1,11 +1,11 @@
 {
-  "name": "webpack-5-vue3",
+  "name": "ecommerce-admin-project",
   "version": "0.1.0",
   "description": "vue 3 template",
   "sideEffects": true,
   "main": "src/app/main.ts",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack serve --hot --config ./build/webpack.dev.config.js",
+    "dev": "cross-env NODE_ENV=development webpack serve --config ./build/webpack.dev.config.js",
     "build": "webpack --config ./build/webpack.prod.config.js",
     "start": "serve dist",
     "prettier": "prettier --write --config ./.prettierrc './src'",
@@ -16,7 +16,7 @@
     "test:e2e": "cypress run-ct"
   },
   "keywords": [],
-  "author": "",
+  "author": "Anar Allakhverdiev",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.17.5",

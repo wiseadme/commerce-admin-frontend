@@ -11,6 +11,7 @@ defineProps({
 <template>
   <v-toolbar
     fixed
+    color="green"
     class="elevation-3"
   >
     <v-toolbar-content>

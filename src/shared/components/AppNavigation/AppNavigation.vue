@@ -35,13 +35,13 @@ export default defineComponent({
   <v-navigation
     fixed
     expand
-    color="orange darken-3"
+    color="#171717"
     offset-top="56"
     class="elevation-2"
   >
     <v-list
       v-model="current"
-      active-class="white orange--text text--darken-3"
+      active-class="orange darken-2 white--text text--base"
       active
       text-color="#ffffff"
     >
