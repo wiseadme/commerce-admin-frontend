@@ -8,18 +8,18 @@ export const actions = {
       this.state.categories.push(data.data)
       return data.data
     } catch (err) {
-      return Promise.reject(err)
+      return console.log(err)
     }
   },
 
   async updateCategory(updates){
     try {
       const { data } = await categoryRepository.update(updates)
-      const ind = this.categories.findIndex((c) => c._id === data.data._id)
+      const ind = this.state.categories.findIndex((c) => c._id === data.data._id)
       this.state.categories.splice(ind, 1, data.data)
       return data.data
     } catch (err) {
-      return Promise.reject(err)
+      return console.log(err)
     }
   },
 
@@ -29,16 +29,17 @@ export const actions = {
       this.state.categories = data.data
       return data.data
     } catch (err) {
-      return Promise.reject(err)
+      return console.log(err)
     }
   },
 
-  async deleteCategoryImage(fileName){
+  async deleteCategoryImage(image){
+    const fileName = image.split('/')[2]
     try {
       const { data } = await filesRepository.delete(fileName)
       return data.data
     } catch (err) {
-      return Promise.reject(err)
+      return console.log(err)
     }
   },
 
@@ -46,18 +47,19 @@ export const actions = {
     try {
       const { data } = await categoryRepository.delete(category._id)
       this.state.categories = this.state.categories.filter(it => it._id !== category._id)
+      category.image && await this.deleteCategoryImage(category)
       return data
     } catch (err) {
-      return Promise.reject(err)
+      return console.log(err)
     }
   },
 
-  async uploadCategoryImage(fileName, formData){
+  async uploadCategoryImage(id, fileName, formData){
     try {
-      const { data } = await filesRepository.create(fileName, formData)
+      const { data } = await filesRepository.create(id, fileName, formData)
       return data.data
     } catch (err) {
-      return Promise.reject(err)
+      return console.log(err)
     }
-  },
+  }
 }

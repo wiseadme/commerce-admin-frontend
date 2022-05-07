@@ -1,7 +1,7 @@
 type CategorySeo = {
-  title: Maybe<string>
-  description: Maybe<string>
-  keywords: Maybe<string>
+  title?: Maybe<string>
+  description?: Maybe<string>
+  keywords?: Maybe<string>
 }
 
 declare interface ICategoryModel {
@@ -34,8 +34,8 @@ declare interface ICategoryActions {
   updateCategory: (updates: Partial<ICategory>) => Promise<ICategory>
   getCategories: (id?: string) => Promise<Array<ICategory>>
   deleteCategory: (category: ICategory) => Promise<boolean>
-  uploadCategoryImage: (fileName: string, data: FormData) => Promise<{ url: string }>
-  deleteCategoryImage: (fileName: string) => Promise<boolean>
+  uploadCategoryImage: (id: string, fileName: string, data: FormData) => Promise<{ url: string }>
+  deleteCategoryImage: (id: string, fileName: string) => Promise<boolean>
 }
 
 declare interface ICategoryService {

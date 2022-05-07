@@ -1,24 +1,52 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue'
   import { service } from '@modules/category/service/category.service'
-  import { categoryModel } from '@modules/category/model/category.model'
+  import { CategoryModel } from '@modules/category/model/category.model'
 
   import { CreateModal } from '../components/CreateModal'
+  import { UpdateModal } from '../components/UpdateModal'
 
   export default defineComponent({
-    components: { CreateModal },
+    components: {
+      CreateModal,
+      UpdateModal
+    },
 
     async setup(){
+      const model = ref<ICategoryModel>(CategoryModel.create())
+      const updates = ref<Partial<ICategoryModel>>({})
+      const currentItem = ref<Maybe<ICategory>>(null)
+
       const showCreateModal = ref<boolean>(false)
-      const compRef = ref(null)
+      const showUpdateModal = ref<boolean>(false)
+
+      const onEdit = (row) => {
+        currentItem.value = row
+        showUpdateModal.value = true
+      }
 
       const onUploadImage = (files) => {
-        service.uploadCategoryImage(files)
-          .then((file) => (categoryModel.image = file.url))
+        service.uploadCategoryImage(
+          currentItem.value._id,
+          files
+        )
+          .then((file) => (updates.value.image = file.url))
+          .then(() => console.log(updates.value))
       }
 
       const onSend = () => {
-        service.createCategory(categoryModel)
+        service.createCategory(model.value)
+          .then(() => model.value = CategoryModel.create())
+          .then(() => showCreateModal.value = false)
+      }
+
+      const onUpdate = (update) => {
+        updates.value = { ...update, ...updates.value }
+        updates.value._id = currentItem.value._id
+
+        service.updateCategory(updates.value)
+          .then(item => currentItem.value = item)
+          .then(() => updates.value = {})
       }
 
       const cols = ref([
@@ -85,11 +113,15 @@
 
       return {
         cols,
-        compRef,
+        showUpdateModal,
         showCreateModal,
+        model,
+        updates,
+        currentItem,
         service,
-        categoryModel,
+        onEdit,
         onSend,
+        onUpdate,
         onUploadImage
       }
     }
@@ -106,10 +138,6 @@
           :cols="cols"
           :rows="service.store.state.categories"
           class="elevation-2"
-          :header-options="{
-            // color: 'grey darken-3',
-            // contentColor: 'white',
-          }"
         >
           <template #toolbar>
             <v-button
@@ -124,6 +152,7 @@
             <v-button
               color="orange"
               elevation="2"
+              @click="onEdit(row)"
             >
               <v-icon>fas fa-pen</v-icon>
             </v-button>
@@ -150,16 +179,22 @@
     </v-row>
     <create-modal
       v-model="showCreateModal"
-      v-model:title="categoryModel.title"
-      v-model:url="categoryModel.url"
-      v-model:image="categoryModel.image"
-      v-model:seo-title="categoryModel.seo.title"
-      v-model:seo-description="categoryModel.seo.description"
-      v-model:seo-keywords="categoryModel.seo.keywords"
-      v-model:parent="categoryModel.parent"
-      v-model:order="categoryModel.order"
+      v-model:title="model.title"
+      v-model:url="model.url"
+      v-model:image="model.image"
+      v-model:seo-title="model.seo.title"
+      v-model:seo-description="model.seo.description"
+      v-model:seo-keywords="model.seo.keywords"
+      v-model:parent="model.parent"
+      v-model:order="model.order"
       :categories="service.store.state.categories"
       @send="onSend"
+    />
+    <update-modal
+      v-model="showUpdateModal"
+      :item="currentItem"
+      :categories="service.store.state.categories"
+      @update="onUpdate"
       @upload="onUploadImage"
     />
   </v-layout>

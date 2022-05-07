@@ -9,9 +9,10 @@ class Service implements ICategoryService {
   }
 
   createCategory(category: ICategoryModel){
-    this.store.createCategory(category)
-      .then(ctg => this.updateParentCategory(ctg))
-      .catch((err) => console.log(err))
+    return this.store.createCategory(category)
+      .then(response => {
+        response && this.updateParentCategory(response)
+      })
   }
 
   updateParentCategory(category: ICategory){
@@ -31,25 +32,25 @@ class Service implements ICategoryService {
     return this.store.updateCategory(updates)
   }
 
+  updateCategory(updates){
+    return this.store.updateCategory(updates)
+  }
+
   getAllCategories(){
     return this.store.getCategories()
   }
 
-  async deleteCategory(category: ICategory){
-    await this.store.deleteCategory(category)
-
-    if (category.image) {
-      this.store.deleteCategoryImage(category.image.split('/')[2])
-    }
+  deleteCategory(category: ICategory){
+    return this.store.deleteCategory(category)
   }
 
-  uploadCategoryImage = (files: File[]) => {
+  uploadCategoryImage = (id: string, files: File[]) => {
     const formData = new FormData()
     const file = files[files.length - 1]
 
     formData.append('image', file)
 
-    return this.store.uploadCategoryImage(file.name, formData)
+    return this.store.uploadCategoryImage(id, file.name, formData)
   }
 }
 

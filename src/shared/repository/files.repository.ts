@@ -2,7 +2,7 @@ import { fileApi } from '@shared/plugins/axios'
 import { IRest, IRepository } from '@shared/types/app'
 
 interface FilesRepository extends Omit<IRepository, 'read' | 'update'> {
-  create: (fileName: string, formData: FormData) => Promise<{ data: { data: any } }>
+  create: (id: string, fileName: string, formData: FormData) => Promise<{ data: { data: any } }>
   delete: (fileName: string) => Promise<{ data: { data: boolean } }>
 }
 
@@ -13,8 +13,8 @@ class Repository implements FilesRepository {
     this.rest = rest
   }
 
-  create(fileName, formData){
-    return this.rest.post(`/v1/assets?fileName=${ fileName }`, formData)
+  create(id, fileName, formData){
+    return this.rest.post(`/v1/assets?id=${ id }&&fileName=${ fileName }`, formData)
   }
 
   delete(fileName){

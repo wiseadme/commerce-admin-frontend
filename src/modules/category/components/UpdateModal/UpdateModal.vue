@@ -1,7 +1,7 @@
 <script lang="ts">
-import { defineCreateModal } from './define-create-modal'
+  import { defineUpdateModal } from './define-update-modal'
 
-export default defineCreateModal
+  export default defineUpdateModal
 </script>
 <template>
   <v-modal
@@ -28,26 +28,31 @@ export default defineCreateModal
                 v-model="computedTitleProp"
                 label="название"
                 color="orange darken-2"
+                :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
                 v-model="computedUrlProp"
                 label="url категории"
                 color="orange darken-2"
+                :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
                 v-model="computedSeoTitleProp"
                 label="seo title"
                 color="orange darken-2"
+                :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
                 v-model="computedSeoDescProp"
                 label="seo description"
                 color="orange darken-2"
+                :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
                 v-model="computedSeoKeywordsProp"
                 label="seo keywords"
                 color="orange darken-2"
+                :rules="[(val) => !!val || 'Required']"
               />
               <v-text-field
                 v-model.number="computedOrderProp"
@@ -55,11 +60,24 @@ export default defineCreateModal
                 color="orange darken-2"
                 type="number"
               />
+              <v-select
+                v-model="computedParentProp"
+                label="Родительская категория"
+                :items="categories"
+                :disabled="!categories"
+                color="orange darken-2"
+                value-key="title"
+              />
+              <v-file-input
+                label="загрузите изображения"
+                color="orange darken-2"
+                @update:model-value="$emit('upload', $event)"
+              />
             </v-card-content>
             <v-card-actions>
               <v-button
                 color="orange darken-3"
-                @click="onSend(validate)"
+                @click="onUpdate(validate)"
               >
                 Создать
               </v-button>

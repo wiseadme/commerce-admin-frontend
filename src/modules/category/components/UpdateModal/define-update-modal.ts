@@ -1,94 +1,87 @@
-import { defineComponent, ref, computed } from 'vue'
+import { computed, defineComponent, PropType, ref } from 'vue'
 
-export const defineCreateModal = defineComponent({
+export const defineUpdateModal = defineComponent({
+  name: 'update-modal',
   props: {
     modelValue: Boolean,
     categories: {
       type: Array,
       default: null
     },
-    title: String,
-    url: String,
-    image: String,
-    parent: String,
-    order: Number,
-    seoTitle: String,
-    seoDescription: String,
-    seoKeywords: String,
+    updates: Object,
+    item: Object as PropType<ICategoryModel>
   },
 
   emits: [
-    'update:modelValue',
-    'update:title',
-    'update:url',
-    'update:image',
-    'update:parent',
-    'update:order',
-    'update:seoTitle',
-    'update:seoDescription',
-    'update:seoKeywords',
-    'send',
+    'update',
     'upload',
+    'update:modelValue'
   ],
 
   setup(props, { emit }) {
     const parent = ref<Maybe<ICategory>>(null)
+    const updates = ref<Partial<ICategoryModel>>({})
 
-    const onSend = (validate) => {
-      validate().then(() => emit('send'))
+    const onUpdate = (validate) => {
+      validate()
+        .then(() => emit('update', updates.value))
+        .then(() => updates.value = {})
     }
 
     const computedTitleProp = computed<string | undefined>({
       get() {
-        return props.title
+        return updates.value?.title || props.item?.title
       },
       set(val) {
-        emit('update:title', val)
+        updates.value.title = val
       },
     })
 
     const computedUrlProp = computed<string | undefined>({
       get() {
-        return props.url
+        return updates.value?.url || props.item?.url
       },
       set(val) {
-        emit('update:url', val)
+        updates.value.url = val
       },
     })
 
     const computedSeoTitleProp = computed<string | undefined>({
       get() {
-        return props.seoTitle
+        return updates.value?.seo?.title || props.item?.seo.title!
       },
       set(val) {
-        emit('update:seoTitle', val)
+        if (!updates.value.seo) updates.value.seo = props.item!.seo
+        updates.value.seo.title = val
       },
     })
 
     const computedSeoDescProp = computed<string | undefined>({
       get() {
-        return props.seoDescription
+        return updates.value?.seo?.description || props.item?.seo.description!
       },
       set(val) {
-        emit('update:seoDescription', val)
+        if (!updates.value.seo) updates.value.seo = props.item!.seo
+        updates.value.seo!.description = val
       },
     })
 
     const computedSeoKeywordsProp = computed<string | undefined>({
       get() {
-        return props.seoKeywords
+        return updates.value?.seo?.keywords || props.item?.seo.keywords!
       },
       set(val) {
-        emit('update:seoKeywords', val)
+        if (!updates.value.seo) updates.value.seo = props.item!.seo
+        updates.value.seo.keywords = val
       },
     })
 
     const computedOrderProp = computed<number | undefined>({
       get() {
-        return props.order
+        return updates.value?.order || props.item?.order
       },
       set(val) {
-        emit('update:order', val)
+        updates.value.order = val
       },
     })
 
@@ -98,12 +91,12 @@ export const defineCreateModal = defineComponent({
       },
       set(val: ICategory) {
         parent.value = val
-        emit('update:parent', parent.value._id)
+        updates.value.parent = parent.value._id
       },
     })
 
     return {
-      onSend,
+      onUpdate,
       computedParentProp,
       computedTitleProp,
       computedUrlProp,
@@ -112,5 +105,5 @@ export const defineCreateModal = defineComponent({
       computedSeoKeywordsProp,
       computedOrderProp,
     }
-  },
+  }
 })

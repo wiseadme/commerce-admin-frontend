@@ -1,6 +1,4 @@
-import { reactive } from 'vue'
-
-class CategoryModel implements ICategoryModel {
+export class CategoryModel implements ICategoryModel {
   title: ICategoryModel['title']
   url: ICategoryModel['url']
   image: ICategoryModel['image']
@@ -27,5 +25,3 @@ class CategoryModel implements ICategoryModel {
     return new CategoryModel()
   }
 }
-
-export const categoryModel = reactive<ICategoryModel>(CategoryModel.create())
