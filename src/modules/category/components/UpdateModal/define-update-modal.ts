@@ -30,9 +30,10 @@ export const defineUpdateModal = defineComponent({
     }
 
     const onDeleteImage = () => {
-      const fileName = props.item!.image!.split('/')[2]
       const id = props.item!._id
-      emit('delete:image', { id, fileName })
+      const url = props.item?.image
+      
+      emit('delete:image', { id, url })
     }
 
     const onLoadImage = event => {

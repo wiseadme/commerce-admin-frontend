@@ -4,9 +4,6 @@ import { useProductService } from '../composables/use-product-service'
 
 export default defineComponent({
   async setup() {
-    // const attribute = { name: null, value: null }
-    // const asset = { url: null, type: null }
-
     const product = reactive({
       name: null,
       price: 0,

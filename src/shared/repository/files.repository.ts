@@ -17,8 +17,8 @@ class Repository implements FilesRepository {
     return this.rest.post(`/v1/assets?id=${ id }&&fileName=${ fileName }`, formData)
   }
 
-  delete(id, fileName){
-    return this.rest.delete(`/v1/assets/${ id }/${ fileName }`)
+  delete(id, url){
+    return this.rest.delete(`/v1/assets/${ id }/${ url }`)
   }
 }
 

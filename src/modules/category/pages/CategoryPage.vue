@@ -25,24 +25,21 @@
         showUpdateModal.value = true
       }
 
-      const onUploadImage = (files) => {
-        service.uploadCategoryImage(
+      const onUploadImage = async (files) => {
+        const res = await service.uploadCategoryImage(
           currentItem.value!._id,
           files
         )
-          .then((file) => (updates.value.image = file.url))
-          .catch((err) => console.log(err))
+        res && (updates.value.image = res.url)
       }
 
-      const onDeleteImage = (fileName) => {
-        service.deleteCategoryImage(fileName)
-          .then(() => (updates.value.image = null))
+      const onDeleteImage = ({ id, url }) => {
+        service.deleteCategoryImage(id, url)
+          .then(() => (updates.value.image = undefined))
           .catch((err) => console.log(err))
       }
 
       const onDeleteCategory = (row) => {
-        // const fileName = row.image?.split('/')[2] ?? null
-        // console.log(row)
         service.deleteCategory(row)
       }
 

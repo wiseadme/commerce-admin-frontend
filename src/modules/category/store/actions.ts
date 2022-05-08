@@ -33,9 +33,9 @@ export const actions = {
     }
   },
 
-  async deleteCategoryImage(id, fileName){
+  async deleteCategoryImage(id, url){
     try {
-      const { data } = await filesRepository.delete(id, fileName)
+      const { data } = await filesRepository.delete(id, url)
       const category = this.state.categories.find((c) => c._id === id)
       category.image = null
       return data.data
