@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default defineComponent({
@@ -18,7 +18,7 @@ export default defineComponent({
       },
     ]
 
-    let current = null
+    let current = ref(0)
 
     const onSelect = (it) => {
       $router.push(it.path)
@@ -35,13 +35,13 @@ export default defineComponent({
   <v-navigation
     fixed
     expand
-    color="#171717"
+    color="#272727"
     offset-top="56"
     class="elevation-2"
   >
     <v-list
-      v-model="current"
-      active-class="orange darken-2 white--text text--base"
+      v-model:value="current"
+      active-class="green white--text text--base"
       active
       text-color="#ffffff"
     >

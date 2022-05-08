@@ -33,10 +33,11 @@ export const actions = {
     }
   },
 
-  async deleteCategoryImage(image){
-    const fileName = image.split('/')[2]
+  async deleteCategoryImage(id, fileName){
     try {
-      const { data } = await filesRepository.delete(fileName)
+      const { data } = await filesRepository.delete(id, fileName)
+      const category = this.state.categories.find((c) => c._id === id)
+      category.image = null
       return data.data
     } catch (err) {
       return console.log(err)
@@ -47,7 +48,6 @@ export const actions = {
     try {
       const { data } = await categoryRepository.delete(category._id)
       this.state.categories = this.state.categories.filter(it => it._id !== category._id)
-      category.image && await this.deleteCategoryImage(category)
       return data
     } catch (err) {
       return console.log(err)

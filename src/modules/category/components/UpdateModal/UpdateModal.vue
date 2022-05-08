@@ -14,73 +14,141 @@
       <v-card
         class="elevation-3"
         width="100%"
-        color="white"
+        color="#272727"
       >
-        <v-card-title> Создание категории</v-card-title>
-        <v-card-content style="max-height: 50vh; overflow: auto">
-          <v-text-field
-            v-model="computedTitleProp"
-            label="название"
-            color="orange darken-2"
-            :rules="[(val) => !!val || 'Required']"
-          />
-          <v-text-field
-            v-model="computedUrlProp"
-            label="url категории"
-            color="orange darken-2"
-            :rules="[(val) => !!val || 'Required']"
-          />
-          <v-text-field
-            v-model="computedSeoTitleProp"
-            label="seo title"
-            color="orange darken-2"
-            :rules="[(val) => !!val || 'Required']"
-          />
-          <v-text-field
-            v-model="computedSeoDescProp"
-            label="seo description"
-            color="orange darken-2"
-            :rules="[(val) => !!val || 'Required']"
-          />
-          <v-text-field
-            v-model="computedSeoKeywordsProp"
-            label="seo keywords"
-            color="orange darken-2"
-            :rules="[(val) => !!val || 'Required']"
-          />
-          <v-text-field
-            v-model.number="computedOrderProp"
-            label="порядковый номер"
-            color="orange darken-2"
-            type="number"
-          />
-          <v-select
-            v-model="computedParentProp"
-            label="Родительская категория"
-            :items="categories"
-            :disabled="!categories"
-            color="orange darken-2"
-            value-key="title"
-          />
-          <v-file-input
-            label="загрузите изображения"
-            color="orange darken-2"
-            @update:model-value="$emit('upload', $event)"
-          />
+        <v-card-title class="card-title green--text text--base">
+          Создание категории
+        </v-card-title>
+        <v-card-content
+          class="grey lighten-3"
+          style="max-height: 50vh; overflow: auto"
+        >
+          <v-row>
+            <v-col xl="6">
+              <v-text-field
+                v-model="computedTitleProp"
+                label="название"
+                color="#272727"
+                text-color="#272727"
+                :rules="[(val) => !!val || 'Required']"
+              />
+            </v-col>
+            <v-col xl="6">
+              <v-text-field
+                v-model="computedUrlProp"
+                label="url категории"
+                color="#272727"
+                text-color="#272727"
+                :rules="[(val) => !!val || 'Required']"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col xl="6">
+              <v-text-field
+                v-model="computedSeoTitleProp"
+                label="seo title"
+                color="#272727"
+                text-color="#272727"
+                :rules="[(val) => !!val || 'Required']"
+              />
+            </v-col>
+            <v-col xl="6">
+              <v-text-field
+                v-model="computedSeoDescProp"
+                label="seo description"
+                color="#272727"
+                text-color="#272727"
+                :rules="[(val) => !!val || 'Required']"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col xl="6">
+              <v-text-field
+                v-model="computedSeoKeywordsProp"
+                label="seo keywords"
+                color="#272727"
+                text-color="#272727"
+                :rules="[(val) => !!val || 'Required']"
+              />
+            </v-col>
+            <v-col xl="6">
+              <v-text-field
+                v-model.number="computedOrderProp"
+                label="порядковый номер"
+                color="#272727"
+                text-color="#272727"
+                type="number"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col xl="6">
+              <v-select
+                v-model="computedParentProp"
+                label="Родительская категория"
+                :items="categories"
+                :disabled="!categories"
+                color="#272727"
+                text-color="#272727"
+                value-key="title"
+              />
+            </v-col>
+            <v-col xl="6">
+              <v-file-input
+                label="загрузите изображения"
+                color="#272727"
+                text-color="#272727"
+                chip-color="green"
+                :disabled="!!item && !!item.image"
+                @update:model-value="onLoadImage"
+              />
+            </v-col>
+          </v-row>
+          <v-row v-if="item && item.image">
+            <v-col>
+              <v-card
+                color="white"
+                width="200"
+                style="position: relative"
+                class="elevation-2"
+              >
+                <v-icon
+                  style="position: absolute; right: 10px; top: 10px"
+                  color="#272727"
+                  clickable
+                  @click="onDeleteImage(item.image)"
+                >
+                  fas fa-times
+                </v-icon>
+                <v-card-content>
+                  <img
+                    style="width:100%"
+                    :src="'http://anar.com' + item.image"
+                  >
+                </v-card-content>
+              </v-card>
+            </v-col>
+          </v-row>
         </v-card-content>
         <v-card-actions>
           <v-button
-            color="orange darken-3"
+            color="white"
+            width="120"
+            outlined
             @click="onUpdate(validate)"
           >
-            Создать
+            сохранить
           </v-button>
           <v-button
-            color="error"
-            class="ml-2"
+            color="warning"
+            class="ml-3"
+            width="120"
+            outlined
             @click="$emit('update:modelValue', false)"
           >
-            Закрыть
+            отмена
           </v-button>
         </v-card-actions>
       </v-card>

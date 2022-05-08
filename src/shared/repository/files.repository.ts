@@ -3,7 +3,7 @@ import { IRest, IRepository } from '@shared/types/app'
 
 interface FilesRepository extends Omit<IRepository, 'read' | 'update'> {
   create: (id: string, fileName: string, formData: FormData) => Promise<{ data: { data: any } }>
-  delete: (fileName: string) => Promise<{ data: { data: boolean } }>
+  delete: (id: string, fileName: string) => Promise<{ data: { data: boolean } }>
 }
 
 class Repository implements FilesRepository {
@@ -17,8 +17,8 @@ class Repository implements FilesRepository {
     return this.rest.post(`/v1/assets?id=${ id }&&fileName=${ fileName }`, formData)
   }
 
-  delete(fileName){
-    return this.rest.delete(`/v1/assets/${ fileName }`)
+  delete(id, fileName){
+    return this.rest.delete(`/v1/assets/${ id }/${ fileName }`)
   }
 }
 

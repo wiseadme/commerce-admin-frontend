@@ -44,7 +44,13 @@ class Service implements ICategoryService {
     return this.store.deleteCategory(category)
   }
 
+  deleteCategoryImage(id, fileName) {
+    return this.store.deleteCategoryImage(id, fileName)
+  }
+
   uploadCategoryImage = (id: string, files: File[]) => {
+    if (!files.length) return
+
     const formData = new FormData()
     const file = files[files.length - 1]
 
