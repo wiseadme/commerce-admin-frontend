@@ -30,7 +30,10 @@ export const defineUpdateModal = defineComponent({
     const onUpdate = (validate) => {
       validate()
         .then(() => emit('update', updates.value))
-        .then(() => updates.value = {})
+        .then(() => {
+          updates.value = {}
+          files.value = []
+        })
     }
 
     const onDeleteImage = () => {

@@ -97,13 +97,14 @@
             </v-col>
             <v-col xl="6">
               <v-file-input
-                v-model="files"
+                v-model:value="files"
                 label="загрузите изображения"
                 color="#272727"
                 text-color="#272727"
                 chip-color="green"
                 :disabled="!!item && !!item.image"
-                @update:model-value="onLoadImage"
+                @update:value="onLoadImage"
+                @delete="onDeleteImage"
               />
             </v-col>
           </v-row>
