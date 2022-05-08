@@ -1,4 +1,5 @@
-import { computed, defineComponent, PropType, ref } from 'vue'
+import { computed, defineComponent, PropType, ref, watch } from 'vue'
+import { Maybe } from 'vueland/dist/types/base'
 
 export const defineUpdateModal = defineComponent({
   name: 'update-modal',
@@ -22,6 +23,9 @@ export const defineUpdateModal = defineComponent({
   setup(props, { emit }){
     const parent = ref<Maybe<ICategory>>(null)
     const updates = ref<Partial<ICategoryModel>>({})
+    const files = ref<Maybe<any>>([])
+
+    watch(files, to => console.log(to))
 
     const onUpdate = (validate) => {
       validate()
@@ -32,7 +36,7 @@ export const defineUpdateModal = defineComponent({
     const onDeleteImage = () => {
       const id = props.item!._id
       const url = props.item?.image
-      
+
       emit('delete:image', { id, url })
     }
 
@@ -112,6 +116,7 @@ export const defineUpdateModal = defineComponent({
       onUpdate,
       onLoadImage,
       onDeleteImage,
+      files,
       computedParentProp,
       computedTitleProp,
       computedUrlProp,

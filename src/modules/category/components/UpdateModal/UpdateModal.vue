@@ -97,6 +97,7 @@
             </v-col>
             <v-col xl="6">
               <v-file-input
+                v-model="files"
                 label="загрузите изображения"
                 color="#272727"
                 text-color="#272727"

@@ -155,7 +155,7 @@
             contentColor: '#ffffff',
             counts: {
               displayColor: 'green',
-              rowsPerPageText: 'строк на странице'
+              rowsPerPageText: 'кол-во строк'
             },
             pagination: {
               buttonsColor: 'green',
@@ -165,15 +165,29 @@
           class="elevation-2"
         >
           <template #toolbar>
-            <v-button
-              color="#ffffff"
-              elevation="3"
-              @click="showCreateModal = true"
-            >
-              <v-icon color="green">
-                fas fa-plus
-              </v-icon>
-            </v-button>
+            <v-toolbar color="#272727">
+              <v-toolbar-logo></v-toolbar-logo>
+              <v-spacer></v-spacer>
+              <v-toolbar-items>
+                <v-button
+                  color="green"
+                  elevation="5"
+                  outlined
+                  @click="showCreateModal = true"
+                >
+                  <v-icon
+                    size="14"
+                    color="green"
+                    sm
+                  >
+                    fas fa-plus
+                  </v-icon>
+                </v-button>
+              </v-toolbar-items>
+            </v-toolbar>
+          </template>
+          <template #pagination-text="{start, last, length}">
+            <span>{{ `с ${start} по ${last} из ${length}` }}</span>
           </template>
           <template #actions="{row}">
             <v-button
