@@ -10,9 +10,7 @@ class Service implements ICategoryService {
 
   createCategory(category: ICategoryModel){
     return this.store.createCategory(category)
-      .then(response => {
-        response && this.updateParentCategory(response)
-      })
+      .then(this.updateParentCategory.bind(this))
   }
 
   updateParentCategory(category: ICategory){
@@ -20,7 +18,9 @@ class Service implements ICategoryService {
 
     const { categories } = this.store.state
 
-    const parent = categories!.find((c) => c._id === category.parent!._id)
+    const parent = categories!.find(
+      (c) => c._id === category.parent!._id
+    )
 
     parent!.children?.push(category)
 

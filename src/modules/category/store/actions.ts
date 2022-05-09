@@ -33,22 +33,22 @@ export const actions = {
     }
   },
 
+  async deleteCategory(category){
+    try {
+      const { data } = await categoryRepository.delete(category._id)
+      this.state.categories = this.state.categories.filter(it => it._id !== category._id)
+      return data
+    } catch (err) {
+      return console.log(err)
+    }
+  },
+
   async deleteCategoryImage(id, url){
     try {
       const { data } = await filesRepository.delete(id, url)
       const category = this.state.categories.find((c) => c._id === id)
       category.image = null
       return data.data
-    } catch (err) {
-      return console.log(err)
-    }
-  },
-
-  async deleteCategory(category){
-    try {
-      const { data } = await categoryRepository.delete(category._id)
-      this.state.categories = this.state.categories.filter(it => it._id !== category._id)
-      return data
     } catch (err) {
       return console.log(err)
     }
