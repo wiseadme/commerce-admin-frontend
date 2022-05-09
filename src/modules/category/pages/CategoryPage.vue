@@ -1,6 +1,6 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue'
-  import { service } from '@modules/category/service/category.service'
+  import { useCategoryService } from '@modules/category/service/category.service'
   import { CategoryModel } from '@modules/category/model/category.model'
 
   import { CategoryCreateModal } from '../components/CategoryCreateModal'
@@ -14,34 +14,23 @@
 
     async setup(){
       const model = ref<ICategoryModel>(CategoryModel.create())
-      const updates = ref<Partial<ICategory>>({})
-      const currentItem = ref<Maybe<ICategory>>(null)
 
       const showCreateModal = ref<boolean>(false)
       const showUpdateModal = ref<boolean>(false)
 
+      const service = useCategoryService()
+
       const onEdit = (row) => {
-        currentItem.value = row
-        requestAnimationFrame(() => {
-          showUpdateModal.value = true
-        })
+        service.setAsCurrent(row)
+        showUpdateModal.value = true
       }
 
-      const onUploadImage = async (files) => {
-        const res = await service.uploadCategoryImage(
-          currentItem.value!._id,
-          files
-        )
-        res && (updates.value.image = res.url)
+      const onUploadImage = (files) => {
+        service.uploadImageHandler(files)
       }
 
       const onDeleteImage = ({ id, url }) => {
-        service.deleteCategoryImage(id, url)
-          .then(() => {
-            updates.value.image = undefined
-            currentItem.value!.image = null
-          })
-          .catch((err) => console.log(err))
+        service.deleteImageHandler(id, url)
       }
 
       const onDeleteCategory = (row) => {
@@ -50,20 +39,13 @@
 
       const onSend = () => {
         service.createCategory(model.value)
+          .then(ctg => service.updateParentCategory(ctg))
           .then(() => model.value = CategoryModel.create())
           .then(() => showCreateModal.value = false)
       }
 
       const onUpdate = (update) => {
-        updates.value = { ...update, ...updates.value }
-
-        if (!Object.keys(updates.value).length) return
-
-        updates.value._id = currentItem.value!._id
-
-        service.updateCategory(updates.value)
-          .then(item => currentItem.value = item)
-          .then(() => updates.value = {})
+        service.updateHandler(update)
       }
 
       const cols = ref([
@@ -133,8 +115,6 @@
         showUpdateModal,
         showCreateModal,
         model,
-        updates,
-        currentItem,
         service,
         onEdit,
         onSend,
@@ -152,7 +132,7 @@
       <v-col>
         <v-data-table
           :cols="cols"
-          :rows="service.store.state.categories"
+          :rows="service.categories"
           :header-options="{
             color: 'green',
             contentColor: '#ffffff',
@@ -197,7 +177,7 @@
             </v-toolbar>
           </template>
           <template #pagination-text="{start, last, length}">
-            <span>{{ `с ${start} по ${last} из ${length}` }}</span>
+            <span>{{ `с ${ start } по ${ last } из ${ length }` }}</span>
           </template>
           <template #actions="{row}">
             <v-button
@@ -243,13 +223,13 @@
       v-model:seo-keywords="model.seo.keywords"
       v-model:parent="model.parent"
       v-model:order="model.order"
-      :categories="service.store.state.categories"
+      :categories="service.categories"
       @send="onSend"
     />
     <category-update-modal
       v-model="showUpdateModal"
-      :item="currentItem"
-      :categories="service.store.state.categories"
+      :item="service.current"
+      :categories="service.categories"
       @delete:image="onDeleteImage"
       @upload:image="onUploadImage"
       @update="onUpdate"

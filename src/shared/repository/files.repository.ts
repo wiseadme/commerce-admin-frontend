@@ -1,4 +1,4 @@
-import { fileApi } from '@shared/plugins/axios'
+import { fileApi } from '@shared/api'
 import { IRest, IRepository } from '@shared/types/app'
 
 interface FilesRepository extends Omit<IRepository, 'read' | 'update'> {

@@ -30,12 +30,12 @@ declare interface ICategoryState {
 }
 
 declare interface ICategoryActions {
-  createCategory: (category: ICategoryModel) => Promise<ICategory>
-  updateCategory: (updates: Partial<ICategory>) => Promise<ICategory>
-  getCategories: (id?: string) => Promise<Array<ICategory>>
-  deleteCategory: (category: ICategory) => Promise<boolean>
-  uploadCategoryImage: (id: string, fileName: string, data: FormData) => Promise<{ url: string }>
-  deleteCategoryImage: (id: string, fileName: string) => Promise<boolean>
+  create: (category: ICategoryModel) => Promise<ICategory>
+  update: (updates: Partial<ICategory>) => Promise<ICategory>
+  read: (id?: string) => Promise<Array<ICategory>>
+  delete: (category: ICategory) => Promise<boolean>
+  uploadImage: (id: string, fileName: string, data: FormData) => Promise<{ url: string }>
+  deleteImage: (id: string, fileName: string) => Promise<boolean>
 }
 
 declare interface ICategoryService {

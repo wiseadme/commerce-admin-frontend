@@ -2,7 +2,7 @@ import { categoryRepository } from '@modules/category/repository/category.reposi
 import { filesRepository } from '@shared/repository/files.repository'
 
 export const actions = {
-  async createCategory(category: ICategory){
+  async create(category: ICategory){
     try {
       const { data } = await categoryRepository.create(category)
       this.state.categories.push(data.data)
@@ -12,7 +12,7 @@ export const actions = {
     }
   },
 
-  async updateCategory(updates){
+  async update(updates){
     try {
       const { data } = await categoryRepository.update(updates)
       const ind = this.state.categories.findIndex((c) => c._id === data.data._id)
@@ -23,7 +23,7 @@ export const actions = {
     }
   },
 
-  async getCategories(id?: string){
+  async read(id?: string){
     try {
       const { data } = await categoryRepository.read(id)
       this.state.categories = data.data
@@ -33,7 +33,7 @@ export const actions = {
     }
   },
 
-  async deleteCategory(category){
+  async delete(category){
     try {
       const { data } = await categoryRepository.delete(category._id)
       this.state.categories = this.state.categories.filter(it => it._id !== category._id)
@@ -43,7 +43,7 @@ export const actions = {
     }
   },
 
-  async deleteCategoryImage(id, url){
+  async deleteImage(id, url){
     try {
       const { data } = await filesRepository.delete(id, url)
       const category = this.state.categories.find((c) => c._id === id)
@@ -54,7 +54,7 @@ export const actions = {
     }
   },
 
-  async uploadCategoryImage(id, fileName, formData){
+  async uploadImage(id, fileName, formData){
     try {
       const { data } = await filesRepository.create(id, fileName, formData)
       return data.data

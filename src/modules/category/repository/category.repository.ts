@@ -1,4 +1,4 @@
-import { rest } from '@shared/plugins/axios'
+import { rest } from '../api'
 import { IRest, IRepository } from '@shared/types/app'
 
 export class Repository implements IRepository {
