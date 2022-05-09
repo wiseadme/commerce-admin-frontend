@@ -22,7 +22,9 @@
 
       const onEdit = (row) => {
         currentItem.value = row
-        showUpdateModal.value = true
+        requestAnimationFrame(() => {
+          showUpdateModal.value = true
+        })
       }
 
       const onUploadImage = async (files) => {
@@ -35,7 +37,10 @@
 
       const onDeleteImage = ({ id, url }) => {
         service.deleteCategoryImage(id, url)
-          .then(() => (updates.value.image = undefined))
+          .then(() => {
+            updates.value.image = null
+            currentItem.value.image = null
+          })
           .catch((err) => console.log(err))
       }
 
@@ -51,6 +56,9 @@
 
       const onUpdate = (update) => {
         updates.value = { ...update, ...updates.value }
+
+        if (!Object.keys(updates.value).length) return
+
         updates.value._id = currentItem.value!._id
 
         service.updateCategory(updates.value)
