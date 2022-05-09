@@ -163,6 +163,8 @@
             }
           }"
           class="elevation-2"
+          show-checkbox
+          show-sequence
         >
           <template #toolbar>
             <v-toolbar color="#272727">
@@ -211,10 +213,13 @@
           <template #image="{ row }">
             <div class="d-flex justify-center align-center">
               <img
+                v-if="row.image"
                 style="height: 30px; width: auto"
                 :src="`http://anar.com/${row.image}`"
-                :alt="row.title"
               />
+              <v-icon v-else>
+                fas fa-box
+              </v-icon>
             </div>
           </template>
         </v-data-table>

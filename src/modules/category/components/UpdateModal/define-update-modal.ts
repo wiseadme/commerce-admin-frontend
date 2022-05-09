@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType, ref, watch } from 'vue'
+import { computed, defineComponent, PropType, watch, ref } from 'vue'
 import { Maybe } from 'vueland/dist/types/base'
 
 export const defineUpdateModal = defineComponent({
@@ -20,12 +20,15 @@ export const defineUpdateModal = defineComponent({
     'delete:image'
   ],
 
-  setup(props, { emit }){
+  setup(props, { emit }) {
     const parent = ref<Maybe<ICategory>>(null)
     const updates = ref<Partial<ICategoryModel>>({})
     const files = ref<Maybe<any>>([])
 
-    watch(files, to => console.log(to))
+    watch(() => props.item, (to: ICategory) => {
+      parent.value = to
+      console.log(to)
+    })
 
     const onUpdate = (validate) => {
       validate()
@@ -49,67 +52,67 @@ export const defineUpdateModal = defineComponent({
     }
 
     const computedTitleProp = computed<string | undefined>({
-      get(){
+      get() {
         return updates.value?.title || props.item?.title
       },
-      set(val){
+      set(val) {
         updates.value.title = val
       }
     })
 
     const computedUrlProp = computed<string | undefined>({
-      get(){
+      get() {
         return updates.value?.url || props.item?.url
       },
-      set(val){
+      set(val) {
         updates.value.url = val
       }
     })
 
     const computedSeoTitleProp = computed<string | undefined>({
-      get(){
+      get() {
         return updates.value?.seo?.title || props.item?.seo.title!
       },
-      set(val){
+      set(val) {
         if (!updates.value.seo) updates.value.seo = props.item!.seo
         updates.value.seo.title = val
       }
     })
 
     const computedSeoDescProp = computed<string | undefined>({
-      get(){
+      get() {
         return updates.value?.seo?.description || props.item?.seo.description!
       },
-      set(val){
+      set(val) {
         if (!updates.value.seo) updates.value.seo = props.item!.seo
         updates.value.seo!.description = val
       }
     })
 
     const computedSeoKeywordsProp = computed<string | undefined>({
-      get(){
+      get() {
         return updates.value?.seo?.keywords || props.item?.seo.keywords!
       },
-      set(val){
+      set(val) {
         if (!updates.value.seo) updates.value.seo = props.item!.seo
         updates.value.seo.keywords = val
       }
     })
 
     const computedOrderProp = computed<number | undefined>({
-      get(){
+      get() {
         return updates.value?.order || props.item?.order
       },
-      set(val){
+      set(val) {
         updates.value.order = val
       }
     })
 
     const computedParentProp = computed<Maybe<ICategory>>({
-      get(){
+      get() {
         return parent.value
       },
-      set(val: ICategory){
+      set(val: ICategory) {
         parent.value = val
         updates.value.parent = parent.value._id
       }

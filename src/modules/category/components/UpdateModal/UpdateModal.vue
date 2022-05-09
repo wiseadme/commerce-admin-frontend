@@ -86,13 +86,14 @@
           <v-row>
             <v-col xl="6">
               <v-select
+                v-if="item"
                 v-model="computedParentProp"
                 label="Родительская категория"
                 :items="categories"
                 :disabled="!categories"
                 color="#272727"
                 text-color="#272727"
-                value-key="title"
+                value-key="parent.title"
               />
             </v-col>
             <v-col xl="6">
