@@ -1,6 +1,6 @@
 import { defineComponent, ref, computed } from 'vue'
 
-export const defineCreateModal = defineComponent({
+export const categoryCreateModal = defineComponent({
   props: {
     modelValue: Boolean,
     categories: {

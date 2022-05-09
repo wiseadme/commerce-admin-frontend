@@ -32,35 +32,9 @@ export default defineComponent({
   <v-layout column>
     <v-row class="pa-1">
       <v-col
-        xl="4"
-        lg="6"
-        md="9"
-        sm="12"
+        cols="12"
       >
-        <v-card
-          class="elevation-3"
-          width="100%"
-          color="#ffffff"
-        >
-          <v-card-title>
-            <h2>Создание продукта</h2>
-          </v-card-title>
-          <v-card-content>
-            <v-text-field
-              v-model="name"
-              label="Название"
-            />
-            <v-text-field
-              v-model="price"
-              label="Цена"
-              type="number"
-            />
-            <v-select
-              label="категории"
-              :items="categories"
-            />
-          </v-card-content>
-        </v-card>
+        <v-data-table></v-data-table>
       </v-col>
     </v-row>
   </v-layout>

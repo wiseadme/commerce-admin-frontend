@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { defineUpdateModal } from './define-update-modal'
+  import { categoryCreateModal } from './category-create-modal'
 
-  export default defineUpdateModal
+  export default categoryCreateModal
 </script>
 <template>
   <v-modal
@@ -16,7 +16,9 @@
         width="100%"
         color="#272727"
       >
-        <v-card-title class="card-title green--text text--base">
+        <v-card-title
+          class="card-title green--text text--base"
+        >
           Создание категории
         </v-card-title>
         <v-card-content
@@ -24,22 +26,24 @@
           style="max-height: 50vh; overflow: auto"
         >
           <v-row>
-            <v-col xl="6">
+            <v-col
+              xl="6"
+            >
               <v-text-field
                 v-model="computedTitleProp"
                 label="название"
                 color="#272727"
                 text-color="#272727"
-                :rules="[(val) => !!val || 'Required']"
               />
             </v-col>
-            <v-col xl="6">
+            <v-col
+              xl="6"
+            >
               <v-text-field
                 v-model="computedUrlProp"
                 label="url категории"
                 color="#272727"
                 text-color="#272727"
-                :rules="[(val) => !!val || 'Required']"
               />
             </v-col>
           </v-row>
@@ -50,7 +54,6 @@
                 label="seo title"
                 color="#272727"
                 text-color="#272727"
-                :rules="[(val) => !!val || 'Required']"
               />
             </v-col>
             <v-col xl="6">
@@ -59,7 +62,6 @@
                 label="seo description"
                 color="#272727"
                 text-color="#272727"
-                :rules="[(val) => !!val || 'Required']"
               />
             </v-col>
           </v-row>
@@ -70,7 +72,6 @@
                 label="seo keywords"
                 color="#272727"
                 text-color="#272727"
-                :rules="[(val) => !!val || 'Required']"
               />
             </v-col>
             <v-col xl="6">
@@ -82,71 +83,35 @@
                 type="number"
               />
             </v-col>
-          </v-row>
-          <v-row>
-            <v-col xl="6">
+            <v-col xl="12">
               <v-select
                 v-model="computedParentProp"
                 label="Родительская категория"
                 :items="categories"
-                :disabled="!categories"
+                :disabled="!categories.length"
                 color="#272727"
+                active-class="green white--text text--white"
                 text-color="#272727"
                 value-key="title"
               />
-            </v-col>
-            <v-col xl="6">
-              <v-file-input
-                v-model:value="files"
-                label="загрузите изображения"
-                color="#272727"
-                text-color="#272727"
-                chip-color="green"
-                :disabled="!!item && !!item.image"
-                @update:value="onLoadImage"
-                @delete="onDeleteImage"
-              />
-            </v-col>
-          </v-row>
-          <v-row v-if="item && item.image">
-            <v-col>
-              <v-card
-                color="white"
-                width="200"
-                style="position: relative"
-                class="elevation-2"
-              >
-                <v-icon
-                  style="position: absolute; right: 10px; top: 10px"
-                  color="#272727"
-                  clickable
-                  @click="onDeleteImage(item.image)"
-                >
-                  fas fa-times
-                </v-icon>
-                <v-card-content>
-                  <img
-                    style="width:100%"
-                    :src="'http://anar.com' + item.image"
-                  >
-                </v-card-content>
-              </v-card>
             </v-col>
           </v-row>
         </v-card-content>
         <v-card-actions>
           <v-button
             color="white"
+            elevation="3"
             width="120"
             outlined
-            @click="onUpdate(validate)"
+            @click="onSend(validate)"
           >
             сохранить
           </v-button>
           <v-button
             color="warning"
-            class="ml-3"
+            class="ml-4"
             width="120"
+            elevation="3"
             outlined
             @click="$emit('update:modelValue', false)"
           >
@@ -157,3 +122,9 @@
     </v-form>
   </v-modal>
 </template>
+<style lang="scss">
+  .card-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+  }
+</style>

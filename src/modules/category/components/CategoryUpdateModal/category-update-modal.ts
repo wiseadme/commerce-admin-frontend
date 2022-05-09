@@ -1,7 +1,7 @@
 import { computed, defineComponent, PropType, watch, ref } from 'vue'
 import { Maybe } from 'vueland/dist/types/base'
 
-export const defineUpdateModal = defineComponent({
+export const categoryUpdateModal = defineComponent({
   name: 'update-modal',
   props: {
     modelValue: Boolean,

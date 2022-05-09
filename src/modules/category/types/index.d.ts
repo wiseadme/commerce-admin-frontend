@@ -18,7 +18,7 @@ declare type ICategory = {
   _id: string
   title: string
   url: string
-  image: string
+  image: Maybe<string>
   parent: ICategory
   children: Array<ICategory>
   order: number

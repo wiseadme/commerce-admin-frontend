@@ -3,13 +3,13 @@
   import { service } from '@modules/category/service/category.service'
   import { CategoryModel } from '@modules/category/model/category.model'
 
-  import { CreateModal } from '../components/CreateModal'
-  import { UpdateModal } from '../components/UpdateModal'
+  import { CategoryCreateModal } from '../components/CategoryCreateModal'
+  import { CategoryUpdateModal } from '../components/CategoryUpdateModal'
 
   export default defineComponent({
     components: {
-      CreateModal,
-      UpdateModal
+      CategoryCreateModal,
+      CategoryUpdateModal
     },
 
     async setup(){
@@ -38,8 +38,8 @@
       const onDeleteImage = ({ id, url }) => {
         service.deleteCategoryImage(id, url)
           .then(() => {
-            updates.value.image = null
-            currentItem.value.image = null
+            updates.value.image = undefined
+            currentItem.value!.image = null
           })
           .catch((err) => console.log(err))
       }
@@ -233,7 +233,7 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <create-modal
+    <category-create-modal
       v-model="showCreateModal"
       v-model:title="model.title"
       v-model:url="model.url"
@@ -246,7 +246,7 @@
       :categories="service.store.state.categories"
       @send="onSend"
     />
-    <update-modal
+    <category-update-modal
       v-model="showUpdateModal"
       :item="currentItem"
       :categories="service.store.state.categories"
