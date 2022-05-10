@@ -45,15 +45,38 @@ class Service implements ICategoryService {
     return this._store.create
   }
 
-  async updateHandler(update: Partial<ICategory>){
-    this._updates.value = { ...update, ...this._updates.value }
+  async updateOldParent(){
+    const oldParentId = this._current.value?.parent._id
+    const parent = this.categories!.find(c => c._id === oldParentId)
+
+    const children = parent?.children.filter(
+      it => it._id !== this._current.value!._id
+    )
+
+    const update = {
+      _id: parent?._id,
+      children: children?.map(c => c._id)
+    }
+
+    await this.updateCategory(update as any)
+  }
+
+  updateHandler(update: Partial<ICategoryModel>){
+    this._updates.value = Object.assign({}, update, this._updates.value)
 
     if (!Object.keys(this._updates.value).length) return
 
     this._updates.value._id = this._current.value!._id
 
-    this._current.value = await this.updateCategory(this._updates.value)
-    this._updates.value = {}
+    this.updateCategory(this._updates.value)
+      .then(async (ctg) => {
+        if (update.parent) await this.updateOldParent()
+        this._current.value = ctg
+        this._updates.value = {}
+      })
+      .then(() => {
+        this.updateParentCategory(this._current.value!)
+      })
   }
 
   async uploadImageHandler(files){
@@ -82,7 +105,7 @@ class Service implements ICategoryService {
     this._current.value!.image = null
   }
 
-  setAsCurrent(row: ICategory) {
+  setAsCurrent(row: ICategory){
     this._current.value = row
   }
 

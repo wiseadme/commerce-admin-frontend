@@ -14,6 +14,7 @@
       <v-card
         color="#272727"
         width="100%"
+        class="elevation-5"
       >
         <v-card-title class="green--text text--base">
           <h3>Создание продукта</h3>
@@ -41,68 +42,97 @@
                   />
                 </v-col>
               </v-row>
-              <v-row
-                no-gutter
-              >
-                <h3>Описание</h3>
+              <v-row no-gutter>
                 <v-col
                   class="elevation-2 white"
                 >
-                  <text-editor></text-editor>
+                  <v-card width="100%">
+                    <v-card-title>
+                      <h3>Описание товара</h3>
+                    </v-card-title>
+                    <v-card-content>
+                      <text-editor></text-editor>
+                    </v-card-content>
+                  </v-card>
                 </v-col>
               </v-row>
             </v-col>
             <v-col xl="4">
               <v-row no-gutter>
-                <span class="mb-2">
-                  Категории
-                </span>
                 <v-col
                   xl="12"
-                  style="height: 300px"
-                  class="elevation-2"
+                  class="elevation-2 pt-2 white"
                 >
-                  <template
-                    v-for="it in categories"
-                    :key="it._id"
-                  >
-                    <v-group
-                      v-if="it.children.length"
-                      :title="it.title"
-                      active-class="green--text text--base grey lighten-2"
-                    >
-                      <v-list
-                        active
-                        multiple
+                  <v-card width="100%">
+                    <v-card-title>
+                      <h3>
+                        Категории
+                      </h3>
+                    </v-card-title>
+                    <v-card-content>
+                      <template
+                        v-for="it in categories"
+                        :key="it._id"
                       >
-                        <v-list-item
-                          v-for="c in it.children"
-                          :key="c._id"
-                          :class="{'green white--text text--base': ctgMap.get(c._id)}"
-                          @click="toggleCategory(c)"
+                        <v-group
+                          v-if="it.children.length"
+                          :title="it.title"
+                          active-class="grey lighten-2"
+                          class="elevation-2"
                         >
-                          <v-list-item-content>
-                            <v-list-item-title>
-                              {{ c.title }}
-                            </v-list-item-title>
-                          </v-list-item-content>
-                        </v-list-item>
-                      </v-list>
-                    </v-group>
-                    <v-list
-                      v-else-if="!it.parent && !it.children.length"
-                      active
-                      multiple
-                    >
-                      <v-list-item>
-                        <v-list-item-content>
-                          <v-list-item-title>
-                            {{ it.title }}
-                          </v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-list>
-                  </template>
+                          <v-list>
+                            <v-list-item
+                              v-for="c in it.children"
+                              :key="c._id"
+                              :class="[{'green white--text text--base': ctgMap.get(c)}]"
+                              @click="toggleCategory(c)"
+                            >
+                              <v-list-item-content>
+                                <v-list-item-title>
+                                  {{ c.title }}
+                                </v-list-item-title>
+                              </v-list-item-content>
+                            </v-list-item>
+                          </v-list>
+                        </v-group>
+                        <v-list
+                          v-else-if="!it.parent && !it.children.length"
+                          active
+                          multiple
+                          class="elevation-2"
+                          active-class="green white--text text--base"
+                        >
+                          <v-list-item>
+                            <v-list-item-content>
+                              <v-list-item-title>
+                                {{ it.title }}
+                              </v-list-item-title>
+                            </v-list-item-content>
+                          </v-list-item>
+                        </v-list>
+                      </template>
+                    </v-card-content>
+                  </v-card>
+                </v-col>
+                <v-col class="white mt-2 elevation-2">
+                  <v-card>
+                    <v-card-title>
+                      <h3>Атрибуты</h3>
+                    </v-card-title>
+                    <v-card-subtitle>
+                      данный раздел актуален только после сохранения товара
+                    </v-card-subtitle>
+                  </v-card>
+                </v-col>
+                <v-col class="white mt-2 elevation-2">
+                  <v-card>
+                    <v-card-title>
+                      <h3>Варианты</h3>
+                    </v-card-title>
+                    <v-card-subtitle>
+                      данный раздел актуален только после сохранения товара
+                    </v-card-subtitle>
+                  </v-card>
                 </v-col>
               </v-row>
             </v-col>

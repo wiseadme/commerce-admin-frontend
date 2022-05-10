@@ -10,15 +10,6 @@ export const productCreateModal = defineComponent({
     categories: Array
   },
   emits: [
-    'update:modelValue',
-    'update:title',
-    'update:url',
-    'update:image',
-    'update:parent',
-    'update:order',
-    'update:seoTitle',
-    'update:seoDescription',
-    'update:seoKeywords',
     'send',
     'upload'
   ],
@@ -27,10 +18,10 @@ export const productCreateModal = defineComponent({
     const ctgMap: Ref<Map<string, ICategory>> = ref(new Map())
 
     const toggleCategory = (ctg) => {
-      if (ctgMap.value.get(ctg._id)) {
-        ctgMap.value.delete(ctg._id)
+      if (ctgMap.value.get(ctg)) {
+        ctgMap.value.delete(ctg)
       } else {
-        ctgMap.value.set(ctg._id, ctg)
+        ctgMap.value.set(ctg, ctg)
       }
     }
 

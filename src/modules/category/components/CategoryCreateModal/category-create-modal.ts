@@ -35,7 +35,9 @@ export const categoryCreateModal = defineComponent({
     const parent = ref<Maybe<ICategory>>(null)
 
     const onSend = (validate) => {
-      validate().then(() => emit('send'))
+      validate()
+        .then(() => emit('send'))
+        .then(() => parent.value = null)
     }
 
     const computedTitleProp = computed<string | undefined>({
