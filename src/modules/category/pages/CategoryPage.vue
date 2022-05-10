@@ -3,49 +3,55 @@
   import { useCategoryService } from '@modules/category/service/category.service'
   import { CategoryModel } from '@modules/category/model/category.model'
 
-  import { CategoryCreateModal } from '../components/CategoryCreateModal'
-  import { CategoryUpdateModal } from '../components/CategoryUpdateModal'
+  import { CategoryActionsModal } from '../components/CategoryActionsModal'
 
   export default defineComponent({
     components: {
-      CategoryCreateModal,
-      CategoryUpdateModal
+      CategoryActionsModal
     },
 
     async setup(){
-      const model = ref<ICategoryModel>(CategoryModel.create())
+      const model = ref<ICategoryModel>(CategoryModel.create({}))
 
       const showCreateModal = ref<boolean>(false)
-      const showUpdateModal = ref<boolean>(false)
 
       const service = useCategoryService()
 
       const onEdit = (row) => {
         service.setAsCurrent(row)
-        showUpdateModal.value = true
+        model.value = CategoryModel.create(row)
+        showCreateModal.value = true
       }
 
       const onUploadImage = (files) => {
         service.uploadImageHandler(files)
       }
 
-      const onDeleteImage = ({ id, url }) => {
-        service.deleteImageHandler(id, url)
+      const onDeleteImage = (url) => {
+        service.deleteImageHandler(url)
+          .then(() => model.value.image = null)
       }
 
       const onDeleteCategory = (row) => {
         service.deleteCategory(row)
       }
 
+      const onAddNew = () => {
+        showCreateModal.value = true
+        service.setAsCurrent(null)
+        model.value = CategoryModel.create({})
+      }
+
       const onSend = () => {
         service.createCategory(model.value)
-          .then(ctg => service.updateParentCategory(ctg))
+          .then(ctg => service.updateParentChildren(ctg))
           .then(() => model.value = CategoryModel.create())
           .then(() => showCreateModal.value = false)
       }
 
-      const onUpdate = (update) => {
-        service.updateHandler(update)
+      const onUpdate = async (update) => {
+        const ctg = await service.updateHandler(update)
+        model.value = CategoryModel.create(ctg!)
       }
 
       const cols = ref([
@@ -112,10 +118,10 @@
 
       return {
         cols,
-        showUpdateModal,
         showCreateModal,
         model,
         service,
+        onAddNew,
         onEdit,
         onSend,
         onDeleteImage,
@@ -163,7 +169,7 @@
                   color="green"
                   elevation="5"
                   outlined
-                  @click="showCreateModal = true"
+                  @click="onAddNew"
                 >
                   <v-icon
                     size="14"
@@ -213,7 +219,7 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <category-create-modal
+    <category-actions-modal
       v-model="showCreateModal"
       v-model:title="model.title"
       v-model:url="model.url"
@@ -224,15 +230,11 @@
       v-model:parent="model.parent"
       v-model:order="model.order"
       :categories="service.categories"
+      :is-update="!!service.current"
       @send="onSend"
-    />
-    <category-update-modal
-      v-model="showUpdateModal"
-      :item="service.current"
-      :categories="service.categories"
+      @update="onUpdate"
       @delete:image="onDeleteImage"
       @upload:image="onUploadImage"
-      @update="onUpdate"
     />
   </v-layout>
 </template>

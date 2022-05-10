@@ -8,8 +8,8 @@ declare interface ICategoryModel {
   title: string
   url: string
   image: Maybe<string>
-  parent: Maybe<string>
-  children: Maybe<Array<ICategoryModel>>
+  parent: Maybe<ICategory>
+  children: Maybe<Array<ICategory>>
   order: number
   seo: CategorySeo
 }
@@ -40,5 +40,5 @@ declare interface ICategoryActions {
 
 declare interface ICategoryService {
   createCategory: (category: ICategoryModel) => void
-  updateParentCategory: (category: ICategory) => Promise<ICategory> | undefined
+  updateParentChildren: (category: ICategory) => Promise<ICategory> | undefined
 }
