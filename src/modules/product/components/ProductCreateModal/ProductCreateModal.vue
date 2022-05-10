@@ -21,6 +21,7 @@
         </v-card-title>
         <v-card-content
           class="grey lighten-3"
+          width="100%"
           style="height: 70vh; max-height: 70vh; overflow: auto"
         >
           <v-row>
@@ -115,7 +116,9 @@
                   </v-card>
                 </v-col>
                 <v-col class="white mt-2 elevation-2">
-                  <v-card>
+                  <v-card
+                    width="100%"
+                  >
                     <v-card-title>
                       <h3>Атрибуты</h3>
                     </v-card-title>
@@ -125,7 +128,9 @@
                   </v-card>
                 </v-col>
                 <v-col class="white mt-2 elevation-2">
-                  <v-card>
+                  <v-card
+                    width="100%"
+                  >
                     <v-card-title>
                       <h3>Варианты</h3>
                     </v-card-title>
