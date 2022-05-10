@@ -19,10 +19,6 @@ class Service implements ICategoryService {
     return this._current.value
   }
 
-  set current(val){
-    this._current.value = val
-  }
-
   get updates(){
     return this._updates.value
   }
@@ -33,10 +29,6 @@ class Service implements ICategoryService {
 
   get parentChildrenIds(){
     return this._parent!.children.map(c => c._id)
-  }
-
-  set updates(val){
-    this._updates.value = val
   }
 
   get categories(){
@@ -68,7 +60,7 @@ class Service implements ICategoryService {
   }
 
   setAsCurrent(category: Maybe<ICategory>){
-    this.current = category
+    this._current.value = category
     category?.parent && this.setParent()
   }
 
@@ -87,12 +79,10 @@ class Service implements ICategoryService {
   async updateOldParent(){
     this.removeFromParentChildren()
 
-    const update = {
+    await this.updateCategory({
       _id: this.parent?._id,
       children: this.parentChildrenIds
-    }
-
-    await this.updateCategory(update as any)
+    })
   }
 
   async deleteCategoryHandler(category){
@@ -100,27 +90,25 @@ class Service implements ICategoryService {
 
     this.removeFromParentChildren()
 
-    const updates = {
+    return this.updateCategory({
       _id: this.parent!._id,
       children: this.parentChildrenIds
-    }
-
-    return this.updateCategory(updates)
+    })
   }
 
   async updateHandler(update: Partial<ICategoryModel>){
-    this.updates = Object.assign({}, update, this.updates)
+    this._updates.value = Object.assign({}, update, this.updates)
 
     if (!Object.keys(this.updates).length) return
 
-    this.updates._id = this.current!._id
+    this._updates.value._id = this.current!._id
 
     await this.updateCategory(this.updates)
       .then(async (ctg) => {
         if (this._parent) await this.updateOldParent()
 
         this.setAsCurrent(ctg)
-        this.updates = {}
+        this._updates.value = {}
       })
       .then(() => this.updateParent(this.current!))
 

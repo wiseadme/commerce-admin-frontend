@@ -113,7 +113,7 @@ export const categoryActionsModal = defineComponent({
 
     const computedParentProp = computed<Maybe<ICategory>>({
       get(){
-        return parent.value
+        return props.parent ?  parent.value : null
       },
       set(val: ICategory){
         parent.value = val
@@ -125,8 +125,6 @@ export const categoryActionsModal = defineComponent({
     watch(() => props.parent, (to: ICategory) => {
       !!to && (parent.value = to)
     }, { immediate: true })
-
-    watch(() => props.categories, to => console.log(to, 'sssss'), { immediate: true })
 
     const onSend = (validate) => {
       validate()
