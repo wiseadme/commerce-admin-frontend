@@ -1,1 +1,3 @@
-export const productService = () => {}
+export class Service {
+
+}

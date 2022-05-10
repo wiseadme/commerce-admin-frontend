@@ -21,7 +21,7 @@
         </v-card-title>
         <v-card-content
           class="grey lighten-3"
-          style="max-height: 50vh; overflow: auto"
+          style="height: 70vh; max-height: 70vh; overflow: auto"
         >
           <v-row>
             <v-col xl="6">

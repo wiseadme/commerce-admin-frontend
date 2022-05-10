@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { AppHeader } from '@shared/components/AppHeader'
-import { AppNavigation } from '@shared/components/AppNavigation'
+import { AppHeader } from '@app/components/AppHeader'
+import { AppNavigation } from '@app/components/AppNavigation'
 
 export default defineComponent({
   components: { AppHeader, AppNavigation },

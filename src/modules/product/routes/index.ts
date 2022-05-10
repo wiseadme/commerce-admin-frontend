@@ -8,7 +8,7 @@ export const productRoutes = [
     children: [
       {
         path: 'create',
-        component: () => import('@modules/product/pages/CreateProduct.vue'),
+        component: () => import('@modules/product/pages/ProductPage.vue'),
         name: 'create-product',
       },
     ],
