@@ -10,6 +10,7 @@ export const productCreateModal = defineComponent({
     categories: Array
   },
   emits: [
+    'update:modelValue',
     'send',
     'upload'
   ],

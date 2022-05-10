@@ -32,8 +32,8 @@
           .then(() => model.value.image = null)
       }
 
-      const onDeleteCategory = (row) => {
-        service.deleteCategory(row)
+      const onDeleteCategory = (category) => {
+        service.deleteCategory(category)
       }
 
       const onAddNew = () => {
@@ -43,8 +43,7 @@
       }
 
       const onSend = () => {
-        service.createCategory(model.value)
-          .then(ctg => service.updateParentChildren(ctg))
+        service.createCategoryHandler(model.value)
           .then(() => model.value = CategoryModel.create())
           .then(() => showCreateModal.value = false)
       }

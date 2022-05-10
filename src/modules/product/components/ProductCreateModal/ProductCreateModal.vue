@@ -78,7 +78,6 @@
                         <v-group
                           v-if="it.children.length"
                           :title="it.title"
-                          active-class="grey lighten-2"
                           class="elevation-2"
                         >
                           <v-list>
@@ -125,6 +124,7 @@
                     <v-card-subtitle>
                       данный раздел актуален только после сохранения товара
                     </v-card-subtitle>
+                    <v-card-content></v-card-content>
                   </v-card>
                 </v-col>
                 <v-col class="white mt-2 elevation-2">
@@ -137,6 +137,7 @@
                     <v-card-subtitle>
                       данный раздел актуален только после сохранения товара
                     </v-card-subtitle>
+                    <v-card-content></v-card-content>
                   </v-card>
                 </v-col>
               </v-row>

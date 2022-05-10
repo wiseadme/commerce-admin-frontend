@@ -4,17 +4,39 @@ import { Store } from 'vuezone'
 
 class Service implements ICategoryService {
   private _store: Store<ICategoryState, ICategoryActions>
-  private _updates: Ref<Partial<ICategory>>
+  private _updates: Ref<Partial<ICategoryUpdates>>
   private _current: Ref<Maybe<ICategory>>
+  private _parent: Maybe<ICategory>
 
   constructor(store){
     this._store = store
     this._current = ref(null)
     this._updates = ref({})
+    this._parent = null
   }
 
   get current(){
     return this._current.value
+  }
+
+  set current(val){
+    this._current.value = val
+  }
+
+  get updates(){
+    return this._updates.value
+  }
+
+  get parent(){
+    return this._parent
+  }
+
+  get parentChildrenIds(){
+    return this._parent!.children.map(c => c._id)
+  }
+
+  set updates(val){
+    this._updates.value = val
   }
 
   get categories(){
@@ -45,26 +67,29 @@ class Service implements ICategoryService {
     return this._store.create
   }
 
-  setAsCurrent(row: Maybe<ICategory>){
-    this._current.value = row
+  setAsCurrent(category: Maybe<ICategory>){
+    this.current = category
+    category?.parent && this.setParent()
   }
 
-  getParent(category) {
-    return this.categories!.find(
-      (c) => c._id === category.parent!._id
+  setParent(){
+    this._parent = this.categories!.find(
+      (c) => c._id === this.current!.parent!._id
+    )!
+  }
+
+  removeFromParentChildren(){
+    this._parent!.children = this._parent!.children.filter(
+      it => it._id !== this.current!._id
     )
   }
 
   async updateOldParent(){
-    const parent = this.getParent(this._current.value)
-
-    const children = parent?.children.filter(
-      it => it._id !== this._current.value!._id
-    )
+    this.removeFromParentChildren()
 
     const update = {
-      _id: parent?._id,
-      children: children?.map(c => c._id)
+      _id: this.parent?._id,
+      children: this.parentChildrenIds
     }
 
     await this.updateCategory(update as any)
@@ -73,33 +98,31 @@ class Service implements ICategoryService {
   async deleteCategoryHandler(category){
     await this.deleteCategory(category)
 
-    const parent = this.getParent(category)
+    this.removeFromParentChildren()
 
     const updates = {
-      _id: parent!._id,
-      children: parent!.children.filter(it => it._id !== category._id)
+      _id: this.parent!._id,
+      children: this.parentChildrenIds
     }
 
     return this.updateCategory(updates)
   }
 
   async updateHandler(update: Partial<ICategoryModel>){
-    this._updates.value = Object.assign({}, update, this._updates.value)
+    this.updates = Object.assign({}, update, this.updates)
 
-    if (!Object.keys(this._updates.value).length) return
+    if (!Object.keys(this.updates).length) return
 
-    this._updates.value._id = this._current.value!._id
+    this.updates._id = this.current!._id
 
-    await this.updateCategory(this._updates.value)
+    await this.updateCategory(this.updates)
       .then(async (ctg) => {
-        if (update.parent) await this.updateOldParent()
+        if (this._parent) await this.updateOldParent()
 
-        this._current.value = ctg
-        this._updates.value = {}
+        this.setAsCurrent(ctg)
+        this.updates = {}
       })
-      .then(() => {
-        this.updateParentChildren(this._current.value!)
-      })
+      .then(() => this.updateParent(this.current!))
 
     return this.current
   }
@@ -113,39 +136,41 @@ class Service implements ICategoryService {
     formData.append('image', file)
 
     const asset: any = await this.uploadCategoryImage(
-      this._current.value!._id,
+      this.current!._id,
       file.name,
       formData
     )
 
     if (asset && asset.url) {
-      this._updates.value.image = asset.url
+      this.updates.image = asset.url
     }
+  }
+
+  createCategoryHandler(model){
+    return this.createCategory(model)
+      .then(ctg => this.updateParent(ctg))
   }
 
   async deleteImageHandler(url){
-    const id = this._current.value!._id
+    const id = this.current!._id
     await this.deleteCategoryImage(id, url)
 
-    this._updates.value.image = null
-    this._current.value!.image = null
+    this.updates.image = null
+    this.current!.image = null
   }
 
-  updateParentChildren(category: ICategory){
+  updateParent(category: ICategory){
     if (!category.parent) return
 
-    const parent = this.getParent(category)
+    this.removeFromParentChildren()
+    const updates: any = {}
 
-    parent!.children = parent!.children.filter(
-      it => it._id !== category._id
-    )
-
-    parent!.children.push(category)
-
-    const updates = {
-      _id: parent!._id,
-      children: parent!.children
+    if (this._parent?.children) {
+      this._parent!.children.push(category)
+      updates.children = this.parentChildrenIds
     }
+
+    updates._id = this._parent!._id
 
     return this.updateCategory(updates)
   }
