@@ -124,6 +124,7 @@ export const categoryActionsModal = defineComponent({
 
     watch(() => props.parent, (to: ICategory) => {
       !!to && (parent.value = to)
+      console.log(to, 'in watcher')
     }, { immediate: true })
 
     const onSend = (validate) => {
