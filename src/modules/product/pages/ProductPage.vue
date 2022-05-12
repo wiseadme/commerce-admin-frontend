@@ -23,11 +23,12 @@
 </script>
 <template>
   <v-layout column>
-    <v-row class="pa-1">
+    <v-row>
       <v-col
         cols="12"
       >
         <v-data-table
+          class="elevation-2"
           :header-options="{
             color: 'green',
             contentColor: '#ffffff',
