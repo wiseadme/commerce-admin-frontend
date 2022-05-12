@@ -65,9 +65,8 @@ class Service implements ICategoryService {
   }
 
   async updateOldParent(){
-    console.log('old parent', this._parent, this._current.value)
     this.removeFromParentChildren()
-    console.log('old parent after', this._parent, this._current.value)
+
     await this.updateCategory({
       _id: this._parent?._id,
       children: this.parentChildrenIds
@@ -121,6 +120,8 @@ class Service implements ICategoryService {
     if (asset && asset.url) {
       this._updates.value.image = asset.url
     }
+
+    return asset.url
   }
 
   createCategoryHandler(model){

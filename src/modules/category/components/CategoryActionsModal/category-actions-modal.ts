@@ -124,8 +124,9 @@ export const categoryActionsModal = defineComponent({
 
     watch(() => props.parent, (to: ICategory) => {
       !!to && (parent.value = to)
-      console.log(to, 'in watcher')
     }, { immediate: true })
+
+    watch(() => props.image, () => files.value = [])
 
     const onSend = (validate) => {
       validate()
@@ -150,6 +151,7 @@ export const categoryActionsModal = defineComponent({
 
     const onDeleteImage = () => {
       emit('delete:image', computedImageProp.value)
+
     }
 
     const onLoadImage = event => {

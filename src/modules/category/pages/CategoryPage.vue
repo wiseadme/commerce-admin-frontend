@@ -28,6 +28,7 @@
 
       const onUploadImage = (files) => {
         service.uploadImageHandler(files)
+          .then((url) => model.value.image = url)
       }
 
       const onDeleteImage = (url) => {
