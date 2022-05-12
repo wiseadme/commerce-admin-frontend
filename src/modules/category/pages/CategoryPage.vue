@@ -13,14 +13,17 @@
     async setup(){
       const model = ref<ICategoryModel>(CategoryModel.create({}))
 
-      const showCreateModal = ref<boolean>(false)
+      const isEditMode = ref<boolean>(false)
+      const showModal = ref(false)
 
       const service = useCategoryService()
+
 
       const onEdit = (row) => {
         service.setAsCurrent(row)
         model.value = CategoryModel.create(row)
-        showCreateModal.value = true
+        isEditMode.value = true
+        showModal.value = true
       }
 
       const onUploadImage = (files) => {
@@ -37,20 +40,24 @@
       }
 
       const onAddNew = () => {
-        showCreateModal.value = true
+        showModal.value = true
+        isEditMode.value = false
         service.setAsCurrent(null)
         model.value = CategoryModel.create({})
       }
 
       const onSend = () => {
         service.createCategoryHandler(model.value)
-          .then(() => model.value = CategoryModel.create())
-          .then(() => showCreateModal.value = false)
+          .then(() => model.value = CategoryModel.create({}))
+          .then(() => showModal.value = false)
       }
 
       const onUpdate = async (update) => {
         const ctg = await service.updateHandler(update)
         model.value = CategoryModel.create(ctg!)
+
+        showModal.value = false
+        isEditMode.value = false
       }
 
       const cols = ref([
@@ -117,7 +124,8 @@
 
       return {
         cols,
-        showCreateModal,
+        isEditMode,
+        showModal,
         model,
         service,
         onAddNew,
@@ -219,7 +227,7 @@
       </v-col>
     </v-row>
     <category-actions-modal
-      v-model="showCreateModal"
+      v-model="showModal"
       v-model:title="model.title"
       v-model:url="model.url"
       v-model:image="model.image"
@@ -229,7 +237,7 @@
       v-model:parent="model.parent"
       v-model:order="model.order"
       :categories="service.categories"
-      :is-update="!!service.current"
+      :is-update="isEditMode"
       @send="onSend"
       @update="onUpdate"
       @delete:image="onDeleteImage"
