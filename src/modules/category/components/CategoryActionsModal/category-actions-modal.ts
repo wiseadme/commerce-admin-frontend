@@ -8,13 +8,13 @@ export const categoryActionsModal = defineComponent({
     title: String,
     url: String,
     image: String,
-    parent: Object as PropType<ICategory>,
+    parent: [Object, String] as PropType<ICategory | string>,
     order: Number,
     seoTitle: String,
     seoDescription: String,
     seoKeywords: String,
     categories: {
-      type: Array,
+      type: Array as PropType<Array<ICategory>>,
       default: null
     }
   },
@@ -32,13 +32,12 @@ export const categoryActionsModal = defineComponent({
     'delete:image',
     'upload:image',
     'update',
-    'send',
+    'create',
     'upload'
   ],
 
   setup(props, { emit }){
-    const parent = ref<Maybe<ICategory>>(null)
-    const updates = ref<Partial<ICategoryModel>>({})
+    const updates = ref<Partial<ICategoryUpdates>>({})
     const files = ref<Maybe<any>>([])
 
     const computedTitleProp = computed<string | undefined>({
@@ -113,25 +112,19 @@ export const categoryActionsModal = defineComponent({
 
     const computedParentProp = computed<Maybe<ICategory>>({
       get(){
-        return props.parent ?  parent.value : null
+        const id = props.parent
+        return props.parent ? props.categories.find(it => it._id === id)! : null
       },
       set(val: ICategory){
-        parent.value = val
-        if (props.isUpdate) updates.value.parent = val
-        emit('update:parent', val)
+        if (props.isUpdate) updates.value.parent = val._id
+        emit('update:parent', val._id)
       }
     })
-
-    watch(() => props.parent, (to: ICategory) => {
-      !!to && (parent.value = to)
-    }, { immediate: true })
 
     watch(() => props.image, () => files.value = [])
 
     const onSend = (validate) => {
-      validate()
-        .then(() => emit('send'))
-        .then(() => parent.value = null)
+      validate().then(() => emit('create'))
     }
 
     const onUpdate = (validate) => {
@@ -139,7 +132,6 @@ export const categoryActionsModal = defineComponent({
         .then(() => emit('update', updates.value))
         .then(() => {
           updates.value = {}
-          parent.value = null
           files.value = []
         })
     }

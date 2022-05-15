@@ -5,7 +5,7 @@ export const actions = {
   async create(category: ICategory){
     try {
       const { data } = await categoryRepository.create(category)
-      this.state.categories = [...this.state.categories, data.data]
+      this.state.categories = [ ...this.state.categories, data.data ]
       return data.data
     } catch (err) {
       return console.log(err)
@@ -26,7 +26,8 @@ export const actions = {
   async read(id?: string){
     try {
       const { data } = await categoryRepository.read(id)
-      this.state.categories = data.data
+      !id && (this.state.categories = data.data)
+      id && (this.state.category = data.data)
       return data.data
     } catch (err) {
       return console.log(err)

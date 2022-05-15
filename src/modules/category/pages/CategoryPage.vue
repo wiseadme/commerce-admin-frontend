@@ -12,6 +12,7 @@
 
     async setup(){
       const model = ref<ICategoryModel>(CategoryModel.create({}))
+      let updates: ICategoryUpdates = { _id: '' }
 
       const isEditMode = ref<boolean>(false)
       const showModal = ref(false)
@@ -21,7 +22,12 @@
 
       const onEdit = (row) => {
         service.setAsCurrent(row)
+
         model.value = CategoryModel.create(row)
+        model.value.parent = row.parent?._id
+
+        updates!._id = row._id
+
         isEditMode.value = true
         showModal.value = true
       }
@@ -37,7 +43,7 @@
       }
 
       const onDeleteCategory = (category) => {
-        service.deleteCategory(category)
+        service.deleteCategoryHandler(category)
       }
 
       const onAddNew = () => {
@@ -54,7 +60,10 @@
       }
 
       const onUpdate = async (update) => {
-        const ctg = await service.updateHandler(update)
+        updates = { ...updates, ...update }
+
+        const ctg = await service.updateHandler(updates)
+
         model.value = CategoryModel.create(ctg!)
 
         showModal.value = false
@@ -121,7 +130,7 @@
         }
       ])
 
-      await service.getAllCategories()
+      await service.getCategories()
 
       return {
         cols,
@@ -239,7 +248,7 @@
       v-model:order="model.order"
       :categories="service.categories"
       :is-update="isEditMode"
-      @send="onSend"
+      @create="onSend"
       @update="onUpdate"
       @delete:image="onDeleteImage"
       @upload:image="onUploadImage"

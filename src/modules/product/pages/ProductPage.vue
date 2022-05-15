@@ -11,7 +11,7 @@
       const categoryService = useCategoryService()
 
       if (!categoryService.categories) {
-        await categoryService.getAllCategories()
+        await categoryService.getCategories()
       }
 
       return {

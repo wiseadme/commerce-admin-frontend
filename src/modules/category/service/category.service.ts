@@ -5,18 +5,12 @@ import { Store } from 'vuezone'
 class Service implements ICategoryService {
   private _store: Store<ICategoryState, ICategoryActions>
   private _updates: Ref<Partial<ICategoryUpdates>>
-  private _current: Ref<Maybe<ICategory>>
-  private _parent: Maybe<ICategory>
+  private _category: Ref<Maybe<ICategory>>
 
   constructor(store){
     this._store = store
-    this._current = ref(null)
+    this._category = ref(null)
     this._updates = ref({})
-    this._parent = null
-  }
-
-  get parentChildrenIds(){
-    return this._parent!.children.map(c => c._id)
   }
 
   get categories(){
@@ -27,7 +21,7 @@ class Service implements ICategoryService {
     return this._store.update
   }
 
-  get getAllCategories(){
+  get getCategories(){
     return this._store.read
   }
 
@@ -48,59 +42,18 @@ class Service implements ICategoryService {
   }
 
   setAsCurrent(category: Maybe<ICategory>){
-    this._current.value = category
-    category?.parent && this.setParent()
-  }
-
-  setParent(){
-    this._parent = this.categories!.find(
-      (c) => c._id === this._current.value!.parent!._id
-    )!
-  }
-
-  removeFromParentChildren(){
-    this._parent!.children = this._parent!.children.filter(
-      it => it._id !== this._current.value!._id
-    )
-  }
-
-  async updateOldParent(){
-    this.removeFromParentChildren()
-
-    await this.updateCategory({
-      _id: this._parent?._id,
-      children: this.parentChildrenIds
-    })
+    this._category.value = category
   }
 
   async deleteCategoryHandler(category){
     await this.deleteCategory(category)
-
-    this.removeFromParentChildren()
-
-    return this.updateCategory({
-      _id: this._parent!._id,
-      children: this.parentChildrenIds
-    })
   }
 
-  async updateHandler(update: Partial<ICategoryModel>){
-    this._updates.value = Object.assign({}, update, this._updates.value)
-
-    if (!Object.keys(this._updates.value).length) return
-
-    this._updates.value._id = this._current.value!._id
+  async updateHandler(updates: Partial<ICategoryUpdates>){
+    this._updates.value = Object.assign({}, updates, this._updates.value)
 
     await this.updateCategory(this._updates.value)
-      .then(async (ctg) => {
-        if (this._parent) await this.updateOldParent()
-
-        this.setAsCurrent(ctg)
-        this._updates.value = {}
-      })
-      .then(() => this.updateParent(this._current.value!))
-
-    return this._current.value
+    return this.getCategories()
   }
 
   async uploadImageHandler(files){
@@ -112,7 +65,7 @@ class Service implements ICategoryService {
     formData.append('image', file)
 
     const asset: any = await this.uploadCategoryImage(
-      this._current.value!._id,
+      this._category.value!._id,
       file.name,
       formData
     )
@@ -126,32 +79,14 @@ class Service implements ICategoryService {
 
   createCategoryHandler(model){
     return this.createCategory(model)
-      .then(ctg => this.updateParent(ctg))
   }
 
   async deleteImageHandler(url){
-    const id = this._current.value!._id
+    const id = this._category.value!._id
     await this.deleteCategoryImage(id, url)
 
     this._updates.value.image = null
-    this._current.value!.image = null
-  }
-
-  updateParent(category: ICategory){
-    this.setAsCurrent(category)
-    if (!this._parent) return
-
-    if (this._parent?.children) {
-      this.removeFromParentChildren()
-    }
-
-    const updates: any = {}
-    this._parent!.children.push(category)
-
-    updates.children = this.parentChildrenIds
-    updates._id = this._parent!._id
-
-    return this.updateCategory(updates)
+    this._category.value!.image = null
   }
 }
 
