@@ -1,4 +1,4 @@
-import { Rest } from '@shared/services/rest'
+import { Rest } from '@shared/plugins/rest'
 import axios from 'axios'
 
 export const fileApi = new Rest(axios.create({

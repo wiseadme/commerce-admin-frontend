@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Rest } from '@shared/services/rest'
+import { Rest } from '@shared/plugins/rest'
 
 export const rest = new Rest(axios.create({
   headers: {

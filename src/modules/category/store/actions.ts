@@ -5,7 +5,7 @@ export const actions = {
   async create(category: ICategory){
     try {
       const { data } = await categoryRepository.create(category)
-      this.state.categories = [ ...this.state.categories, data.data ]
+      this.state.categories.push(data.data)
       return data.data
     } catch (err) {
       return console.log(err)

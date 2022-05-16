@@ -4,13 +4,11 @@ import { Store } from 'vuezone'
 
 class Service implements ICategoryService {
   private _store: Store<ICategoryState, ICategoryActions>
-  private _updates: Ref<Partial<ICategoryUpdates>>
   private _category: Ref<Maybe<ICategory>>
 
   constructor(store){
     this._store = store
     this._category = ref(null)
-    this._updates = ref({})
   }
 
   get categories(){
@@ -47,12 +45,12 @@ class Service implements ICategoryService {
 
   async deleteCategoryHandler(category){
     await this.deleteCategory(category)
+    return this.getCategories()
   }
 
   async updateHandler(updates: Partial<ICategoryUpdates>){
-    this._updates.value = Object.assign({}, updates, this._updates.value)
+    await this.updateCategory(updates)
 
-    await this.updateCategory(this._updates.value)
     return this.getCategories()
   }
 
@@ -71,7 +69,10 @@ class Service implements ICategoryService {
     )
 
     if (asset && asset.url) {
-      this._updates.value.image = asset.url
+      await this.updateHandler({
+        _id: this._category.value!._id,
+        image: asset.url
+      })
     }
 
     return asset.url
@@ -79,14 +80,14 @@ class Service implements ICategoryService {
 
   createCategoryHandler(model){
     return this.createCategory(model)
+      .then(() => this.getCategories())
   }
 
   async deleteImageHandler(url){
     const id = this._category.value!._id
-    await this.deleteCategoryImage(id, url)
 
-    this._updates.value.image = null
-    this._category.value!.image = null
+    await this.deleteCategoryImage(id, url)
+    await this.updateHandler({ _id: id, image: null })
   }
 }
 

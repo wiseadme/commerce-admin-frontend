@@ -88,7 +88,7 @@
                 v-model="computedParentProp"
                 label="Родительская категория"
                 :items="categories"
-                :disabled="!categories.length"
+                :disabled="categories && !categories.length"
                 color="#272727"
                 active-class="green white--text text--white"
                 text-color="#272727"

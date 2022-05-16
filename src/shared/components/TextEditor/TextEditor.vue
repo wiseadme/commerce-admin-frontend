@@ -5,11 +5,10 @@
 </script>
 <template>
   <quill-editor
-    v-model:content="content"
+    v-model:content="computedContent"
     :toolbar="toolbar"
     content-type="html"
     theme="snow"
-    @text-change="onShow"
   />
 </template>
 <style lang="scss">

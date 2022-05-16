@@ -1,11 +1,22 @@
-import { defineComponent, ref } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 
 export const textEditor = defineComponent({
   name: 'product-text-editor',
   components: { QuillEditor },
-  setup(){
-    const content = ref<string>('')
+  props: {
+    content: String
+  },
+  emits: [ 'update:content' ],
+  setup(props, { emit }){
+    const computedContent = computed({
+      get(){
+        return props.content
+      },
+      set(val){
+        emit('update:content', val)
+      }
+    })
 
     const toolbar = [
       [ 'bold', 'italic', 'underline', 'strike' ],
@@ -24,18 +35,13 @@ export const textEditor = defineComponent({
       // [ { 'font': [] } ],
       [ { 'align': [] } ],
 
-      [ 'clean' ],
+      [ 'clean' ]
       // [ 'link', 'image', 'video' ]
     ]
 
-    const onShow = () => {
-      console.log(content.value)
-    }
-
     return {
-      content,
+      computedContent,
       toolbar,
-      onShow
     }
   }
 })

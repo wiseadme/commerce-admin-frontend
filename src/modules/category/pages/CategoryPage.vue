@@ -118,7 +118,7 @@
           resizeable: true,
           sortable: true,
           filterable: true,
-          format: (row) => row.title
+          format: (row) => row.seo.title
         },
         {
           key: 'order',

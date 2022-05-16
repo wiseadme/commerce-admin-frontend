@@ -74,7 +74,7 @@
     </v-row>
     <product-create-modal
       v-model="showCreateModal"
-      :categories="categoryService.categories"
+      :category-items="categoryService.categories"
     />
   </v-layout>
 </template>

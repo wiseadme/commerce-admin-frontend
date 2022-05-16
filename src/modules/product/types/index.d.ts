@@ -15,16 +15,17 @@ interface IProductVariant {
 }
 
 declare interface IProductModel {
-  name: string,
-  price: number,
-  categories: Array<ICategory>,
-  image?: IProductAsset,
+  name: string
+  price: number
+  description: string
+  categories: Array<ICategory>
+  image: Maybe<IProductAsset>
   seo?: {
-    title?: string,
-    description?: string,
+    title?: string
+    description?: string
     keywords?: string
   },
-  assets?: Array<IProductAsset>,
-  attributes?: Array<IProductAttribute>,
-  variants?: Array<IProductVariant>
+  assets: Maybe<Array<IProductAsset>>
+  attributes: Maybe<Array<IProductAttribute>>
+  variants: Maybe<Array<IProductVariant>>
 }

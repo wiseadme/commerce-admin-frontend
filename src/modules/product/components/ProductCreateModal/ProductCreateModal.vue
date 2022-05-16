@@ -52,7 +52,9 @@
                       <h3>Описание товара</h3>
                     </v-card-title>
                     <v-card-content>
-                      <text-editor></text-editor>
+                      <text-editor
+                        v-model:content="htmlContent"
+                      />
                     </v-card-content>
                   </v-card>
                 </v-col>
@@ -72,7 +74,7 @@
                     </v-card-title>
                     <v-card-content>
                       <template
-                        v-for="it in categories"
+                        v-for="it in categoryItems"
                         :key="it._id"
                       >
                         <v-group
