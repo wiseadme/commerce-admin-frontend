@@ -43,6 +43,24 @@
                   />
                 </v-col>
               </v-row>
+              <v-row>
+                <v-col xl="6">
+                  <v-text-field
+                    label="Количество"
+                    color="#272727"
+                    type="number"
+                    text-color="#272727"
+                  />
+                </v-col>
+                <v-col xl="6">
+                  <v-select
+                    :items="['штук', 'упаковок', 'килограмм', 'грамм']"
+                    label="Единица измерения"
+                    color="#272727"
+                    text-color="#272727"
+                  />
+                </v-col>
+              </v-row>
               <v-row no-gutter>
                 <v-col
                   class="elevation-2 white"

@@ -15,11 +15,11 @@
         {
           title: 'Товары',
           icon: 'fas fa-boxes',
-          path: '/product/create'
+          path: '/product'
         }
       ]
 
-      let current = ref(null)
+      let current = ref<Maybe<number>>(null)
 
       current.value = items.findIndex(it => {
         return it.path === $router.currentRoute.value.path
