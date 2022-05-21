@@ -40,13 +40,15 @@ export const categoryActionsModal = defineComponent({
     const updates = ref<Partial<ICategoryUpdates>>({})
     const files = ref<Maybe<any>>([])
 
+    updates.value.seo = {}
+
     const computedTitleProp = computed<string | undefined>({
       get(){
         return props.title
       },
       set(val){
-        if (props.isUpdate) updates.value.title = val
-        emit('update:title', val)
+        if (props.isUpdate) return updates.value.title = val
+        return emit('update:title', val)
       }
     })
 
@@ -55,8 +57,8 @@ export const categoryActionsModal = defineComponent({
         return props.url
       },
       set(val){
-        if (props.isUpdate) updates.value.url = val
-        emit('update:url', val)
+        if (props.isUpdate) return updates.value.url = val
+        return emit('update:url', val)
       }
     })
 
@@ -65,8 +67,8 @@ export const categoryActionsModal = defineComponent({
         return props.image
       },
       set(val){
-        if (props.isUpdate) updates.value.image = val
-        emit('update:image', val)
+        if (props.isUpdate) return updates.value.image = val
+        return emit('update:image', val)
       }
     })
 
@@ -75,8 +77,8 @@ export const categoryActionsModal = defineComponent({
         return props.seoTitle
       },
       set(val){
-        if (props.isUpdate) updates.value.seo!.title = val
-        emit('update:seoTitle', val)
+        if (props.isUpdate) return updates.value.seo!.title = val
+        return emit('update:seoTitle', val)
       }
     })
 
@@ -85,8 +87,8 @@ export const categoryActionsModal = defineComponent({
         return props.seoDescription
       },
       set(val){
-        if (props.isUpdate) updates.value.seo!.description = val
-        emit('update:seoDescription', val)
+        if (props.isUpdate) return updates.value.seo!.description = val
+        return emit('update:seoDescription', val)
       }
     })
 
@@ -95,8 +97,8 @@ export const categoryActionsModal = defineComponent({
         return props.seoKeywords
       },
       set(val){
-        if (props.isUpdate) updates.value.seo!.keywords = val
-        emit('update:seoKeywords', val)
+        if (props.isUpdate) return updates.value.seo!.keywords = val
+        return emit('update:seoKeywords', val)
       }
     })
 
@@ -105,8 +107,8 @@ export const categoryActionsModal = defineComponent({
         return props.order
       },
       set(val){
-        if (props.isUpdate) updates.value.order = val
-        emit('update:order', val)
+        if (props.isUpdate) return updates.value.order = val
+        return emit('update:order', val)
       }
     })
 
@@ -116,8 +118,8 @@ export const categoryActionsModal = defineComponent({
         return props.parent ? props.categories.find(it => it._id === id)! : null
       },
       set(val: ICategory){
-        if (props.isUpdate) updates.value.parent = val._id
-        emit('update:parent', val._id)
+        if (props.isUpdate) return updates.value.parent = val._id
+        return emit('update:parent', val._id)
       }
     })
 
@@ -143,7 +145,6 @@ export const categoryActionsModal = defineComponent({
 
     const onDeleteImage = () => {
       emit('delete:image', computedImageProp.value)
-
     }
 
     const onLoadImage = event => {

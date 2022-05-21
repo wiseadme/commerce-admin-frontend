@@ -87,7 +87,7 @@ class Service implements ICategoryService {
     const id = this._category.value!._id
 
     await this.deleteCategoryImage(id, url)
-    await this.updateHandler({ _id: id, image: null })
+    return this.updateHandler({ _id: id, image: null })
   }
 }
 

@@ -29,6 +29,7 @@
               <v-row>
                 <v-col xl="6">
                   <v-text-field
+                    v-model="computedName"
                     label="Наименование товара"
                     color="#272727"
                     text-color="#272727"
@@ -36,6 +37,7 @@
                 </v-col>
                 <v-col xl="6">
                   <v-text-field
+                    v-model="computedPrice"
                     label="Цена"
                     color="#272727"
                     text-color="#272727"
@@ -46,6 +48,7 @@
               <v-row>
                 <v-col xl="6">
                   <v-text-field
+                    v-model="computedCount"
                     label="Количество"
                     color="#272727"
                     type="number"
@@ -54,6 +57,7 @@
                 </v-col>
                 <v-col xl="6">
                   <v-select
+                    v-model="computedUnit"
                     :items="['штук', 'упаковок', 'килограмм', 'грамм']"
                     label="Единица измерения"
                     color="#272727"
@@ -71,7 +75,7 @@
                     </v-card-title>
                     <v-card-content>
                       <text-editor
-                        v-model:content="htmlContent"
+                        v-model:content="computedDescription"
                       />
                     </v-card-content>
                   </v-card>
@@ -122,7 +126,7 @@
                           class="elevation-2"
                           active-class="green white--text text--base"
                         >
-                          <v-list-item>
+                          <v-list-item @click="toggleCategory(it)">
                             <v-list-item-content>
                               <v-list-item-title>
                                 {{ it.title }}
