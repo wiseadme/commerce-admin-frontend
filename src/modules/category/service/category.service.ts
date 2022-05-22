@@ -15,6 +15,10 @@ class Service implements ICategoryService {
     return this._store.state.categories
   }
 
+  get category() {
+    return this._category.value
+  }
+
   get updateCategory(){
     return this._store.update
   }
@@ -44,14 +48,13 @@ class Service implements ICategoryService {
   }
 
   async deleteCategoryHandler(category){
-    await this.deleteCategory(category)
-    return this.getCategories()
+    return await this.deleteCategory(category)
+      .then(() => this.getCategories())
   }
 
   async updateHandler(updates: Partial<ICategoryUpdates>){
-    await this.updateCategory(updates)
-
-    return this.getCategories()
+    return await this.updateCategory(updates)
+      .then(() => this.getCategories())
   }
 
   async uploadImageHandler(files){

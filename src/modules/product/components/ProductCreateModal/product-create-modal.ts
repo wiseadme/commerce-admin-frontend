@@ -185,7 +185,6 @@ export const productCreateModal = defineComponent({
         return props.categories!
       },
       set(val){
-        // toggleCategory(val)
         emit('update:categories', val)
       }
     })

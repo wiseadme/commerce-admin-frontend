@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
+  import { defineComponent, ref, computed } from 'vue'
   import { useCategoryService } from '@modules/category/service/category.service'
   import { CategoryModel } from '@modules/category/model/category.model'
+  import { getDifferences, clone } from '@shared/helpers'
 
   import { CategoryActionsModal } from '../components/CategoryActionsModal'
 
@@ -11,22 +12,22 @@
     },
 
     async setup(){
-      const model = ref<ICategoryModel>(CategoryModel.create({}))
-      let updates: ICategoryUpdates = { _id: '' }
+      const categoryModel = ref<ICategoryModel>(CategoryModel.create({}))
+      const categoryUpdates = ref<Maybe<ICategory>>(null)
 
       const isEditMode = ref<boolean>(false)
-      const showModal = ref(false)
+      const showModal = ref<boolean>(false)
 
       const service = useCategoryService()
 
+      const model = computed<Maybe<ICategory> | ICategoryModel>(() => {
+        if (isEditMode.value) return categoryUpdates.value
+        return categoryModel.value
+      })
 
       const onEdit = (row) => {
         service.setAsCurrent(row)
-
-        model.value = CategoryModel.create(row)
-        model.value.parent = row.parent?._id
-
-        updates!._id = row._id
+        categoryUpdates.value = clone(row)
 
         isEditMode.value = true
         showModal.value = true
@@ -34,12 +35,12 @@
 
       const onUploadImage = (files) => {
         service.uploadImageHandler(files)
-          .then((url) => model.value.image = url)
+          .then((url) => model.value!.image = url)
       }
 
       const onDeleteImage = (url) => {
         service.deleteImageHandler(url)
-          .then(() => model.value.image = null)
+          .then(() => model.value!.image = null)
       }
 
       const onDeleteCategory = (category) => {
@@ -50,24 +51,31 @@
         showModal.value = true
         isEditMode.value = false
         service.setAsCurrent(null)
-        model.value = CategoryModel.create({})
+        categoryModel.value = CategoryModel.create({})
       }
 
       const onSend = () => {
         service.createCategoryHandler(model.value)
-          .then(() => model.value = CategoryModel.create({}))
+          .then(() => categoryModel.value = CategoryModel.create({}))
           .then(() => showModal.value = false)
       }
 
-      const onUpdate = async (update) => {
-        updates = { ...updates, ...update }
+      const onUpdate = async () => {
+        const updates: Maybe<ICategoryUpdates> = getDifferences(
+          categoryUpdates.value,
+          service.category
+        ) as ICategoryUpdates
 
-        const ctg = await service.updateHandler(updates)
+        if (updates) {
+          updates!._id = service.category!._id
 
-        model.value = CategoryModel.create(ctg!)
+          if (updates!.parent) updates!.parent = categoryUpdates.value!.parent._id
 
-        showModal.value = false
-        isEditMode.value = false
+          await service.updateHandler(updates!)
+
+          showModal.value = false
+          isEditMode.value = false
+        }
       }
 
       const cols = ref([

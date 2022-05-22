@@ -1,28 +1,28 @@
-import { rest } from '../api'
+import { rest } from '@shared/api'
 import { IRest, IRepository } from '@shared/types/app'
 
 export class Repository implements IRepository {
   rest: IRest
   baseUrl: string
 
-  constructor(rest, path) {
+  constructor(rest, path){
     this.rest = rest
     this.baseUrl = path
   }
 
-  async create(category) {
+  async create(category){
     return this.rest.post(this.baseUrl, category)
   }
 
-  async read(id = '') {
+  async read(id = ''){
     return this.rest.get(this.baseUrl, { query: { id } })
   }
 
-  async update(updates) {
+  async update(updates){
     return this.rest.patch(this.baseUrl, updates)
   }
 
-  async delete(id) {
+  async delete(id){
     return this.rest.delete(this.baseUrl, { params: { id } })
   }
 }
