@@ -104,7 +104,7 @@ export const categoryActionsModal = defineComponent({
 
     const computedParentProp = computed<Maybe<ICategory>>({
       get(){
-        const id = props.isUpdate ? (props.parent as ICategory)._id : props.parent
+        const id = props.isUpdate ? (props.parent as ICategory)?._id : props.parent
         return props.parent ? props.categories.find(it => it._id === id)! : null
       },
       set(val: ICategory){

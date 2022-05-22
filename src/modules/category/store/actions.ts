@@ -1,5 +1,8 @@
-import { categoryRepository } from '@modules/category/repository/category.repository'
-import { filesRepository } from '@shared/repository/files.repository'
+import { useCategoryRepository } from '@modules/category/repository/category.repository'
+import { useFilesRepository } from '@shared/repository/files.repository'
+
+const categoryRepository = useCategoryRepository()
+const filesRepository = useFilesRepository()
 
 export const actions = {
   async create(category: ICategory){

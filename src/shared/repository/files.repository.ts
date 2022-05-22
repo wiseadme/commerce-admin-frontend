@@ -1,7 +1,7 @@
 import { fileApi } from '@shared/api'
 import { IRest, IRepository } from '@shared/types/app'
 
-interface FilesRepository extends Omit<IRepository, 'read' | 'update'> {
+interface FilesRepository extends Omit<() => IRepository, 'read' | 'update'> {
   create: (id: string, fileName: string, formData: FormData) => Promise<{ data: { data: any } }>
   delete: (id: string, fileName: string) => Promise<{ data: { data: boolean } }>
 }
@@ -22,4 +22,4 @@ class Repository implements FilesRepository {
   }
 }
 
-export const filesRepository: FilesRepository = new Repository(fileApi)
+export const useFilesRepository = () => new Repository(fileApi) as FilesRepository

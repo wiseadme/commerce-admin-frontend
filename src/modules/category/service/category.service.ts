@@ -1,14 +1,13 @@
-import { ref, Ref } from 'vue'
 import { useCategoryStore } from '@modules/category/store'
 import { Store } from 'vuezone'
 
 class Service implements ICategoryService {
   private _store: Store<ICategoryState, ICategoryActions>
-  private _category: Ref<Maybe<ICategory>>
+  private _category: Maybe<ICategory>
 
   constructor(store){
     this._store = store
-    this._category = ref(null)
+    this._category = null
   }
 
   get categories(){
@@ -16,7 +15,7 @@ class Service implements ICategoryService {
   }
 
   get category() {
-    return this._category.value
+    return this._category
   }
 
   get updateCategory(){
@@ -44,7 +43,7 @@ class Service implements ICategoryService {
   }
 
   setAsCurrent(category: Maybe<ICategory>){
-    this._category.value = category
+    this._category = category
   }
 
   async deleteCategoryHandler(category){
@@ -66,14 +65,14 @@ class Service implements ICategoryService {
     formData.append('image', file)
 
     const asset: any = await this.uploadCategoryImage(
-      this._category.value!._id,
+      this._category!._id,
       file.name,
       formData
     )
 
     if (asset && asset.url) {
       await this.updateHandler({
-        _id: this._category.value!._id,
+        _id: this._category!._id,
         image: asset.url
       })
     }
@@ -87,7 +86,7 @@ class Service implements ICategoryService {
   }
 
   async deleteImageHandler(url){
-    const id = this._category.value!._id
+    const id = this._category!._id
 
     await this.deleteCategoryImage(id, url)
     return this.updateHandler({ _id: id, image: null })

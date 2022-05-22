@@ -1,10 +1,9 @@
+import { useProductRepository } from '@modules/product/repository'
+
+const productRepository = useProductRepository()
+
 export const actions = {
-  async getUsers() {
-    try {
-      const data = null
-      return data
-    } catch (err) {
-      return Promise.reject(err)
-    }
-  },
+  async create(product: IProductModel){
+    await productRepository.create(product)
+  }
 }

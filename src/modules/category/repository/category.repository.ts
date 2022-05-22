@@ -27,4 +27,4 @@ export class Repository implements IRepository {
   }
 }
 
-export const categoryRepository = new Repository(rest, '/v1/category')
+export const useCategoryRepository = () => new Repository(rest, '/v1/category')

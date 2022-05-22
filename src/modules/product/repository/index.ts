@@ -27,4 +27,4 @@ class Repository implements IRepository {
   }
 }
 
-export const useRepository = () => new Repository(rest, '/v1/product')
+export const useProductRepository = () => new Repository(rest, '/v1/product')
