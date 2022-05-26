@@ -234,7 +234,7 @@
               <img
                 v-if="row.image"
                 style="height: 30px; width: auto"
-                :src="`http://anar.com/${row.image}`"
+                :src="`http://anar.com${row.image}`"
               />
               <v-icon v-else>
                 fas fa-box
