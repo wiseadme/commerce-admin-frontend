@@ -29,10 +29,12 @@ export class Service {
   createProductHandler(product){
     return this.createProduct(product)
       .then(() => this.getProducts())
+      .catch(err => console.log(err))
   }
 
   deleteProductHandler(product){
     return this.deleteProduct(product)
+      .catch(err => console.log(err))
   }
 }
 

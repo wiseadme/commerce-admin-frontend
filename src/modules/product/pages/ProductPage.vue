@@ -56,6 +56,24 @@
           format: (row) => row.url
         },
         {
+          key: 'price',
+          title: 'Цена',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.price
+        },
+        {
+          key: 'count',
+          title: 'Количество',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.count
+        },
+        {
           key: 'image',
           title: 'Картинка',
           width: '150',

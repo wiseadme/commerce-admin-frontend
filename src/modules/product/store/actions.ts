@@ -8,7 +8,7 @@ export const actions = {
       const { data } = await productRepository.create(product)
       return data.data
     } catch (err) {
-      return console.log(err)
+      return Promise.reject(err)
     }
   },
 
@@ -18,7 +18,7 @@ export const actions = {
       this.state.products = data.data
       return data.data
     } catch (err) {
-      return console.log(err)
+      return Promise.reject(err)
     }
   },
 
@@ -28,7 +28,7 @@ export const actions = {
       this.state.products = this.state.products.filter(it => it._id !== product._id)
       return data
     } catch (err) {
-      console.log(err)
+      return Promise.reject(err)
     }
   }
 }

@@ -11,7 +11,7 @@ export const actions = {
       this.state.categories.push(data.data)
       return data.data
     } catch (err) {
-      return console.log(err)
+      return Promise.reject(err)
     }
   },
 
@@ -22,7 +22,7 @@ export const actions = {
       this.state.categories.splice(ind, 1, data.data)
       return data.data
     } catch (err) {
-      return console.log(err)
+      return Promise.reject(err)
     }
   },
 
@@ -33,7 +33,7 @@ export const actions = {
       id && (this.state.category = data.data)
       return data.data
     } catch (err) {
-      return console.log(err)
+      return Promise.reject(err)
     }
   },
 
@@ -43,7 +43,7 @@ export const actions = {
       this.state.categories = this.state.categories.filter(it => it._id !== category._id)
       return data
     } catch (err) {
-      return console.log(err)
+      return Promise.reject(err)
     }
   },
 
@@ -54,7 +54,7 @@ export const actions = {
       category.image = null
       return data.data
     } catch (err) {
-      return console.log(err)
+      return Promise.reject(err)
     }
   },
 
@@ -63,7 +63,7 @@ export const actions = {
       const { data } = await filesRepository.create(id, fileName, formData)
       return data.data
     } catch (err) {
-      return console.log(err)
+      return Promise.reject(err)
     }
   }
 }
