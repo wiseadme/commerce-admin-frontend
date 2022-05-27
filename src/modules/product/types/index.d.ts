@@ -4,6 +4,8 @@ declare interface IProductState {
 
 declare interface IProductActions {
   create: (product: IProductModel) => Promise<IProduct>
+  read: (id?: string) => Promise<Array<IProduct>>
+  delete: (product) => Promise<{ data: boolean, ok: boolean }>
 }
 
 declare interface IProductAsset {

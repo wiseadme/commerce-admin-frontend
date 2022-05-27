@@ -10,6 +10,7 @@ export const productCreateModal = defineComponent({
     isUpdate: Boolean,
     categoryItems: Array,
     name: String,
+    url: String,
     description: String,
     price: Number,
     count: Number,
@@ -39,6 +40,7 @@ export const productCreateModal = defineComponent({
     'update:seo:title',
     'update:seo:description',
     'update:seo:keywords',
+    'update:url',
     'upload:image',
     'create',
     'update'
@@ -99,6 +101,15 @@ export const productCreateModal = defineComponent({
       },
       set(val){
         emit('update:unit', val)
+      }
+    })
+
+    const computedUrl = computed<string>({
+      get(){
+        return props.url!
+      },
+      set(val){
+        emit('update:url', val)
       }
     })
 
@@ -211,6 +222,7 @@ export const productCreateModal = defineComponent({
       computedVariants,
       computedCategories,
       computedDescription,
+      computedUrl,
       toggleCategory,
       onCreate
     }

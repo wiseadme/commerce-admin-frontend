@@ -16,13 +16,20 @@
       const categoryService = useCategoryService()
 
       const onCreate = () => {
-        productService.createProduct(model.value)
+        productService.createProductHandler(model.value)
+          .then(res => console.log(res))
+      }
+
+      const onDeleteProduct = (product) => {
+        productService.deleteProduct(product)
           .then(res => console.log(res))
       }
 
       if (!categoryService.categories) {
         await categoryService.getCategories()
       }
+
+      await productService.getProducts()
 
       const cols = ref([
         {
@@ -63,7 +70,12 @@
           resizeable: true,
           sortable: true,
           filterable: true,
-          format: (row) => row.categories
+          format: (row) => row.categories.reduce((acc, c, i, arr) => {
+            acc += c.title
+            if (i + 1 !== arr.length) acc += ', '
+
+            return acc
+          }, '')
         },
         {
           key: 'seo',
@@ -80,8 +92,10 @@
         cols,
         model,
         categoryService,
+        productService,
         showCreateModal,
-        onCreate
+        onCreate,
+        onDeleteProduct
       }
     }
   })
@@ -94,6 +108,7 @@
       >
         <v-data-table
           :cols="cols"
+          :rows="productService.products"
           class="elevation-2"
           :header-options="{
             color: 'green',
@@ -112,6 +127,8 @@
               displayColor: 'green'
             }
           }"
+          show-checkbox
+          show-sequence
         >
           <template #toolbar>
             <v-toolbar color="#272727">
@@ -134,6 +151,25 @@
                 </v-button>
               </v-toolbar-items>
             </v-toolbar>
+          </template>
+          <template #actions="{row}">
+            <v-button
+              color="orange"
+              elevation="2"
+              text
+              @click="onEdit(row)"
+            >
+              <v-icon>fas fa-pen</v-icon>
+            </v-button>
+            <v-button
+              class="ml-1"
+              color="red darken-1"
+              elevation="2"
+              text
+              @click="onDeleteProduct(row)"
+            >
+              <v-icon>fas fa-trash-alt</v-icon>
+            </v-button>
           </template>
         </v-data-table>
       </v-col>

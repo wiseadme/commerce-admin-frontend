@@ -92,6 +92,14 @@
                     text-color="#272727"
                   />
                 </v-col>
+                <v-col xl="6">
+                  <v-text-field
+                    v-model="computedUrl"
+                    label="URL товара"
+                    color="#272727"
+                    text-color="#272727"
+                  />
+                </v-col>
               </v-row>
               <v-row no-gutter>
                 <v-col
