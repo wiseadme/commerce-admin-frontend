@@ -10,8 +10,8 @@ class Repository implements IRepository {
     this.baseUrl = baseUrl
   }
 
-  create(data){
-    return rest.post(this.baseUrl, data)
+  create(product){
+    return rest.post(this.baseUrl, product)
   }
 
   read(id = ''){

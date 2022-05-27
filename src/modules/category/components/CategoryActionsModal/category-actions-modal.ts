@@ -114,7 +114,7 @@ export const categoryActionsModal = defineComponent({
 
     watch(() => props.image, () => files.value = [])
 
-    const onSend = (validate) => {
+    const onCreate = (validate) => {
       validate().then(() => emit('create'))
     }
 
@@ -128,7 +128,7 @@ export const categoryActionsModal = defineComponent({
 
     const onSubmit = validate => {
       if (props.isUpdate) onUpdate(validate)
-      if (!props.isUpdate) onSend(validate)
+      if (!props.isUpdate) onCreate(validate)
     }
 
     const onDeleteImage = () => {
@@ -141,7 +141,7 @@ export const categoryActionsModal = defineComponent({
     }
 
     return {
-      onSend,
+      onCreate,
       onLoadImage,
       onDeleteImage,
       onUpdate,

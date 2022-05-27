@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { defineComponent, ref, watch } from 'vue'
+  import { defineComponent, ref } from 'vue'
   import { ProductCreateModal } from '../components/ProductCreateModal'
+  import { useProductService } from '@modules/product/service/product.service'
   import { useCategoryService } from '@modules/category/service/category.service'
   import { ProductModel } from '@modules/product/model/product.model'
 
@@ -11,18 +12,76 @@
       const model = ref<IProductModel>(ProductModel.create())
       const showCreateModal = ref(false)
 
+      const productService = useProductService()
       const categoryService = useCategoryService()
 
-      watch(() => model.value, to => console.log(to), { immediate: true, deep: true })
+      const onCreate = () => {
+        productService.createProduct(model.value)
+          .then(res => console.log(res))
+      }
 
       if (!categoryService.categories) {
         await categoryService.getCategories()
       }
 
+      const cols = ref([
+        {
+          key: 'actions',
+          title: 'Действия',
+          align: 'center'
+        },
+        {
+          key: 'name',
+          title: 'Название',
+          width: '300',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.name
+        },
+        {
+          key: 'url',
+          title: 'Url товара',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.url
+        },
+        {
+          key: 'image',
+          title: 'Картинка',
+          width: '150',
+          resizeable: true,
+          sortable: true,
+          filterable: true
+        },
+        {
+          key: 'categories',
+          title: 'Категории',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.categories
+        },
+        {
+          key: 'seo',
+          title: 'SEO',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.seo.title
+        }
+      ])
+
       return {
+        cols,
         model,
         categoryService,
-        showCreateModal
+        showCreateModal,
+        onCreate
       }
     }
   })
@@ -34,6 +93,7 @@
         cols="12"
       >
         <v-data-table
+          :cols="cols"
           class="elevation-2"
           :header-options="{
             color: 'green',
@@ -83,6 +143,7 @@
       v-model:name="model.name"
       v-model:price="model.price"
       v-model:count="model.count"
+      v-model:url="model.url"
       v-model:unit="model.unit"
       v-model:description="model.description"
       v-model:categories="model.categories"
@@ -91,6 +152,7 @@
       v-model:variants="model.variants"
       v-model:is-visible="model.isVisible"
       :category-items="categoryService.categories"
+      @create="onCreate"
     />
   </v-layout>
 </template>

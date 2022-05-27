@@ -10,12 +10,17 @@
         {
           title: 'Категории',
           icon: 'fas fa-cubes',
-          path: '/category'
+          path: '/categories'
         },
         {
           title: 'Товары',
           icon: 'fas fa-boxes',
-          path: '/product'
+          path: '/products'
+        },
+        {
+          title: 'Измерения',
+          icon: 'fab fa-unity',
+          path: '/units'
         }
       ]
 

@@ -54,7 +54,7 @@
         categoryModel.value = CategoryModel.create({})
       }
 
-      const onSend = () => {
+      const onCreate = () => {
         service.createCategoryHandler(model.value)
           .then(() => categoryModel.value = CategoryModel.create({}))
           .then(() => showModal.value = false)
@@ -148,7 +148,7 @@
         service,
         onAddNew,
         onEdit,
-        onSend,
+        onCreate,
         onDeleteImage,
         onUpdate,
         onUploadImage,
@@ -256,7 +256,7 @@
       v-model:order="model.order"
       :categories="service.categories"
       :is-update="isEditMode"
-      @create="onSend"
+      @create="onCreate"
       @update="onUpdate"
       @delete:image="onDeleteImage"
       @upload:image="onUploadImage"

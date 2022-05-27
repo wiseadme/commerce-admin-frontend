@@ -10,6 +10,8 @@ export class ProductModel implements IProductModel {
   assets: IProductModel['assets']
   attributes: IProductModel['attributes']
   variants: IProductModel['variants']
+  seo: IProductModel['seo']
+  url: IProductModel['url']
 
   constructor({
     name = '',
@@ -22,7 +24,13 @@ export class ProductModel implements IProductModel {
     assets = null,
     attributes = null,
     variants = null,
-    isVisible = true
+    isVisible = true,
+    url = '',
+    seo = {
+      title: '',
+      description: '',
+      keywords: ''
+    }
   }){
     this.name = name
     this.price = price
@@ -35,6 +43,8 @@ export class ProductModel implements IProductModel {
     this.attributes = attributes
     this.variants = variants
     this.isVisible = isVisible
+    this.seo = seo
+    this.url = url
   }
 
   static create(product = {}){

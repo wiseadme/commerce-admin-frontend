@@ -2,14 +2,14 @@ import ProductLayout from '@modules/product/layouts/ProductLayout.vue'
 
 export const productRoutes = [
   {
-    path: '/product',
+    path: '/products',
     component: ProductLayout,
-    name: 'dashboard',
+    name: 'products',
     children: [
       {
         path: '',
         component: () => import('@modules/product/pages/ProductPage.vue'),
-        name: 'product',
+        name: 'products-table',
       },
     ],
   },

@@ -7,6 +7,7 @@ export const productCreateModal = defineComponent({
   },
   props: {
     modelValue: Boolean,
+    isUpdate: Boolean,
     categoryItems: Array,
     name: String,
     description: String,
@@ -38,8 +39,9 @@ export const productCreateModal = defineComponent({
     'update:seo:title',
     'update:seo:description',
     'update:seo:keywords',
-    'send',
-    'upload'
+    'upload:image',
+    'create',
+    'update'
   ],
 
   async setup(props, { emit }){
@@ -143,7 +145,7 @@ export const productCreateModal = defineComponent({
       set(val){
         const seo = JSON.parse(JSON.stringify(props.seo))
         seo.title = val
-        emit('update:seo:title', seo)
+        emit('update:seo', seo)
       }
     })
 
@@ -155,7 +157,7 @@ export const productCreateModal = defineComponent({
         const seo = JSON.parse(JSON.stringify(props.seo))
         seo.description = val
 
-        emit('update:seo:description', seo)
+        emit('update:seo', seo)
       }
     })
 
@@ -167,7 +169,7 @@ export const productCreateModal = defineComponent({
         const seo = JSON.parse(JSON.stringify(props.seo))
         seo.keywords = val
 
-        emit('update:seo:keywords', seo)
+        emit('update:seo', seo)
       }
     })
 
@@ -189,6 +191,10 @@ export const productCreateModal = defineComponent({
       }
     })
 
+    const onCreate = validate => {
+      validate().then(() => emit('create'))
+    }
+
     return {
       ctgMap,
       computedVisibility,
@@ -205,7 +211,8 @@ export const productCreateModal = defineComponent({
       computedVariants,
       computedCategories,
       computedDescription,
-      toggleCategory
+      toggleCategory,
+      onCreate
     }
   }
 })

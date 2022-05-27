@@ -65,6 +65,34 @@
                   />
                 </v-col>
               </v-row>
+              <v-row>
+                <v-col xl="6">
+                  <v-text-field
+                    v-model="computedSeoTitle"
+                    label="SEO title"
+                    color="#272727"
+                    text-color="#272727"
+                  />
+                </v-col>
+                <v-col xl="6">
+                  <v-text-field
+                    v-model="computedSeoDesc"
+                    label="SEO description"
+                    color="#272727"
+                    text-color="#272727"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col xl="6">
+                  <v-text-field
+                    v-model="computedSeoKeywords"
+                    label="SEO keywords"
+                    color="#272727"
+                    text-color="#272727"
+                  />
+                </v-col>
+              </v-row>
               <v-row no-gutter>
                 <v-col
                   class="elevation-2 white"
@@ -174,7 +202,7 @@
             elevation="3"
             width="120"
             outlined
-            @click="onSend(validate)"
+            @click="onCreate(validate)"
           >
             сохранить
           </v-button>

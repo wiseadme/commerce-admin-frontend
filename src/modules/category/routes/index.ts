@@ -2,14 +2,14 @@ import CategoryLayout from '@modules/category/layouts/CategoryLayout.vue'
 
 export const categoryRoutes = [
   {
-    path: '/category',
+    path: '/categories',
     component: CategoryLayout,
-    name: 'category',
+    name: 'categories',
     children: [
       {
         path: '',
         component: () => import('@modules/category/pages/CategoryPage.vue'),
-        name: 'category',
+        name: 'categories-table',
       },
     ],
   },
