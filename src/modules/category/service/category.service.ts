@@ -1,13 +1,16 @@
 import { useCategoryStore } from '@modules/category/store'
 import { Store } from 'vuezone'
+import { useFilesService, Service as FilesService } from '@shared/services/files.service'
 
 class Service implements ICategoryService {
   private _store: Store<ICategoryState, ICategoryActions>
   private _category: Maybe<ICategory>
+  public _files: FilesService
 
-  constructor(store){
+  constructor(store, filesService){
     this._store = store
     this._category = null
+    this._files = filesService
   }
 
   get categories(){
@@ -50,16 +53,15 @@ class Service implements ICategoryService {
   async uploadCategoryImage(files){
     if (!files.length) return
 
-    const formData = new FormData()
-    const file = files[files.length - 1]
+    const { formData, file } = this._files.createFormData(files)
+    const ownerId = this._category!._id
+    const fileName = file.name
 
-    formData.append('image', file)
-
-    const asset: any = await this._store.uploadImage(
-      this._category!._id,
-      file.name,
+    const asset: any = await this._files.uploadFile({
+      ownerId,
+      fileName,
       formData
-    )
+    })
 
     if (asset && asset.url) {
       await this.updateCategory({
@@ -72,11 +74,14 @@ class Service implements ICategoryService {
   }
 
   async deleteImageHandler(url){
-    const id = this._category!._id
+    const ownerId = this._category!._id
 
-    await this.deleteCategoryImage(id, url)
-    return this.updateCategory({ _id: id, image: null })
+    await this._files.deleteFile({ ownerId, url })
+    return this.updateCategory({ _id: ownerId, image: null })
   }
 }
 
-export const useCategoryService = () => new Service(useCategoryStore())
+export const useCategoryService = () => new Service(
+  useCategoryStore(),
+  useFilesService()
+)

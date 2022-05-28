@@ -1,8 +1,6 @@
 import { useCategoryRepository } from '@modules/category/repository/category.repository'
-import { useFilesRepository } from '@shared/repository/files.repository'
 
 const categoryRepository = useCategoryRepository()
-const filesRepository = useFilesRepository()
 
 export const actions = {
   async create(category: ICategory){
@@ -42,24 +40,4 @@ export const actions = {
       return Promise.reject(err)
     }
   },
-
-  async deleteImage(id, url){
-    try {
-      const { data } = await filesRepository.delete(id, url)
-      const category = this.state.categories.find((c) => c._id === id)
-      category.image = null
-      return data.data
-    } catch (err) {
-      return Promise.reject(err)
-    }
-  },
-
-  async uploadImage(id, fileName, formData){
-    try {
-      const { data } = await filesRepository.create(id, fileName, formData)
-      return data.data
-    } catch (err) {
-      return Promise.reject(err)
-    }
-  }
 }

@@ -1,13 +1,16 @@
 import { Store } from 'vuezone'
 import { useProductStore } from '@modules/product/store'
+import { useFilesService, Service as FilesService } from '@shared/services/files.service'
 
-export class Service {
-  _store: Store<IProductState, IProductActions>
-  _product: Maybe<IProduct>
+class Service {
+  private _store: Store<IProductState, IProductActions>
+  private _product: Maybe<IProduct>
+  public _files: FilesService
 
-  constructor(store){
+  constructor(store, filesService){
     this._store = store
     this._product = null
+    this._files = filesService
   }
 
   get products(){
@@ -36,26 +39,17 @@ export class Service {
   async uploadProductImage(files){
     if (!files.length) return
 
-    const formData = new FormData()
-    const file = files[files.length - 1]
+    const { formData, file } = this._files.createFormData(files)
+    const ownerId = this._product!._id
+    const fileName = file.name
 
-    formData.append('image', file)
-
-    const asset: any = await this._store.uploadImage(
-      this._product!._id,
-      file.name,
-      formData
-    )
-
-    // if (asset && asset.url) {
-    //   await this.updateCategory({
-    //     _id: this._category!._id,
-    //     image: asset.url
-    //   })
-    // }
+    const asset: any = await this._files.uploadFile({ ownerId, fileName, formData })
 
     return asset.url
   }
 }
 
-export const useProductService = () => new Service(useProductStore())
+export const useProductService = () => new Service(
+  useProductStore(),
+  useFilesService()
+)
