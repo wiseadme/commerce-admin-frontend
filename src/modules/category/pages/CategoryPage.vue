@@ -34,7 +34,7 @@
       }
 
       const onUploadImage = (files) => {
-        service.uploadImageHandler(files)
+        service.uploadCategoryImage(files)
           .then((url) => model.value!.image = url)
       }
 
@@ -44,18 +44,20 @@
       }
 
       const onDeleteCategory = (category) => {
-        service.deleteCategoryHandler(category)
+        service.deleteCategory(category)
       }
 
       const onAddNew = () => {
         showModal.value = true
         isEditMode.value = false
+
         service.setAsCurrent(null)
+
         categoryModel.value = CategoryModel.create({})
       }
 
       const onCreate = () => {
-        service.createCategoryHandler(model.value)
+        service.createCategory(model.value)
           .then(() => categoryModel.value = CategoryModel.create({}))
           .then(() => showModal.value = false)
       }
@@ -71,7 +73,7 @@
 
           if (updates!.parent) updates!.parent = categoryUpdates.value!.parent._id
 
-          await service.updateHandler(updates!)
+          await service.updateCategory(updates!)
 
           showModal.value = false
           isEditMode.value = false

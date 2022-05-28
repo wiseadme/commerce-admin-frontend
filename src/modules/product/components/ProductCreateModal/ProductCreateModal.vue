@@ -111,10 +111,27 @@
                     </v-card-title>
                     <v-card-content>
                       <text-editor
+                        :key="computedDescription"
                         v-model:content="computedDescription"
+                        content-type="html"
                       />
                     </v-card-content>
                   </v-card>
+                </v-col>
+              </v-row>
+              <v-row no-gutter>
+                <v-col class="my-4">
+                  <v-file-input
+                    v-model:value="files"
+                    label="Загрузить изображения"
+                    color="#272727"
+                    text-color="#272727"
+                    @update:value="onLoadImage"
+                  />
+                </v-col>
+              </v-row>
+              <v-row no-gutter>
+                <v-col class="my-4">
                 </v-col>
               </v-row>
             </v-col>
@@ -139,12 +156,13 @@
                           v-if="it.children.length"
                           :title="it.title"
                           class="elevation-2"
+                          :expand="isUpdate"
                         >
                           <v-list>
                             <v-list-item
                               v-for="c in it.children"
                               :key="c._id"
-                              :class="[{'green white--text text--base': ctgMap.get(c)}]"
+                              :class="[{'green white--text text--base': ctgMap.get(c._id)}]"
                               @click="toggleCategory(c)"
                             >
                               <v-list-item-content>
@@ -157,12 +175,12 @@
                         </v-group>
                         <v-list
                           v-else-if="!it.parent && !it.children.length"
-                          active
-                          multiple
                           class="elevation-2"
-                          active-class="green white--text text--base"
                         >
-                          <v-list-item @click="toggleCategory(it)">
+                          <v-list-item
+                            :class="[{'green white--text text--base': ctgMap.get(it._id)}]"
+                            @click="toggleCategory(it)"
+                          >
                             <v-list-item-content>
                               <v-list-item-title>
                                 {{ it.title }}

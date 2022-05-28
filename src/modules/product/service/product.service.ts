@@ -10,31 +10,51 @@ export class Service {
     this._product = null
   }
 
-  get createProduct(){
-    return this._store.create
-  }
-
-  get deleteProduct(){
-    return this._store.delete
-  }
-
   get products(){
     return this._store.state.products
   }
 
-  get getProducts(){
-    return this._store.read
+  setAsCurrent(product){
+    this._product = product
   }
 
-  createProductHandler(product){
-    return this.createProduct(product)
+  createProduct(product){
+    this._store.create(product)
       .then(() => this.getProducts())
       .catch(err => console.log(err))
   }
 
-  deleteProductHandler(product){
-    return this.deleteProduct(product)
+  deleteProduct(product){
+    this._store.delete(product)
       .catch(err => console.log(err))
+  }
+
+  getProducts(){
+    this._store.read().catch(err => console.log(err))
+  }
+
+  async uploadProductImage(files){
+    if (!files.length) return
+
+    const formData = new FormData()
+    const file = files[files.length - 1]
+
+    formData.append('image', file)
+
+    const asset: any = await this._store.uploadImage(
+      this._product!._id,
+      file.name,
+      formData
+    )
+
+    // if (asset && asset.url) {
+    //   await this.updateCategory({
+    //     _id: this._category!._id,
+    //     image: asset.url
+    //   })
+    // }
+
+    return asset.url
   }
 }
 

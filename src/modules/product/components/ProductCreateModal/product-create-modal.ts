@@ -1,5 +1,6 @@
-import { defineComponent, ref, toRaw, computed, PropType } from 'vue'
+import { defineComponent, ref, toRaw, computed, PropType, watch } from 'vue'
 import { TextEditor } from '@shared/components/TextEditor'
+import { Maybe } from 'vueland/dist/types/base'
 
 export const productCreateModal = defineComponent({
   components: {
@@ -48,16 +49,26 @@ export const productCreateModal = defineComponent({
 
   async setup(props, { emit }){
     const ctgMap = ref<Map<string, ICategory>>(new Map())
+    const files = ref<Maybe<any>>([])
 
     const toggleCategory = (ctg) => {
-      if (ctgMap.value.get(ctg)) {
-        ctgMap.value.delete(ctg)
+      if (ctgMap.value.get(ctg._id)) {
+        ctgMap.value.delete(ctg._id)
       } else {
-        ctgMap.value.set(ctg, ctg)
+        ctgMap.value.set(ctg._id, ctg)
       }
 
       computedCategories.value = Array.from(toRaw(ctgMap.value).values())
     }
+
+    watch(() => props.modelValue, to => {
+      ctgMap.value.clear()
+      if (to && props.isUpdate) {
+        props.categories?.forEach(ctg => {
+          if (!ctgMap.value.get(ctg._id)) toggleCategory(ctg)
+        })
+      }
+    }, { immediate: true })
 
     const computedName = computed<string>({
       get(){
@@ -206,6 +217,11 @@ export const productCreateModal = defineComponent({
       validate().then(() => emit('create'))
     }
 
+    const onLoadImage = event => {
+      if (!event.length) return
+      emit('upload:image', event)
+    }
+
     return {
       ctgMap,
       computedVisibility,
@@ -223,7 +239,9 @@ export const productCreateModal = defineComponent({
       computedCategories,
       computedDescription,
       computedUrl,
+      files,
       toggleCategory,
+      onLoadImage,
       onCreate
     }
   }

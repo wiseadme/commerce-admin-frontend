@@ -6,6 +6,8 @@ declare interface IProductActions {
   create: (product: IProductModel) => Promise<IProduct>
   read: (id?: string) => Promise<Array<IProduct>>
   delete: (product) => Promise<{ data: boolean, ok: boolean }>
+  uploadImage: (id: string, fileName: string, data: FormData) => Promise<{ url: string }>
+  deleteImage: (id: string, fileName: string) => Promise<boolean>
 }
 
 declare interface IProductAsset {

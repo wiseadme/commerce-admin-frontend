@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
+  import { defineComponent, ref, watch } from 'vue'
   import { ProductCreateModal } from '../components/ProductCreateModal'
   import { useProductService } from '@modules/product/service/product.service'
   import { useCategoryService } from '@modules/category/service/category.service'
@@ -11,25 +11,38 @@
     async setup(){
       const model = ref<IProductModel>(ProductModel.create())
       const showCreateModal = ref(false)
+      const isEditMode = ref(false)
 
       const productService = useProductService()
       const categoryService = useCategoryService()
 
       const onCreate = () => {
-        productService.createProductHandler(model.value)
-          .then(res => console.log(res))
+        productService.createProduct(model.value)
       }
 
       const onDeleteProduct = (product) => {
         productService.deleteProduct(product)
+      }
+
+      const onUploadImage = (files) => {
+        productService.uploadProductImage(files)
           .then(res => console.log(res))
       }
 
-      if (!categoryService.categories) {
-        await categoryService.getCategories()
+      const onEdit = (row) => {
+        productService.setAsCurrent(row)
+        model.value = ProductModel.create(row)
+        showCreateModal.value = true
+        isEditMode.value = true
       }
 
-      await productService.getProducts()
+      if (!categoryService.categories) {
+        categoryService.getCategories()
+      }
+
+      productService.getProducts()
+
+      watch(model, to => console.log(to), { deep: true })
 
       const cols = ref([
         {
@@ -112,8 +125,11 @@
         categoryService,
         productService,
         showCreateModal,
+        isEditMode,
         onCreate,
-        onDeleteProduct
+        onDeleteProduct,
+        onUploadImage,
+        onEdit
       }
     }
   })
@@ -206,7 +222,9 @@
       v-model:variants="model.variants"
       v-model:is-visible="model.isVisible"
       :category-items="categoryService.categories"
+      :is-update="isEditMode"
       @create="onCreate"
+      @upload:image="onUploadImage"
     />
   </v-layout>
 </template>

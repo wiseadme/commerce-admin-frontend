@@ -8,7 +8,6 @@ export const actions = {
   async create(category: ICategory){
     try {
       const { data } = await categoryRepository.create(category)
-      this.state.categories.push(data.data)
       return data.data
     } catch (err) {
       return Promise.reject(err)
@@ -18,8 +17,6 @@ export const actions = {
   async update(updates){
     try {
       const { data } = await categoryRepository.update(updates)
-      const ind = this.state.categories.findIndex((c) => c._id === data.data._id)
-      this.state.categories.splice(ind, 1, data.data)
       return data.data
     } catch (err) {
       return Promise.reject(err)
@@ -40,7 +37,6 @@ export const actions = {
   async delete(category){
     try {
       const { data } = await categoryRepository.delete(category._id)
-      this.state.categories = this.state.categories.filter(it => it._id !== category._id)
       return data
     } catch (err) {
       return Promise.reject(err)

@@ -14,49 +14,40 @@ class Service implements ICategoryService {
     return this._store.state.categories
   }
 
-  get category() {
+  get category(){
     return this._category
-  }
-
-  get updateCategory(){
-    return this._store.update
-  }
-
-  get getCategories(){
-    return this._store.read
-  }
-
-  get deleteCategory(){
-    return this._store.delete
   }
 
   get deleteCategoryImage(){
     return this._store.deleteImage
   }
 
-  get uploadCategoryImage(){
-    return this._store.uploadImage
-  }
-
-  get createCategory(){
-    return this._store.create
-  }
-
   setAsCurrent(category: Maybe<ICategory>){
     this._category = category
   }
 
-  async deleteCategoryHandler(category){
-    return await this.deleteCategory(category)
+  createCategory(model){
+    return this._store.create(model)
       .then(() => this.getCategories())
   }
 
-  async updateHandler(updates: Partial<ICategoryUpdates>){
-    return await this.updateCategory(updates)
-      .then(() => this.getCategories())
+  getCategories(){
+    this._store.read().catch(err => console.log(err))
   }
 
-  async uploadImageHandler(files){
+  updateCategory(updates){
+    return this._store.update(updates)
+      .then(() => this.getCategories())
+      .catch(err => console.log(err))
+  }
+
+  deleteCategory(category){
+    this._store.delete(category)
+      .then(() => this.getCategories())
+      .catch(err => console.log(err))
+  }
+
+  async uploadCategoryImage(files){
     if (!files.length) return
 
     const formData = new FormData()
@@ -64,14 +55,14 @@ class Service implements ICategoryService {
 
     formData.append('image', file)
 
-    const asset: any = await this.uploadCategoryImage(
+    const asset: any = await this._store.uploadImage(
       this._category!._id,
       file.name,
       formData
     )
 
     if (asset && asset.url) {
-      await this.updateHandler({
+      await this.updateCategory({
         _id: this._category!._id,
         image: asset.url
       })
@@ -80,16 +71,11 @@ class Service implements ICategoryService {
     return asset.url
   }
 
-  createCategoryHandler(model){
-    return this.createCategory(model)
-      .then(() => this.getCategories())
-  }
-
   async deleteImageHandler(url){
     const id = this._category!._id
 
     await this.deleteCategoryImage(id, url)
-    return this.updateHandler({ _id: id, image: null })
+    return this.updateCategory({ _id: id, image: null })
   }
 }
 
