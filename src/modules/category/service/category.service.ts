@@ -5,12 +5,12 @@ import { useFilesService, Service as FilesService } from '@shared/services/files
 class Service implements ICategoryService {
   private _store: Store<ICategoryState, ICategoryActions>
   private _category: Maybe<ICategory>
-  public _files: FilesService
+  public files: FilesService
 
   constructor(store, filesService){
     this._store = store
     this._category = null
-    this._files = filesService
+    this.files = filesService
   }
 
   get categories(){
@@ -53,21 +53,13 @@ class Service implements ICategoryService {
   async uploadCategoryImage(files){
     if (!files.length) return
 
-    const { formData, file } = this._files.createFormData(files)
+    const { formData, fileName } = this.files.createFormData(files)
     const ownerId = this._category!._id
-    const fileName = file.name
 
-    const asset: any = await this._files.uploadFile({
-      ownerId,
-      fileName,
-      formData
-    })
+    const asset = await this.files.uploadFile({ ownerId, fileName, formData })
 
     if (asset && asset.url) {
-      await this.updateCategory({
-        _id: this._category!._id,
-        image: asset.url
-      })
+      await this.updateCategory({ _id: this._category!._id, image: asset.url })
     }
 
     return asset.url
@@ -76,7 +68,7 @@ class Service implements ICategoryService {
   async deleteImageHandler(url){
     const ownerId = this._category!._id
 
-    await this._files.deleteFile({ ownerId, url })
+    await this.files.deleteFile({ ownerId, url })
     return this.updateCategory({ _id: ownerId, image: null })
   }
 }

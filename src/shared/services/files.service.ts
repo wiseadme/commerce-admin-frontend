@@ -10,10 +10,11 @@ export class Service {
   createFormData(files){
     const formData = new FormData()
     const file = files[files.length - 1]
+    const fileName = file.name
 
     formData.append('image', file)
 
-    return { formData, file }
+    return { formData, fileName }
   }
 
   async uploadFile({ ownerId, fileName, formData }){

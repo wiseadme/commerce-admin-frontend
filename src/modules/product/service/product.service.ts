@@ -5,16 +5,20 @@ import { useFilesService, Service as FilesService } from '@shared/services/files
 class Service {
   private _store: Store<IProductState, IProductActions>
   private _product: Maybe<IProduct>
-  public _files: FilesService
+  public files: FilesService
 
   constructor(store, filesService){
     this._store = store
     this._product = null
-    this._files = filesService
+    this.files = filesService
   }
 
   get products(){
     return this._store.state.products
+  }
+
+  get product(){
+    return this._product
   }
 
   setAsCurrent(product){
@@ -32,6 +36,11 @@ class Service {
       .catch(err => console.log(err))
   }
 
+  updateProduct(updates){
+    return this._store.update(updates)
+      .catch(err => console.log(err))
+  }
+
   getProducts(){
     this._store.read().catch(err => console.log(err))
   }
@@ -39,13 +48,22 @@ class Service {
   async uploadProductImage(files){
     if (!files.length) return
 
-    const { formData, file } = this._files.createFormData(files)
+    const { formData, fileName } = this.files.createFormData(files)
     const ownerId = this._product!._id
-    const fileName = file.name
 
-    const asset: any = await this._files.uploadFile({ ownerId, fileName, formData })
+    const asset: any = await this.files.uploadFile({ ownerId, fileName, formData })
 
-    return asset.url
+    if (asset && asset.url) {
+      let { assets } = this._product!
+      assets = assets ? assets : []
+
+      assets.push(asset)
+
+      await this.updateProduct({
+        _id: this._product?._id,
+        assets
+      })
+    }
   }
 }
 

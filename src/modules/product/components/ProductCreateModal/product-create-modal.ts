@@ -1,6 +1,7 @@
 import { defineComponent, ref, toRaw, computed, PropType, watch } from 'vue'
 import { TextEditor } from '@shared/components/TextEditor'
 import { Maybe } from 'vueland/dist/types/base'
+import { clone } from '@shared/helpers'
 
 export const productCreateModal = defineComponent({
   components: {
@@ -50,6 +51,9 @@ export const productCreateModal = defineComponent({
   async setup(props, { emit }){
     const ctgMap = ref<Map<string, ICategory>>(new Map())
     const files = ref<Maybe<any>>([])
+    const attributesArray = ref<Array<any>>([])
+
+    const attribute = { key: '', value: '' }
 
     const toggleCategory = (ctg) => {
       if (ctgMap.value.get(ctg._id)) {
@@ -142,11 +146,11 @@ export const productCreateModal = defineComponent({
       }
     })
 
-    const computedAttributes = computed<Array<IProductAttribute>>({
-      get(){
-        return props.attributes!
+    const computedAttributes = computed({
+      get() {
+        return props.attributes
       },
-      set(val){
+      set(val) {
         emit('update:attributes', val)
       }
     })
@@ -213,13 +217,32 @@ export const productCreateModal = defineComponent({
       }
     })
 
+
     const onCreate = validate => {
       validate().then(() => emit('create'))
+    }
+
+    const onAttributesUpdate = () => {
+      computedAttributes.value = attributesArray.value
+    }
+
+    const onUpdate = () => emit('update')
+
+    const onSubmit = (validate) => {
+      if (props.isUpdate) onUpdate()
+      else onCreate(validate)
     }
 
     const onLoadImage = event => {
       if (!event.length) return
       emit('upload:image', event)
+    }
+
+    const addAttribute = () => {
+      // attributesArray.value.push(clone(attribute))
+      attributesArray.value = [...attributesArray.value, clone(attribute)]
+      console.log(attributesArray.value)
+      // emit('update:attributes', attributesArray.value)
     }
 
     return {
@@ -240,9 +263,12 @@ export const productCreateModal = defineComponent({
       computedDescription,
       computedUrl,
       files,
+      attributesArray,
+      addAttribute,
       toggleCategory,
       onLoadImage,
-      onCreate
+      onSubmit,
+      onAttributesUpdate
     }
   }
 })
