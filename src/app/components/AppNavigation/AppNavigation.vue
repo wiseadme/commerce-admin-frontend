@@ -18,6 +18,11 @@
           path: '/products'
         },
         {
+          title: 'Атрибуты',
+          icon: 'fab fa-buffer',
+          path: '/attributes'
+        },
+        {
           title: 'Измерения',
           icon: 'fab fa-unity',
           path: '/units'

@@ -16,7 +16,8 @@ declare interface IProductAsset {
 
 declare interface IProductAttribute {
   key: string
-  value: any
+  value: string
+  meta?: string
 }
 
 declare interface IProductVariant {
@@ -36,7 +37,7 @@ declare interface IProductModel {
   categories: Array<ICategory>
   image: Maybe<IProductAsset>
   assets: Maybe<Array<IProductAsset>>
-  attributes: Maybe<Array<IProductAttribute>>
+  attributes: Maybe<Array<IAttribute>>
   variants: Maybe<Array<IProductVariant>>
   seo?: {
     title?: string
@@ -45,23 +46,4 @@ declare interface IProductModel {
   },
 }
 
-declare interface IProduct {
-  _id: string
-  name: string
-  price: number
-  count: number
-  unit: string
-  url: string
-  description: string
-  isVisible?: boolean
-  categories: Array<ICategory>
-  image: Maybe<IProductAsset>
-  assets: Maybe<Array<IProductAsset>>
-  attributes: Maybe<Array<IProductAttribute>>
-  variants: Maybe<Array<IProductVariant>>
-  seo?: {
-    title?: string
-    description?: string
-    keywords?: string
-  },
-}
+declare type IProduct = IProductModel & { _id: string }

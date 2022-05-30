@@ -1,9 +1,7 @@
-import CategoryLayout from '@modules/category/layouts/CategoryLayout.vue'
-
 export const categoryRoutes = [
   {
     path: '/categories',
-    component: CategoryLayout,
+    component: () => import('@modules/category/layouts/CategoryLayout.vue'),
     name: 'categories',
     children: [
       {

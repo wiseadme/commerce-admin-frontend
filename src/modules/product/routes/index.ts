@@ -1,9 +1,7 @@
-import ProductLayout from '@modules/product/layouts/ProductLayout.vue'
-
 export const productRoutes = [
   {
     path: '/products',
-    component: ProductLayout,
+    component: () => import('@modules/product/layouts/ProductLayout.vue'),
     name: 'products',
     children: [
       {

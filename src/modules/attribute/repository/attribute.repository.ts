@@ -1,17 +1,17 @@
 import { rest } from '@shared/api'
-import { IRest, IRepository } from '@shared/types/app'
+import { IRepository, IRest } from '@shared/types/app'
 
-export class Repository implements IRepository {
+class Repository implements IRepository {
   rest: IRest
   baseUrl: string
 
-  constructor(rest, path){
+  constructor(rest, baseUrl){
     this.rest = rest
-    this.baseUrl = path
+    this.baseUrl = baseUrl
   }
 
-  create(category){
-    return this.rest.post(this.baseUrl, category)
+  create(attribute){
+    return this.rest.post(this.baseUrl, attribute)
   }
 
   read(id = ''){
@@ -27,4 +27,4 @@ export class Repository implements IRepository {
   }
 }
 
-export const useCategoryRepository = () => new Repository(rest, '/v1/category')
+export const useAttributeRepository = () => new Repository(rest, '/v1/attribute')
