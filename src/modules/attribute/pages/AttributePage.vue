@@ -1,12 +1,22 @@
 <script lang="ts">
   import { defineComponent, ref, toRaw } from 'vue'
+  import draggable from 'vuedraggable'
   import { useAttributeService } from '../service/attribute.service'
   import { clone } from '@shared/helpers'
 
   export default defineComponent({
     name: 'attribute-page',
-    async setup() {
-      const attributePattern = ref({ key: '', value: '', meta: '' })
+    components: {
+      draggable
+    },
+    async setup(){
+      const attributes: Array<IAttribute> = ref(null)
+      const attributePattern = ref<IAttributeModel>({
+        key: '',
+        value: '',
+        meta: '',
+        order: 0
+      })
 
       const service = useAttributeService()
 
@@ -20,18 +30,26 @@
         })
       }
 
+      const onChange = () => {
+        attributes.value.forEach((it, i) => it.order = i)
+        service.updateAttribute(attributes.value)
+      }
+
       const onDelete = (attribute: IAttribute) => {
         service.deleteAttribute(attribute._id)
       }
 
       service.getAttributes()
+        .then(() => attributes.value = clone(service.attributes))
 
       return {
         service,
         attributePattern,
+        attributes,
         clearForm,
         onCreate,
-        onDelete
+        onDelete,
+        onChange
       }
     }
   })
@@ -72,6 +90,12 @@
                 label="Мета информация"
                 color="#272727"
               />
+              <v-text-field
+                v-model="attributePattern.order"
+                label="Порядковый номер"
+                color="#272727"
+                type="number"
+              />
             </v-card-content>
             <v-card-actions class="">
               <v-button
@@ -107,23 +131,36 @@
         md="12"
         sm="12"
       >
-        <template v-if="service.attributes">
-          <div
-            v-for="it in service.attributes"
-            :key="it.key"
-            class="d-flex justify-start align-center elevation-2 my-1 py-4 px-3 white"
+        <template v-if="attributes">
+          <draggable
+            v-model="attributes"
+            item-key="_id"
+            @change="onChange"
           >
-            <span>
-              {{ it.key }}
-            </span>
-            <v-spacer></v-spacer>
-            <v-icon
-              clickable
-              @click="onDelete(it)"
-            >
-              fas fa-times
-            </v-icon>
-          </div>
+            <template #item="{element}">
+              <div
+                class="d-flex justify-start align-center elevation-2 my-1 py-4 px-3 white"
+              >
+                <v-icon
+                  class="mr-3"
+                  color="grey lighten-2"
+                >
+                  fas fa-grip-vertical
+                </v-icon>
+                <span>
+                  {{ element.key }}
+                </span>
+                <v-spacer></v-spacer>
+                <v-icon
+                  clickable
+                  color="green"
+                  @click="onDelete(element)"
+                >
+                  fas fa-times
+                </v-icon>
+              </div>
+            </template>
+          </draggable>
         </template>
       </v-col>
     </v-row>

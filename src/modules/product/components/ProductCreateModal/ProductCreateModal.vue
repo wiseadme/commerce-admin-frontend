@@ -114,6 +114,7 @@
               md="6"
               sm="12"
               class="mr-2 mb-4 pa-2 white elevation-2 d-flex justify-center align-center"
+              :class="{'main': it.main}"
               style="overflow: hidden; position: relative"
             >
               <img
@@ -138,9 +139,8 @@
                 </v-card-title>
                 <v-card-content>
                   <text-editor
-                    :key="computedDescription"
+                    :key="content"
                     v-model:content="computedDescription"
-                    content-type="html"
                   />
                 </v-card-content>
               </v-card>
@@ -212,27 +212,35 @@
                   <h3>Атрибуты</h3>
                 </v-card-title>
                 <v-card-content>
-                  <v-row
-                    v-for="(it, i) in computedAttributes"
-                    :key="i"
+                  <draggable
+                    v-model="computedAttributes"
+                    item-key="_id"
                   >
-                    <v-col cols="6">
-                      <v-text-field
-                        v-model="it.key"
-                        label="Атрибут"
-                        color="#272727"
-                        readonly
-                      />
-                    </v-col>
-                    <v-col cols="6">
-                      <v-text-field
-                        v-model="it.value"
-                        label="Значение"
-                        color="green"
-                        @input="onAttributesUpdate"
-                      />
-                    </v-col>
-                  </v-row>
+                    <template #item="{element}">
+                      <v-row class="my-2 elevation-2 pa-2">
+                        <v-col
+                          class="d-flex justify-start align-center"
+                          cols="6"
+                        >
+                          <div class="attr-title white py-2">
+                            {{ element.key }}
+                          </div>
+                          <v-spacer
+                            class="mx-2"
+                            style="border-bottom: 1px dotted #272727"
+                          >
+                          </v-spacer>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-text-field
+                            v-model="element.value"
+                            color="#272727"
+                            @input="onAttributesUpdate"
+                          />
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </draggable>
                 </v-card-content>
               </v-card>
             </v-col>
@@ -282,5 +290,9 @@
   .card-title {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
+  }
+
+  .main {
+    border: 2px solid green;
   }
 </style>

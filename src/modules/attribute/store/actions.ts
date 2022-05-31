@@ -2,7 +2,7 @@ import { useAttributeRepository } from '@modules/attribute/repository/attribute.
 
 const attributeRepository = useAttributeRepository()
 
-export const actions = {
+export const actions: IAttributesActions = {
   async create(attribute: IAttributeModel){
     try {
       const { data } = await attributeRepository.create(attribute)
@@ -16,17 +16,25 @@ export const actions = {
   async read(id?: string){
     try {
       const { data } = await attributeRepository.read(id)
-      this.state.attributes = data.data
-      return data.data
+      this.state.attributes = data.data.sort((a, b) => a.order - b.order)
+      return this.state.attributes
     } catch (err) {
       return Promise.reject(err)
     }
   },
 
-  async update(updates: Partial<IAttribute>){
+  async update(updates: Array<IAttribute>){
     try {
       const { data } = await attributeRepository.update(updates)
-      return data.data
+      const map: { [key: string]: IAttribute } = {}
+
+      this.state.attributes.concat(data.data).forEach(it => map[it._id] = it)
+
+      this.state.attributes = Object.values(map).sort(
+        (a, b) => a.order - b.order
+      )
+
+      return this.state.attributes
     } catch (err) {
       return Promise.reject(err)
     }

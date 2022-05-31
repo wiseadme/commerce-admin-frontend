@@ -2,10 +2,12 @@ import { defineComponent, ref, toRaw, computed, PropType, watch } from 'vue'
 import { TextEditor } from '@shared/components/TextEditor'
 import { Maybe } from 'vueland/dist/types/base'
 import { clone } from '@shared/helpers'
+import draggable from 'vuedraggable'
 
 export const productCreateModal = defineComponent({
   components: {
-    TextEditor
+    TextEditor,
+    draggable
   },
   props: {
     modelValue: Boolean,
@@ -53,6 +55,7 @@ export const productCreateModal = defineComponent({
     const ctgMap = ref<Map<string, ICategory>>(new Map())
     const files = ref<Maybe<any>>([])
     const attributesArray = ref<Array<any>>([])
+    const content = ref<string>('')
 
     const toggleCategory = (ctg) => {
       if (ctgMap.value.get(ctg._id)) {
@@ -66,12 +69,16 @@ export const productCreateModal = defineComponent({
 
     watch(() => props.modelValue, to => {
       ctgMap.value.clear()
+
       if (to && props.isUpdate) {
         props.categories?.forEach(ctg => {
           if (!ctgMap.value.get(ctg._id)) toggleCategory(ctg)
         })
       }
+
       attributesArray.value = clone(props.attributes)
+      content.value = props.description!
+
     }, { immediate: true })
 
     const computedName = computed<string>({
@@ -94,7 +101,7 @@ export const productCreateModal = defineComponent({
 
     const computedDescription = computed<string>({
       get(){
-        return props.description!
+        return content.value!
       },
       set(val){
         emit('update:description', val)
@@ -147,10 +154,10 @@ export const productCreateModal = defineComponent({
     })
 
     const computedAttributes = computed({
-      get() {
+      get(){
         return attributesArray.value
       },
-      set() {
+      set(){
         emit('update:attributes', attributesArray.value)
       }
     })
@@ -235,6 +242,7 @@ export const productCreateModal = defineComponent({
     const onLoadImage = uploads => {
       if (!uploads.length) return
       emit('upload:image', uploads)
+      files.value = []
     }
 
     const onDeleteImage = (asset) => {
@@ -260,6 +268,7 @@ export const productCreateModal = defineComponent({
       computedUrl,
       files,
       attributesArray,
+      content,
       toggleCategory,
       onLoadImage,
       onSubmit,

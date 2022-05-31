@@ -3,19 +3,18 @@ import { useAttributeStore } from '@modules/attribute/store'
 
 class Service {
   private _store: Store<IAttributeState, IAttributesActions>
-  private _attribute: Maybe<IAttribute>
 
   constructor(store){
     this._store = store
-    this._attribute = null
   }
 
   get attributes(){
     return this._store.state.attributes
   }
 
-  setAsCurrent(attribute: IAttribute){
-    this._attribute = attribute
+  updateAttribute(updates){
+    return this._store.update(updates)
+      .then(res => console.log(res))
   }
 
   createAttribute(attribute){

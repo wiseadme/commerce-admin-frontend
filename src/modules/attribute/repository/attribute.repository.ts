@@ -18,7 +18,7 @@ class Repository implements IRepository {
     return this.rest.get(this.baseUrl, { query: { id } })
   }
 
-  update(updates){
+  update(updates): Promise<{ data: { data: Array<IAttribute> } }>{
     return this.rest.patch(this.baseUrl, updates)
   }
 

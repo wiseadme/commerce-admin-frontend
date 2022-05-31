@@ -9,6 +9,8 @@
   import { ProductModel } from '@modules/product/model/product.model'
   import { getDifferences } from '@shared/helpers'
 
+  import { clone } from '@shared/helpers'
+
   export default defineComponent({
     components: { ProductCreateModal },
 
@@ -16,73 +18,6 @@
       const model = ref<IProductModel>(ProductModel.create())
       const showCreateModal = ref<boolean>(false)
       const isEditMode = ref(false)
-
-      const productService = useProductService()
-      const categoryService = useCategoryService()
-      const attributeService = useAttributeService()
-
-      const onCreate = () => {
-        productService.createProduct(model.value)
-      }
-
-      const onAdd = () => {
-        showCreateModal.value = true
-        isEditMode.value = false
-
-        model.value = ProductModel.create()
-        model.value.attributes = attributeService.attributes
-      }
-
-      const onUpdate = () => {
-        const updates: Maybe<IProduct> = getDifferences(
-          model.value,
-          productService.product
-        ) as IProduct
-
-        if (updates) {
-          updates!._id = productService.product?._id!
-        }
-
-        productService.updateProduct(updates)
-          .then(() => {
-            showCreateModal.value = false
-            isEditMode.value = false
-          })
-      }
-
-      const onDeleteProduct = (product) => {
-        productService.deleteProduct(product)
-      }
-
-      const onUploadImage = (files) => {
-        productService.uploadProductImage(files)
-          .then(res => console.log(res))
-      }
-
-      const onDeleteImage = (url) => {
-        productService.deleteProductImage(url)
-          .then(() => {
-            model.value.assets = model.value.assets?.filter(it => it.url !== url)!
-          })
-      }
-
-      const onEdit = (row) => {
-        productService.setAsCurrent(row)
-
-        model.value = ProductModel.create(row)
-        showCreateModal.value = true
-        isEditMode.value = true
-      }
-
-      if (!categoryService.categories) {
-        categoryService.getCategories()
-      }
-
-      if (!attributeService.attributes) {
-        attributeService.getAttributes()
-      }
-
-      productService.getProducts()
 
       const cols = ref([
         {
@@ -158,6 +93,71 @@
           format: (row) => row.seo.title
         }
       ])
+
+      const productService = useProductService()
+      const categoryService = useCategoryService()
+      const attributeService = useAttributeService()
+
+      const onCreate = () => {
+        productService.createProduct(model.value)
+      }
+
+      const onAdd = () => {
+        showCreateModal.value = true
+        isEditMode.value = false
+
+        model.value = ProductModel.create()
+        model.value.attributes = clone(attributeService.attributes)
+      }
+
+      const onUpdate = () => {
+        const updates: Maybe<IProduct> = getDifferences(
+          model.value,
+          productService.product
+        ) as IProduct
+
+        if (updates) updates!._id = productService.product?._id!
+
+        productService.updateProduct(updates)
+          .then(() => {
+            showCreateModal.value = false
+            isEditMode.value = false
+          })
+      }
+
+      const onDeleteProduct = (product) => {
+        productService.deleteProduct(product)
+      }
+
+      const onUploadImage = (files) => {
+        productService.uploadProductImage(files)
+          .then(res => console.log(res))
+      }
+
+      const onDeleteImage = (url) => {
+        productService.deleteProductImage(url)
+          .then(() => {
+            model.value.assets = model.value.assets?.filter(it => it.url !== url)!
+          })
+      }
+
+      const onEdit = (row) => {
+        productService.setAsCurrent(row)
+
+        model.value = ProductModel.create(row)
+        showCreateModal.value = true
+        isEditMode.value = true
+      }
+
+      if (!categoryService.categories) {
+        categoryService.getCategories()
+      }
+
+      if (!attributeService.attributes) {
+        attributeService.getAttributes()
+      }
+
+      productService.getProducts()
 
       return {
         cols,
