@@ -11,7 +11,7 @@ export const rest = new Rest(axios.create({
   timeout: 10000
 }))
 
-export const fileApi = new Rest(axios.create({
+export const file = new Rest(axios.create({
   headers: {
     'Content-Type': 'multipart/form-data'
   },

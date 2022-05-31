@@ -44,6 +44,7 @@ export const productCreateModal = defineComponent({
     'update:seo:keywords',
     'update:url',
     'upload:image',
+    'delete:image',
     'create',
     'update'
   ],
@@ -52,8 +53,6 @@ export const productCreateModal = defineComponent({
     const ctgMap = ref<Map<string, ICategory>>(new Map())
     const files = ref<Maybe<any>>([])
     const attributesArray = ref<Array<any>>([])
-
-    const attribute = { key: '', value: '' }
 
     const toggleCategory = (ctg) => {
       if (ctgMap.value.get(ctg._id)) {
@@ -72,6 +71,7 @@ export const productCreateModal = defineComponent({
           if (!ctgMap.value.get(ctg._id)) toggleCategory(ctg)
         })
       }
+      attributesArray.value = clone(props.attributes)
     }, { immediate: true })
 
     const computedName = computed<string>({
@@ -148,10 +148,10 @@ export const productCreateModal = defineComponent({
 
     const computedAttributes = computed({
       get() {
-        return props.attributes
+        return attributesArray.value
       },
-      set(val) {
-        emit('update:attributes', val)
+      set() {
+        emit('update:attributes', attributesArray.value)
       }
     })
 
@@ -217,7 +217,6 @@ export const productCreateModal = defineComponent({
       }
     })
 
-
     const onCreate = validate => {
       validate().then(() => emit('create'))
     }
@@ -233,16 +232,13 @@ export const productCreateModal = defineComponent({
       else onCreate(validate)
     }
 
-    const onLoadImage = event => {
-      if (!event.length) return
-      emit('upload:image', event)
+    const onLoadImage = uploads => {
+      if (!uploads.length) return
+      emit('upload:image', uploads)
     }
 
-    const addAttribute = () => {
-      // attributesArray.value.push(clone(attribute))
-      attributesArray.value = [...attributesArray.value, clone(attribute)]
-      console.log(attributesArray.value)
-      // emit('update:attributes', attributesArray.value)
+    const onDeleteImage = (asset) => {
+      emit('delete:image', asset.url)
     }
 
     return {
@@ -264,10 +260,10 @@ export const productCreateModal = defineComponent({
       computedUrl,
       files,
       attributesArray,
-      addAttribute,
       toggleCategory,
       onLoadImage,
       onSubmit,
+      onDeleteImage,
       onAttributesUpdate
     }
   }

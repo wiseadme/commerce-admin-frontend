@@ -1,7 +1,7 @@
 <script lang="ts">
-import { productCreateModal } from './product-create-modal'
+  import { productCreateModal } from './product-create-modal'
 
-export default productCreateModal
+  export default productCreateModal
 </script>
 <template>
   <v-modal
@@ -97,11 +97,37 @@ export default productCreateModal
             <v-col class="mb-4 pa-4 white elevation-2">
               <v-file-input
                 v-model:value="files"
-                label="Загрузить изображения"
+                :label="isUpdate ? 'Загрузить изображения' : 'Загруить изображение мождно только после создания продукта'"
                 color="#272727"
                 text-color="#272727"
+                :disabled="!isUpdate"
                 @update:value="onLoadImage"
               />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              v-for="it in computedAssets"
+              :key="it._id"
+              xl="2"
+              lg="4"
+              md="6"
+              sm="12"
+              class="mr-2 mb-4 pa-2 white elevation-2 d-flex justify-center align-center"
+              style="overflow: hidden; position: relative"
+            >
+              <img
+                style="height: 100px; width: auto"
+                :src="'http://anar.com' + it.url"
+                alt=""
+              >
+              <v-icon
+                clickable
+                style="position: absolute; top: 5px; right: 5px"
+                @click="onDeleteImage(it)"
+              >
+                fas fa-times
+              </v-icon>
             </v-col>
           </v-row>
           <v-row>
@@ -185,20 +211,7 @@ export default productCreateModal
                 <v-card-title>
                   <h3>Атрибуты</h3>
                 </v-card-title>
-                <v-card-subtitle v-if="!isUpdate">
-                  данный раздел актуален только после сохранения товара
-                </v-card-subtitle>
-                <v-card-content v-else>
-                  <v-row>
-                    <v-col>
-                      <v-button
-                        color="green"
-                        @click="addAttribute"
-                      >
-                        <v-icon>fas fa-plus</v-icon>
-                      </v-button>
-                    </v-col>
-                  </v-row>
+                <v-card-content>
                   <v-row
                     v-for="(it, i) in computedAttributes"
                     :key="i"
@@ -206,14 +219,16 @@ export default productCreateModal
                     <v-col cols="6">
                       <v-text-field
                         v-model="it.key"
-                        label="название"
-                        @input="onAttributesUpdate"
+                        label="Атрибут"
+                        color="#272727"
+                        readonly
                       />
                     </v-col>
                     <v-col cols="6">
                       <v-text-field
                         v-model="it.value"
-                        label="значение"
+                        label="Значение"
+                        color="green"
                         @input="onAttributesUpdate"
                       />
                     </v-col>
@@ -264,8 +279,8 @@ export default productCreateModal
   </v-modal>
 </template>
 <style lang="scss">
-.card-title {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-}
+  .card-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+  }
 </style>

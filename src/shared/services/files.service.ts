@@ -21,6 +21,10 @@ export class Service {
     return await this._store.uploadFile({ ownerId, fileName, formData })
   }
 
+  async updateFile(updates) {
+    return this._store.update(updates)
+  }
+
   async deleteFile({ ownerId, url }) {
     return await this._store.deleteFile({ ownerId, url })
   }

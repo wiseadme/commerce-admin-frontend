@@ -1,4 +1,4 @@
-import { fileApi } from '@shared/api'
+import { file, rest } from '@shared/api'
 import { IRest, IRepository } from '@shared/types/app'
 
 type CreateFileParams = {
@@ -12,25 +12,34 @@ type DeleteFileParams = {
   url: string,
 }
 
-interface FilesRepository extends Omit<() => IRepository, 'read' | 'update'> {
+interface IFilesRepository extends Omit<() => IRepository, 'read' | 'update'> {
   create: (params: CreateFileParams) => Promise<{ data: { data: any } }>
+  update: (updates: Partial<IProductAsset>) => Promise<{ data: { data: IProductAsset } }>
   delete: (params: DeleteFileParams) => Promise<{ data: { data: boolean } }>
 }
 
-class Repository implements FilesRepository {
-  private rest: IRest
+class Repository implements IFilesRepository {
+  private _file: IRest
+  private _rest: IRest
+  private _baseUrl: string
 
-  constructor(rest){
-    this.rest = rest
+  constructor(file, rest, baseUrl){
+    this._file = file
+    this._rest = rest
+    this._baseUrl = baseUrl
   }
 
   create({ ownerId, fileName, formData }){
-    return this.rest.post(`/v1/assets?id=${ ownerId }&&fileName=${ fileName }`, formData)
+    return this._file.post(`${ this._baseUrl }?id=${ ownerId }&&fileName=${ fileName }`, formData)
+  }
+
+  update(updates){
+    return this._rest.patch(this._baseUrl, updates)
   }
 
   delete({ ownerId, url }){
-    return this.rest.delete(`/v1/assets?id=${ ownerId }&&url=${ url }`)
+    return this._file.delete(`${ this._baseUrl }?id=${ ownerId }&&url=${ url }`)
   }
 }
 
-export const useFilesRepository = () => new Repository(fileApi) as FilesRepository
+export const useFilesRepository = () => new Repository(file, rest, '/v1/assets') as IFilesRepository

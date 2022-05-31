@@ -1,158 +1,182 @@
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
-import { ProductCreateModal } from '../components/ProductCreateModal'
-import { useProductService } from '@modules/product/service/product.service'
-import { useCategoryService } from '@modules/category/service/category.service'
-import { ProductModel } from '@modules/product/model/product.model'
-import { getDifferences } from '@shared/helpers'
+  import { defineComponent, ref } from 'vue'
+  import { ProductCreateModal } from '../components/ProductCreateModal'
+  // Services
+  import { useProductService } from '@modules/product/service/product.service'
+  import { useCategoryService } from '@modules/category/service/category.service'
+  import { useAttributeService } from '@modules/attribute/service/attribute.service'
+  // Model
+  import { ProductModel } from '@modules/product/model/product.model'
+  import { getDifferences } from '@shared/helpers'
 
-export default defineComponent({
-  components: { ProductCreateModal },
+  export default defineComponent({
+    components: { ProductCreateModal },
 
-  async setup(){
-    const model = ref<IProductModel>(ProductModel.create())
-    const showCreateModal = ref<boolean>(false)
-    const isEditMode = ref(false)
+    async setup(){
+      const model = ref<IProductModel>(ProductModel.create())
+      const showCreateModal = ref<boolean>(false)
+      const isEditMode = ref(false)
 
-    const productService = useProductService()
-    const categoryService = useCategoryService()
+      const productService = useProductService()
+      const categoryService = useCategoryService()
+      const attributeService = useAttributeService()
 
-    const onCreate = () => {
-      productService.createProduct(model.value)
-    }
-
-    const onUpdate = () => {
-      const updates: Maybe<IProduct> = getDifferences(
-        model.value,
-        productService.product
-      ) as IProduct
-
-      if (updates) {
-        updates!._id = productService.product?._id!
+      const onCreate = () => {
+        productService.createProduct(model.value)
       }
 
-      productService.updateProduct(updates)
-        .then(() => {
-          showCreateModal.value = false
-          isEditMode.value = false
-        })
-    }
+      const onAdd = () => {
+        showCreateModal.value = true
+        isEditMode.value = false
 
-    const onDeleteProduct = (product) => {
-      productService.deleteProduct(product)
-    }
-
-    const onUploadImage = (files) => {
-      productService.uploadProductImage(files)
-        .then(res => console.log(res))
-    }
-
-    const onEdit = (row) => {
-      productService.setAsCurrent(row)
-
-      model.value = ProductModel.create(row)
-      showCreateModal.value = true
-      isEditMode.value = true
-    }
-
-    if (!categoryService.categories) {
-      categoryService.getCategories()
-    }
-
-    productService.getProducts()
-
-    watch(model, to => console.log(to), { deep: true })
-
-    const cols = ref([
-      {
-        key: 'actions',
-        title: 'Действия',
-        align: 'center'
-      },
-      {
-        key: 'name',
-        title: 'Название',
-        width: '300',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.name
-      },
-      {
-        key: 'url',
-        title: 'Url товара',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.url
-      },
-      {
-        key: 'price',
-        title: 'Цена',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.price
-      },
-      {
-        key: 'count',
-        title: 'Количество',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.count
-      },
-      {
-        key: 'image',
-        title: 'Картинка',
-        width: '150',
-        resizeable: true,
-        sortable: true,
-        filterable: true
-      },
-      {
-        key: 'categories',
-        title: 'Категории',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.categories.reduce((acc, c, i, arr) => {
-          acc += c.title
-          if (i + 1 !== arr.length) acc += ', '
-
-          return acc
-        }, '')
-      },
-      {
-        key: 'seo',
-        title: 'SEO',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.seo.title
+        model.value = ProductModel.create()
+        model.value.attributes = attributeService.attributes
       }
-    ])
 
-    return {
-      cols,
-      model,
-      categoryService,
-      productService,
-      showCreateModal,
-      isEditMode,
-      onCreate,
-      onUpdate,
-      onEdit,
-      onDeleteProduct,
-      onUploadImage
+      const onUpdate = () => {
+        const updates: Maybe<IProduct> = getDifferences(
+          model.value,
+          productService.product
+        ) as IProduct
+
+        if (updates) {
+          updates!._id = productService.product?._id!
+        }
+
+        productService.updateProduct(updates)
+          .then(() => {
+            showCreateModal.value = false
+            isEditMode.value = false
+          })
+      }
+
+      const onDeleteProduct = (product) => {
+        productService.deleteProduct(product)
+      }
+
+      const onUploadImage = (files) => {
+        productService.uploadProductImage(files)
+          .then(res => console.log(res))
+      }
+
+      const onDeleteImage = (url) => {
+        productService.deleteProductImage(url)
+          .then(() => {
+            model.value.assets = model.value.assets?.filter(it => it.url !== url)!
+          })
+      }
+
+      const onEdit = (row) => {
+        productService.setAsCurrent(row)
+
+        model.value = ProductModel.create(row)
+        showCreateModal.value = true
+        isEditMode.value = true
+      }
+
+      if (!categoryService.categories) {
+        categoryService.getCategories()
+      }
+
+      if (!attributeService.attributes) {
+        attributeService.getAttributes()
+      }
+
+      productService.getProducts()
+
+      const cols = ref([
+        {
+          key: 'actions',
+          title: 'Действия',
+          align: 'center'
+        },
+        {
+          key: 'name',
+          title: 'Название',
+          width: '300',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.name
+        },
+        {
+          key: 'url',
+          title: 'Url товара',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.url
+        },
+        {
+          key: 'price',
+          title: 'Цена',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.price
+        },
+        {
+          key: 'count',
+          title: 'Количество',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.count
+        },
+        {
+          key: 'image',
+          title: 'Картинка',
+          width: '150',
+          resizeable: true,
+          sortable: true,
+          filterable: true
+        },
+        {
+          key: 'categories',
+          title: 'Категории',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.categories.reduce((acc, c, i, arr) => {
+            acc += c.title
+            if (i + 1 !== arr.length) acc += ', '
+
+            return acc
+          }, '')
+        },
+        {
+          key: 'seo',
+          title: 'SEO',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.seo.title
+        }
+      ])
+
+      return {
+        cols,
+        model,
+        categoryService,
+        attributeService,
+        productService,
+        showCreateModal,
+        isEditMode,
+        onCreate,
+        onUpdate,
+        onEdit,
+        onAdd,
+        onDeleteProduct,
+        onDeleteImage,
+        onUploadImage
+      }
     }
-  }
-})
+  })
 </script>
 <template>
   <v-layout column>
@@ -193,7 +217,7 @@ export default defineComponent({
                   color="green"
                   elevation="5"
                   outlined
-                  @click="showCreateModal = true"
+                  @click="onAdd"
                 >
                   <v-icon
                     size="14"
@@ -242,6 +266,7 @@ export default defineComponent({
       v-model:name="model.name"
       v-model:price="model.price"
       v-model:count="model.count"
+      v-model:assets="model.assets"
       v-model:url="model.url"
       v-model:unit="model.unit"
       v-model:description="model.description"
@@ -255,6 +280,7 @@ export default defineComponent({
       @create="onCreate"
       @update="onUpdate"
       @upload:image="onUploadImage"
+      @delete:image="onDeleteImage"
     />
   </v-layout>
 </template>

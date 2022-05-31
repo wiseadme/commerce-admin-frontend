@@ -3,15 +3,20 @@ declare interface IProductState {
 }
 
 declare interface IProductActions {
-  create: (product: IProductModel) => Promise<IProduct>
-  read: (id?: string) => Promise<Array<IProduct>>
-  delete: (product) => Promise<boolean>
-  update: (updates: Partial<IProduct>) => Promise<IProduct>
+  create(product: IProductModel): Promise<IProduct>
+
+  read(id?: string): Promise<Array<IProduct>>
+
+  delete(product): Promise<boolean>
+
+  update(updates: Partial<IProduct>): Promise<IProduct>
 }
 
 declare interface IProductAsset {
+  _id: string
   url: string,
-  type: string
+  type: string,
+  main: boolean
 }
 
 declare interface IProductAttribute {

@@ -1,15 +1,14 @@
-<script>
+<script lang="ts">
   import { defineComponent, ref, toRaw } from 'vue'
-  // import { useAttributeService } from '../service/attribute.service'
+  import { useAttributeService } from '../service/attribute.service'
   import { clone } from '@shared/helpers'
 
   export default defineComponent({
     name: 'attribute-page',
     async setup() {
-      const attributes = ref([])
       const attributePattern = ref({ key: '', value: '', meta: '' })
 
-      // const service = useAttributeService()
+      const service = useAttributeService()
 
       const clearForm = () => {
         attributePattern.value = { key: '', value: '', meta: '' }
@@ -17,16 +16,22 @@
 
       const onCreate = (validate) => {
         validate().then(() => {
-          attributes.value.push(clone(toRaw(attributePattern.value)))
+          service.createAttribute(clone(toRaw(attributePattern.value)))
         })
-        // service.createAttribute(attribute)
       }
 
+      const onDelete = (attribute: IAttribute) => {
+        service.deleteAttribute(attribute._id)
+      }
+
+      service.getAttributes()
+
       return {
-        attributes,
+        service,
         attributePattern,
         clearForm,
-        onCreate
+        onCreate,
+        onDelete
       }
     }
   })
@@ -102,19 +107,24 @@
         md="12"
         sm="12"
       >
-        <div
-          v-for="it in attributes"
-          :key="it.key"
-          class="d-flex justify-start align-center elevation-2 my-1 py-4 px-3 white"
-        >
-          <span>
-            {{ it.key }}
-          </span>
-          <v-spacer></v-spacer>
-          <v-icon clickable>
-            fas fa-times
-          </v-icon>
-        </div>
+        <template v-if="service.attributes">
+          <div
+            v-for="it in service.attributes"
+            :key="it.key"
+            class="d-flex justify-start align-center elevation-2 my-1 py-4 px-3 white"
+          >
+            <span>
+              {{ it.key }}
+            </span>
+            <v-spacer></v-spacer>
+            <v-icon
+              clickable
+              @click="onDelete(it)"
+            >
+              fas fa-times
+            </v-icon>
+          </div>
+        </template>
       </v-col>
     </v-row>
   </v-layout>
