@@ -1,15 +1,16 @@
 import { Store } from 'vuezone'
 import { useProductStore } from '@modules/product/store'
 import { Service as FilesService, useFilesService } from '@shared/services/files.service'
+import { ref, Ref } from 'vue'
 
 class Service {
   private _store: Store<IProductState, IProductActions>
-  private _product: Maybe<IProduct>
+  private _product: Ref<Maybe<IProduct>>
   public files: FilesService
 
   constructor(store, filesService){
     this._store = store
-    this._product = null
+    this._product = ref(null)
     this.files = filesService
   }
 
@@ -18,26 +19,28 @@ class Service {
   }
 
   get product(){
-    return this._product
+    return this._product.value
   }
 
   setAsCurrent(product: IProduct){
-    this._product = product
+    this._product.value = product
   }
 
   createProduct(product: IProductModel){
-    this._store.create(product)
+    return this._store.create(product)
       .then(() => this.getProducts())
       .catch(err => console.log(err))
   }
 
   deleteProduct(product){
-    this._store.delete(product)
-      .catch(err => console.log(err))
+    this._store.delete(product).catch(err => console.log(err))
   }
 
   updateProduct(updates){
+    updates!._id = this._product.value?._id!
+
     return this._store.update(updates)
+      .then(pr => this._product.value = pr)
       .catch(err => console.log(err))
   }
 
@@ -49,7 +52,7 @@ class Service {
     if (!files.length) return
 
     const { formData, fileName } = this.files.createFormData(files)
-    const ownerId = this._product!._id
+    const ownerId = this._product.value!._id
 
     const asset: IProductAsset = await this.files.uploadFile({
       ownerId,
@@ -58,7 +61,7 @@ class Service {
     })
 
     if (asset && asset.url) {
-      let { assets } = this._product!
+      let { assets } = this._product.value!
       assets = assets || []
 
       asset.main = asset.main || !assets.length
@@ -80,12 +83,12 @@ class Service {
   }
 
   async deleteProductImage(url){
-    const ownerId = this._product!._id
+    const ownerId = this._product.value!._id
 
     await this.files.deleteFile({ ownerId, url })
 
-    let assets = this._product!.assets?.filter(it => it.url !== url)
-    this._product!.assets = assets!
+    let assets = this._product.value!.assets?.filter(it => it.url !== url)
+    this._product.value!.assets = assets!
 
     if (assets && assets.length && !assets?.find(it => it.main)) {
       assets[0] = await this.files.updateFile({

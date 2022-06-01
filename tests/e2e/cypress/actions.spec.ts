@@ -1,12 +1,10 @@
 import { mount } from '@cypress/vue'
-import { AppHeader } from '../../../src/shared/components/AppHeader'
+import { AppHeader } from '@app/components/AppHeader'
 
 describe('AppHeader', () => {
-  it('renders a message', () => {
-    // const name = 'Hello Cypress Component Testing!'
+  it('mount component and test element', () => {
     mount(AppHeader as any, {})
 
-
-    cy.get('.app-header').should('exist')
+    cy.get('v-toolbar').should('exist')
   })
 })

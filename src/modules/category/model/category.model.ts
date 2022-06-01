@@ -6,6 +6,7 @@ export class CategoryModel implements ICategoryModel {
   children: ICategoryModel['children']
   order: ICategoryModel['order']
   seo: ICategoryModel['seo']
+  isVisible: ICategoryModel['isVisible']
 
   constructor({
     title = '',
@@ -13,6 +14,7 @@ export class CategoryModel implements ICategoryModel {
     image = null,
     parent = null,
     children = null,
+    isVisible = true,
     order = 0,
     seo = {
       title: null,
@@ -27,6 +29,7 @@ export class CategoryModel implements ICategoryModel {
     this.children = children
     this.order = order
     this.seo = seo
+    this.isVisible = isVisible
   }
 
   static create(params = {}){

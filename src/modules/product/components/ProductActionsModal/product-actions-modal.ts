@@ -1,10 +1,9 @@
 import { defineComponent, ref, toRaw, computed, PropType, watch } from 'vue'
 import { TextEditor } from '@shared/components/TextEditor'
-import { Maybe } from 'vueland/dist/types/base'
 import { clone } from '@shared/helpers'
 import draggable from 'vuedraggable'
 
-export const productCreateModal = defineComponent({
+export const productActionsModal = defineComponent({
   components: {
     TextEditor,
     draggable
@@ -53,8 +52,8 @@ export const productCreateModal = defineComponent({
 
   async setup(props, { emit }){
     const ctgMap = ref<Map<string, ICategory>>(new Map())
-    const files = ref<Maybe<any>>([])
-    const attributesArray = ref<Array<any>>([])
+    const files = ref<Array<File>>([])
+    const attributesArray = ref<Array<IAttribute>>([])
     const content = ref<string>('')
 
     const toggleCategory = (ctg) => {
@@ -66,20 +65,6 @@ export const productCreateModal = defineComponent({
 
       computedCategories.value = Array.from(toRaw(ctgMap.value).values())
     }
-
-    watch(() => props.modelValue, to => {
-      ctgMap.value.clear()
-
-      if (to && props.isUpdate) {
-        props.categories?.forEach(ctg => {
-          if (!ctgMap.value.get(ctg._id)) toggleCategory(ctg)
-        })
-      }
-
-      attributesArray.value = clone(props.attributes)
-      content.value = props.description!
-
-    }, { immediate: true })
 
     const computedName = computed<string>({
       get(){
@@ -248,6 +233,22 @@ export const productCreateModal = defineComponent({
     const onDeleteImage = (asset) => {
       emit('delete:image', asset.url)
     }
+
+    watch(() => props.modelValue, to => {
+      ctgMap.value.clear()
+
+      if (to && props.isUpdate) {
+        props.categories?.forEach(ctg => {
+          if (!ctgMap.value.get(ctg._id)) toggleCategory(ctg)
+        })
+      }
+
+      attributesArray.value = clone(props.attributes)
+      content.value = props.description!
+
+    }, { immediate: true })
+
+    // watch(computedAssets, to => console.log(to))
 
     return {
       ctgMap,

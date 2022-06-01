@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { defineComponent, ref, toRaw } from 'vue'
+  import { defineComponent, ref, watch, toRaw } from 'vue'
   import draggable from 'vuedraggable'
   import { useAttributeService } from '../service/attribute.service'
   import { clone } from '@shared/helpers'
@@ -10,7 +10,7 @@
       draggable
     },
     async setup(){
-      const attributes: Array<IAttribute> = ref(null)
+      const attributes = ref<Maybe<Array<IAttribute>>>(null)
       const attributePattern = ref<IAttributeModel>({
         key: '',
         value: '',
@@ -21,7 +21,7 @@
       const service = useAttributeService()
 
       const clearForm = () => {
-        attributePattern.value = { key: '', value: '', meta: '' }
+        attributePattern.value = { key: '', value: '', meta: '', order: 0 }
       }
 
       const onCreate = (validate) => {
@@ -31,7 +31,7 @@
       }
 
       const onChange = () => {
-        attributes.value.forEach((it, i) => it.order = i)
+        attributes.value!.forEach((it, i) => it.order = i)
         service.updateAttribute(attributes.value)
       }
 
@@ -39,8 +39,13 @@
         service.deleteAttribute(attribute._id)
       }
 
+      watch(
+        () => service.attributes,
+        to => attributes.value = clone(to),
+        { immediate: true, deep: true },
+      )
+
       service.getAttributes()
-        .then(() => attributes.value = clone(service.attributes))
 
       return {
         service,

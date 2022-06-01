@@ -5,5 +5,7 @@
   "componentFolder": ".",
   "testFiles": "**/*.spec.ts",
   "video": false,
+  "screenshotOnRunFailure": false,
+  "screenshotsFolder": "cypress/screenshots",
   "baseUrl": "http://localhost:3000"
 }

@@ -12,6 +12,7 @@ declare interface ICategoryModel {
   children: Maybe<Array<ICategory>>
   order: number
   seo: CategorySeo
+  isVisible: boolean
 }
 
 declare type ICategory = {

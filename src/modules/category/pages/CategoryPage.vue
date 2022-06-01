@@ -1,74 +1,75 @@
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
-import { useCategoryService } from '@modules/category/service/category.service'
-import { CategoryModel } from '@modules/category/model/category.model'
-import { getDifferences, clone } from '@shared/helpers'
+  import { defineComponent, ref, computed } from 'vue'
+  import { useCategoryService } from '@modules/category/service/category.service'
+  import { CategoryModel } from '@modules/category/model/category.model'
+  import { getDifferences, clone } from '@shared/helpers'
 
-import { CategoryActionsModal } from '../components/CategoryActionsModal'
+  import { CategoryActionsModal } from '../components/CategoryActionsModal'
 
-export default defineComponent({
-  components: {
-    CategoryActionsModal
-  },
+  export default defineComponent({
+    components: {
+      CategoryActionsModal
+    },
 
-  async setup(){
-    const categoryModel = ref<ICategoryModel>(CategoryModel.create({}))
-    const categoryUpdates = ref<Maybe<ICategory>>(null)
+    async setup(){
+      const categoryModel = ref<ICategoryModel>(CategoryModel.create({}))
+      const categoryUpdates = ref<Maybe<ICategory>>(null)
 
-    const isEditMode = ref<boolean>(false)
-    const showModal = ref<boolean>(false)
+      const isEditMode = ref<boolean>(false)
+      const showModal = ref<boolean>(false)
 
-    const service = useCategoryService()
+      const service = useCategoryService()
 
-    const model = computed<Maybe<ICategory> | ICategoryModel>(() => {
-      if (isEditMode.value) return categoryUpdates.value
-      return categoryModel.value
-    })
+      const model = computed<Maybe<ICategory> | ICategoryModel>(() => {
+        if (isEditMode.value) return categoryUpdates.value
+        return categoryModel.value
+      })
 
-    const onEdit = (row) => {
-      service.setAsCurrent(row)
-      categoryUpdates.value = clone(row)
+      const onEdit = (row) => {
+        service.setAsCurrent(row)
+        categoryUpdates.value = clone(row)
 
-      isEditMode.value = true
-      showModal.value = true
-    }
+        isEditMode.value = true
+        showModal.value = true
+      }
 
-    const onUploadImage = (files) => {
-      service.uploadCategoryImage(files)
-        .then((url) => model.value!.image = url)
-    }
+      const onUploadImage = (files) => {
+        service.uploadCategoryImage(files)
+          .then((url) => model.value!.image = url)
+      }
 
-    const onDeleteImage = (url) => {
-      service.deleteImageHandler(url)
-        .then(() => model.value!.image = null)
-    }
+      const onDeleteImage = (url) => {
+        service.deleteImageHandler(url)
+          .then(() => model.value!.image = null)
+      }
 
-    const onDeleteCategory = (category) => {
-      service.deleteCategory(category)
-    }
+      const onDeleteCategory = (category) => {
+        service.deleteCategory(category)
+      }
 
-    const onAddNew = () => {
-      showModal.value = true
-      isEditMode.value = false
+      const onAddNew = () => {
+        showModal.value = true
+        isEditMode.value = false
 
-      service.setAsCurrent(null)
+        service.setAsCurrent(null)
 
-      categoryModel.value = CategoryModel.create({})
-    }
+        categoryModel.value = CategoryModel.create({})
+      }
 
-    const onCreate = () => {
-      service.createCategory(model.value)
-        .then(() => categoryModel.value = CategoryModel.create({}))
-        .then(() => showModal.value = false)
-    }
+      const onCreate = () => {
+        service.createCategory(model.value)
+          .then(() => categoryModel.value = CategoryModel.create({}))
+          .then(() => showModal.value = false)
+      }
 
-    const onUpdate = () => {
-      const updates: Maybe<ICategoryUpdates> = getDifferences(
-        categoryUpdates.value,
-        service.category
-      ) as ICategoryUpdates
+      const onUpdate = () => {
+        const updates: Maybe<ICategoryUpdates> = getDifferences(
+          categoryUpdates.value,
+          service.category
+        ) as ICategoryUpdates
 
-      if (updates) {
+        if (!updates) return
+
         updates!._id = service.category!._id
 
         if (updates!.parent) updates!.parent = categoryUpdates.value!.parent._id
@@ -79,87 +80,87 @@ export default defineComponent({
             isEditMode.value = false
             categoryUpdates.value = null
           })
+
+      }
+
+      const cols = ref([
+        {
+          key: 'actions',
+          title: 'Действия',
+          align: 'center'
+        },
+        {
+          key: 'title',
+          title: 'Название',
+          width: '300',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.title
+        },
+        {
+          key: 'url',
+          title: 'Url категории',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.url
+        },
+        {
+          key: 'image',
+          title: 'Картинка',
+          width: '150',
+          resizeable: true,
+          sortable: true,
+          filterable: true
+        },
+        {
+          key: 'parent',
+          title: 'Родительская категория',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.parent?.title
+        },
+        {
+          key: 'seo',
+          title: 'SEO',
+          width: '250',
+          resizeable: true,
+          sortable: true,
+          filterable: true,
+          format: (row) => row.seo.title
+        },
+        {
+          key: 'order',
+          title: 'Порядковый номер',
+          width: '200',
+          resizeable: true,
+          sortable: true,
+          filterable: true
+        }
+      ])
+
+      await service.getCategories()
+
+      return {
+        cols,
+        isEditMode,
+        showModal,
+        model,
+        service,
+        onAddNew,
+        onEdit,
+        onCreate,
+        onDeleteImage,
+        onUpdate,
+        onUploadImage,
+        onDeleteCategory
       }
     }
-
-    const cols = ref([
-      {
-        key: 'actions',
-        title: 'Действия',
-        align: 'center'
-      },
-      {
-        key: 'title',
-        title: 'Название',
-        width: '300',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.title
-      },
-      {
-        key: 'url',
-        title: 'Url категории',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.url
-      },
-      {
-        key: 'image',
-        title: 'Картинка',
-        width: '150',
-        resizeable: true,
-        sortable: true,
-        filterable: true
-      },
-      {
-        key: 'parent',
-        title: 'Родительская категория',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.parent?.title
-      },
-      {
-        key: 'seo',
-        title: 'SEO',
-        width: '250',
-        resizeable: true,
-        sortable: true,
-        filterable: true,
-        format: (row) => row.seo.title
-      },
-      {
-        key: 'order',
-        title: 'Порядковый номер',
-        width: '200',
-        resizeable: true,
-        sortable: true,
-        filterable: true
-      }
-    ])
-
-    await service.getCategories()
-
-    return {
-      cols,
-      isEditMode,
-      showModal,
-      model,
-      service,
-      onAddNew,
-      onEdit,
-      onCreate,
-      onDeleteImage,
-      onUpdate,
-      onUploadImage,
-      onDeleteCategory
-    }
-  }
-})
+  })
 </script>
 <template>
   <v-layout column>
@@ -258,6 +259,7 @@ export default defineComponent({
       v-model:seo-keywords="model.seo.keywords"
       v-model:parent="model.parent"
       v-model:order="model.order"
+      v-model:isVisible="model.isVisible"
       :categories="service.categories"
       :is-update="isEditMode"
       @create="onCreate"

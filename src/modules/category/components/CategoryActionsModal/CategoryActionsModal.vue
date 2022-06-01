@@ -133,6 +133,14 @@
               </v-card>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col>
+              <v-checkbox
+                v-model="computedIsVisibleProp"
+                label="Категория отображаемая"
+              />
+            </v-col>
+          </v-row>
         </v-card-content>
         <v-card-actions>
           <v-button

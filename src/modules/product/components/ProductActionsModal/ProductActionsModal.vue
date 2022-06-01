@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { productCreateModal } from './product-create-modal'
+  import { productActionsModal } from './product-actions-modal'
 
-  export default productCreateModal
+  export default productActionsModal
 </script>
 <template>
   <v-modal
@@ -109,8 +109,8 @@
             <v-col
               v-for="it in computedAssets"
               :key="it._id"
-              xl="2"
-              lg="4"
+              xl="4"
+              lg="6"
               md="6"
               sm="12"
               class="mr-2 mb-4 pa-2 white elevation-2 d-flex justify-center align-center"

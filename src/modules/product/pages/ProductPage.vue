@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
-  import { ProductCreateModal } from '../components/ProductCreateModal'
+  import { defineComponent, ref, watch } from 'vue'
+  import { ProductActionsModal } from '../components/ProductActionsModal'
   // Services
   import { useProductService } from '@modules/product/service/product.service'
   import { useCategoryService } from '@modules/category/service/category.service'
@@ -12,7 +12,7 @@
   import { clone } from '@shared/helpers'
 
   export default defineComponent({
-    components: { ProductCreateModal },
+    components: { ProductActionsModal },
 
     async setup(){
       const model = ref<IProductModel>(ProductModel.create())
@@ -100,6 +100,8 @@
 
       const onCreate = () => {
         productService.createProduct(model.value)
+          .then(() => showCreateModal.value = false)
+          .then(() => model.value = ProductModel.create())
       }
 
       const onAdd = () => {
@@ -116,7 +118,7 @@
           productService.product
         ) as IProduct
 
-        if (updates) updates!._id = productService.product?._id!
+        if (!updates) return
 
         productService.updateProduct(updates)
           .then(() => {
@@ -131,7 +133,6 @@
 
       const onUploadImage = (files) => {
         productService.uploadProductImage(files)
-          .then(res => console.log(res))
       }
 
       const onDeleteImage = (url) => {
@@ -148,6 +149,11 @@
         showCreateModal.value = true
         isEditMode.value = true
       }
+
+      watch(
+        () => productService.product,
+        to => model.value = ProductModel.create(to!)
+      )
 
       if (!categoryService.categories) {
         categoryService.getCategories()
@@ -261,7 +267,7 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <product-create-modal
+    <product-actions-modal
       v-model="showCreateModal"
       v-model:name="model.name"
       v-model:price="model.price"

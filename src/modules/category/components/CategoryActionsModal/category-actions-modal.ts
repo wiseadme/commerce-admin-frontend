@@ -13,6 +13,7 @@ export const categoryActionsModal = defineComponent({
     seoTitle: String,
     seoDescription: String,
     seoKeywords: String,
+    isVisible: Boolean,
     categories: {
       type: Array as PropType<Array<ICategory>>,
       default: null
@@ -29,6 +30,7 @@ export const categoryActionsModal = defineComponent({
     'update:seoTitle',
     'update:seoDescription',
     'update:seoKeywords',
+    'update:isVisible',
     'delete:image',
     'upload:image',
     'update',
@@ -112,6 +114,15 @@ export const categoryActionsModal = defineComponent({
       }
     })
 
+    const computedIsVisibleProp = computed<boolean>({
+      get() {
+        return props.isVisible
+      },
+      set(val) {
+        emit('update:isVisible', val)
+      }
+    })
+
     watch(() => props.image, () => files.value = [])
 
     const onCreate = (validate) => {
@@ -154,7 +165,8 @@ export const categoryActionsModal = defineComponent({
       computedSeoTitleProp,
       computedSeoDescProp,
       computedSeoKeywordsProp,
-      computedOrderProp
+      computedOrderProp,
+      computedIsVisibleProp
     }
   }
 })
