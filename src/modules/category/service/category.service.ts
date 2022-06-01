@@ -1,16 +1,19 @@
 import { useCategoryStore } from '@modules/category/store'
 import { Store } from 'vuezone'
-import { useFilesService, Service as FilesService } from '@shared/services/files.service'
+import { useEventBus } from '@shared/composables/use-event-bus'
+import { useFilesService } from '@shared/services/files.service'
 
 class Service implements ICategoryService {
   private _store: Store<ICategoryState, ICategoryActions>
   private _category: Maybe<ICategory>
-  public files: FilesService
+  private _events: ReturnType<typeof useEventBus>
 
-  constructor(store, filesService){
+  constructor(store, eventBus){
     this._store = store
     this._category = null
-    this.files = filesService
+    this._events = eventBus
+
+    this.addListeners()
   }
 
   get categories(){
@@ -25,6 +28,10 @@ class Service implements ICategoryService {
     return this._store.deleteImage
   }
 
+  addListeners(){
+    this._events.add('get:categories', this.onGetCategories.bind(this))
+  }
+
   setAsCurrent(category: Maybe<ICategory>){
     this._category = category
   }
@@ -36,6 +43,11 @@ class Service implements ICategoryService {
 
   getCategories(){
     this._store.read().catch(err => console.log(err))
+  }
+
+  onGetCategories(){
+    if (this.categories) return this.categories
+    return this.getCategories()
   }
 
   updateCategory(updates){
@@ -53,10 +65,13 @@ class Service implements ICategoryService {
   async uploadCategoryImage(files){
     if (!files.length) return
 
-    const { formData, fileName } = this.files.createFormData(files)
+    const { formData, fileName } = await this._events.emit('create:data', files)
     const ownerId = this._category!._id
 
-    const asset = await this.files.uploadFile({ ownerId, fileName, formData })
+    const asset = await this._events.emit(
+      'upload:file',
+      { ownerId, fileName, formData }
+    )
 
     if (asset && asset.url) {
       await this.updateCategory({ _id: this._category!._id, image: asset.url })
@@ -68,12 +83,16 @@ class Service implements ICategoryService {
   async deleteImageHandler(url){
     const ownerId = this._category!._id
 
-    await this.files.deleteFile({ ownerId, url })
+    await this._events.emit('delete:file', { ownerId, url })
     return this.updateCategory({ _id: ownerId, image: null })
   }
 }
 
-export const useCategoryService = () => new Service(
-  useCategoryStore(),
+export const useCategoryService = () => {
   useFilesService()
-)
+
+  return new Service(
+    useCategoryStore(),
+    useEventBus()
+  )
+}

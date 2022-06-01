@@ -140,7 +140,7 @@ export const productActionsModal = defineComponent({
 
     const computedAttributes = computed({
       get(){
-        return attributesArray.value
+        return props.attributes
       },
       set(){
         emit('update:attributes', attributesArray.value)

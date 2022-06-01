@@ -3,8 +3,6 @@
   import { ProductActionsModal } from '../components/ProductActionsModal'
   // Services
   import { useProductService } from '@modules/product/service/product.service'
-  import { useCategoryService } from '@modules/category/service/category.service'
-  import { useAttributeService } from '@modules/attribute/service/attribute.service'
   // Model
   import { ProductModel } from '@modules/product/model/product.model'
   import { getDifferences } from '@shared/helpers'
@@ -94,12 +92,10 @@
         }
       ])
 
-      const productService = useProductService()
-      const categoryService = useCategoryService()
-      const attributeService = useAttributeService()
+      const service = useProductService()
 
       const onCreate = () => {
-        productService.createProduct(model.value)
+        service.createProduct(model.value)
           .then(() => showCreateModal.value = false)
           .then(() => model.value = ProductModel.create())
       }
@@ -109,7 +105,7 @@
         isEditMode.value = false
 
         model.value = ProductModel.create()
-        model.value.attributes = clone(attributeService.attributes)
+        model.value.attributes = clone(service.attributes)
       }
 
       const onUpdate = () => {
@@ -118,9 +114,7 @@
           productService.product
         ) as IProduct
 
-        if (!updates) return
-
-        productService.updateProduct(updates)
+        !!updates && service.updateProduct(updates)
           .then(() => {
             showCreateModal.value = false
             isEditMode.value = false
@@ -128,49 +122,42 @@
       }
 
       const onDeleteProduct = (product) => {
-        productService.deleteProduct(product)
+        service.deleteProduct(product)
       }
 
       const onUploadImage = (files) => {
-        productService.uploadProductImage(files)
+        service.uploadProductImage(files)
       }
 
       const onDeleteImage = (url) => {
-        productService.deleteProductImage(url)
+        service.deleteProductImage(url)
           .then(() => {
             model.value.assets = model.value.assets?.filter(it => it.url !== url)!
           })
       }
 
       const onEdit = (row) => {
-        productService.setAsCurrent(row)
+        service.setAsCurrent(row)
 
-        model.value = ProductModel.create(row)
         showCreateModal.value = true
         isEditMode.value = true
       }
 
       watch(
-        () => productService.product,
+        () => service.product,
         to => model.value = ProductModel.create(to!)
       )
 
-      if (!categoryService.categories) {
-        categoryService.getCategories()
-      }
-
-      if (!attributeService.attributes) {
-        attributeService.getAttributes()
-      }
-
-      productService.getProducts()
+      await Promise.all([
+        service.getCategories(),
+        service.getAttributes(),
+        service.getProducts()
+      ])
 
       return {
         cols,
         model,
-        categoryService,
-        attributeService,
-        productService,
+        service,
         showCreateModal,
         isEditMode,
         onCreate,
@@ -192,7 +179,7 @@
       >
         <v-data-table
           :cols="cols"
-          :rows="productService.products"
+          :rows="service.products"
           class="elevation-2"
           :header-options="{
             color: 'green',
@@ -281,7 +268,7 @@
       v-model:attributes="model.attributes"
       v-model:variants="model.variants"
       v-model:is-visible="model.isVisible"
-      :category-items="categoryService.categories"
+      :category-items="service.categories"
       :is-update="isEditMode"
       @create="onCreate"
       @update="onUpdate"

@@ -1,17 +1,24 @@
 import { Store } from 'vuezone'
 import { useProductStore } from '@modules/product/store'
-import { Service as FilesService, useFilesService } from '@shared/services/files.service'
 import { ref, Ref } from 'vue'
+import { useEventBus } from '@shared/composables/use-event-bus'
+import { useFilesService } from '@shared/services/files.service'
+import { useCategoryService } from '@modules/category/service/category.service'
+import { useAttributeService } from '@modules/attribute/service/attribute.service'
 
 class Service {
   private _store: Store<IProductState, IProductActions>
   private _product: Ref<Maybe<IProduct>>
-  public files: FilesService
+  private _attributes: Maybe<Array<IProductAttribute>>
+  private _categories: Maybe<Array<ICategory>>
+  private _events: ReturnType<typeof useEventBus>
 
-  constructor(store, filesService){
+  constructor(store, eventBus){
     this._store = store
     this._product = ref(null)
-    this.files = filesService
+    this._attributes = null
+    this._categories = null
+    this._events = eventBus
   }
 
   get products(){
@@ -20,6 +27,26 @@ class Service {
 
   get product(){
     return this._product.value
+  }
+
+  get attributes(){
+    return this._attributes
+  }
+
+  get categories(){
+    return this._categories
+  }
+
+  async getAttributes(){
+    this._attributes = await this._events.emit('get:attributes')
+  }
+
+  async getCategories(){
+    this._categories = await this._events.emit('get:categories')
+  }
+
+  getProducts(){
+    return this._store.read().catch(err => console.log(err))
   }
 
   setAsCurrent(product: IProduct){
@@ -44,21 +71,16 @@ class Service {
       .catch(err => console.log(err))
   }
 
-  getProducts(){
-    this._store.read().catch(err => console.log(err))
-  }
-
   async uploadProductImage(files){
     if (!files.length) return
 
-    const { formData, fileName } = this.files.createFormData(files)
+    const { formData, fileName } = await this._events.emit('create:data', files)
     const ownerId = this._product.value!._id
 
-    const asset: IProductAsset = await this.files.uploadFile({
-      ownerId,
-      fileName,
-      formData
-    })
+    const asset: IProductAsset = await this._events.emit(
+      'upload:file',
+      { ownerId, fileName, formData }
+    )
 
     if (asset && asset.url) {
       let { assets } = this._product.value!
@@ -67,7 +89,7 @@ class Service {
       asset.main = asset.main || !assets.length
 
       if (asset.main) {
-        await this.files.updateFile({
+        await this._events.emit('update:file', {
           _id: asset._id,
           main: true
         })
@@ -85,13 +107,13 @@ class Service {
   async deleteProductImage(url){
     const ownerId = this._product.value!._id
 
-    await this.files.deleteFile({ ownerId, url })
+    await this._events.emit('delete:file', { ownerId, url })
 
     let assets = this._product.value!.assets?.filter(it => it.url !== url)
     this._product.value!.assets = assets!
 
     if (assets && assets.length && !assets?.find(it => it.main)) {
-      assets[0] = await this.files.updateFile({
+      assets[0] = await this._events.emit('update:file', {
         _id: assets?.[0]._id,
         main: true
       })
@@ -104,7 +126,13 @@ class Service {
   }
 }
 
-export const useProductService = () => new Service(
-  useProductStore(),
+export const useProductService = () => {
   useFilesService()
-)
+  useCategoryService()
+  useAttributeService()
+
+  return new Service(
+    useProductStore(),
+    useEventBus()
+  )
+}
