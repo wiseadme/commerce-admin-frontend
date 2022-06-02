@@ -34,7 +34,7 @@ class Service extends Observer implements ICategoryService {
   }
 
   getCategories(){
-    this._store.read().catch(err => console.log(err))
+    return this._store.read().catch(err => console.log(err))
   }
 
   onGetCategories(){

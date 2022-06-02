@@ -138,15 +138,6 @@ export const productActionsModal = defineComponent({
       }
     })
 
-    const computedAttributes = computed({
-      get(){
-        return props.attributes
-      },
-      set(){
-        emit('update:attributes', attributesArray.value)
-      }
-    })
-
     const computedVariants = computed<Array<IProductVariant>>({
       get(){
         return props.variants!
@@ -214,7 +205,7 @@ export const productActionsModal = defineComponent({
     }
 
     const onAttributesUpdate = () => {
-      computedAttributes.value = attributesArray.value
+      emit('update:attributes', attributesArray.value)
     }
 
     const onUpdate = () => emit('update')
@@ -248,8 +239,6 @@ export const productActionsModal = defineComponent({
 
     }, { immediate: true })
 
-    // watch(computedAssets, to => console.log(to))
-
     return {
       ctgMap,
       computedVisibility,
@@ -262,7 +251,6 @@ export const productActionsModal = defineComponent({
       computedSeoDesc,
       computedSeoKeywords,
       computedAssets,
-      computedAttributes,
       computedVariants,
       computedCategories,
       computedDescription,

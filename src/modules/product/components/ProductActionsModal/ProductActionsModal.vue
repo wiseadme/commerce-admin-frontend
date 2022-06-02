@@ -213,8 +213,9 @@
                 </v-card-title>
                 <v-card-content>
                   <draggable
-                    v-model="computedAttributes"
+                    v-model="attributesArray"
                     item-key="_id"
+                    @change="onAttributesUpdate"
                   >
                     <template #item="{element}">
                       <v-row class="my-2 elevation-2 pa-2">

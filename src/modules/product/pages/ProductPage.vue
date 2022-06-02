@@ -247,7 +247,7 @@
           <template #image="{row}">
             <img
               v-if="row.image"
-              :src="'http://anar.com' + row.image"
+              :src="'http://localhost' + row.image"
               :alt="row.name"
               style="width: auto; height: 30px"
             >
