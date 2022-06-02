@@ -1,18 +1,17 @@
-declare interface IAttributeModel {
+declare interface IAttribute {
+  _id: string
   key: string
   value: string
   meta?: string,
   order: number
 }
 
-declare type IAttribute = IAttributeModel & { _id: string }
-
 declare interface IAttributeState {
   attributes: Maybe<Array<IAttribute>>
 }
 
 declare interface IAttributesActions {
-  create(attribute: IAttributeModel): Promise<IAttribute>
+  create(attribute: IAttribute): Promise<IAttribute>
 
   read(id?: string): Promise<Array<IAttribute>>
 

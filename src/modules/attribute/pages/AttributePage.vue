@@ -3,6 +3,7 @@
   import draggable from 'vuedraggable'
   import { useAttributeService } from '../service/attribute.service'
   import { clone } from '@shared/helpers'
+  import { Attribute } from '@/modules/attribute/model/attribute.model'
 
   export default defineComponent({
     name: 'attribute-page',
@@ -11,22 +12,17 @@
     },
     async setup(){
       const attributes = ref<Maybe<Array<IAttribute>>>(null)
-      const attributePattern = ref<IAttributeModel>({
-        key: '',
-        value: '',
-        meta: '',
-        order: 0
-      })
+      const attributePattern = ref<IAttribute>(Attribute.create())
 
       const service = useAttributeService()
 
       const clearForm = () => {
-        attributePattern.value = { key: '', value: '', meta: '', order: 0 }
+        attributePattern.value = Attribute.create()
       }
 
       const onCreate = (validate) => {
         validate().then(() => {
-          service.createAttribute(clone(toRaw(attributePattern.value)))
+          service.createAttribute(toRaw(attributePattern.value))
         })
       }
 
@@ -42,7 +38,7 @@
       watch(
         () => service.attributes,
         to => attributes.value = clone(to),
-        { immediate: true, deep: true },
+        { immediate: true, deep: true }
       )
 
       service.getAttributes()

@@ -1,4 +1,4 @@
-import { useAttributeRepository } from '@modules/attribute/repository/attribute.repository'
+import { useAttributeRepository } from '@/modules/attribute/repository/attribute.repository'
 
 const attributeRepository = useAttributeRepository()
 

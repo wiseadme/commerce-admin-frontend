@@ -1,4 +1,4 @@
-import { useProductRepository } from '@modules/product/repository'
+import { useProductRepository } from '@/modules/product/repository'
 
 const productRepository = useProductRepository()
 

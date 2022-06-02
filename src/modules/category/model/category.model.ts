@@ -1,14 +1,16 @@
-export class CategoryModel implements ICategoryModel {
-  title: ICategoryModel['title']
-  url: ICategoryModel['url']
-  image: ICategoryModel['image']
-  parent: ICategoryModel['parent']
-  children: ICategoryModel['children']
-  order: ICategoryModel['order']
-  seo: ICategoryModel['seo']
-  isVisible: ICategoryModel['isVisible']
+export class Category implements ICategory {
+  _id: ICategory['_id']
+  title: ICategory['title']
+  url: ICategory['url']
+  image: ICategory['image']
+  parent: ICategory['parent']
+  children: ICategory['children']
+  order: ICategory['order']
+  seo: ICategory['seo']
+  isVisible: ICategory['isVisible']
 
   constructor({
+    _id = '',
     title = '',
     url = '',
     image = null,
@@ -22,6 +24,7 @@ export class CategoryModel implements ICategoryModel {
       keywords: null
     }
   }){
+    this._id = _id
     this.title = title
     this.url = url
     this.image = image
@@ -32,7 +35,7 @@ export class CategoryModel implements ICategoryModel {
     this.isVisible = isVisible
   }
 
-  static create(params = {}){
-    return new CategoryModel(params)
+  static create(category = {}){
+    return new Category(category)
   }
 }

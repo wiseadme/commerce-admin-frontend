@@ -1,15 +1,10 @@
 import { useFilesStore } from '@shared/store/files'
-import { useEventBus } from '@shared/composables/use-event-bus'
 
 export class Service {
   private _store: any
-  private _events: ReturnType<typeof useEventBus>
 
-  constructor(store, eventBus){
+  constructor(store){
     this._store = store
-    this._events = eventBus
-
-    this.addListeners()
   }
 
   createFormData(files){
@@ -20,13 +15,6 @@ export class Service {
     formData.append('image', file)
 
     return { formData, fileName }
-  }
-
-  addListeners(){
-    this._events.add('upload:file', this.uploadFile.bind(this))
-    this._events.add('update:file', this.updateFile.bind(this))
-    this._events.add('delete:file', this.deleteFile.bind(this))
-    this._events.add('create:data', this.createFormData.bind(this))
   }
 
   async uploadFile({ ownerId, fileName, formData }){
@@ -42,4 +30,4 @@ export class Service {
   }
 }
 
-export const useFilesService = () => new Service(useFilesStore(), useEventBus())
+export const useFilesService = () => new Service(useFilesStore())

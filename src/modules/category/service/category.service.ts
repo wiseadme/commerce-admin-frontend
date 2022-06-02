@@ -1,19 +1,15 @@
-import { useCategoryStore } from '@modules/category/store'
+import { useCategoryStore } from '@/modules/category/store'
 import { Store } from 'vuezone'
-import { useEventBus } from '@shared/composables/use-event-bus'
-import { useFilesService } from '@shared/services/files.service'
+import { Observer } from '@shared/plugins/observer'
 
-class Service implements ICategoryService {
+class Service extends Observer implements ICategoryService {
   private _store: Store<ICategoryState, ICategoryActions>
   private _category: Maybe<ICategory>
-  private _events: ReturnType<typeof useEventBus>
 
-  constructor(store, eventBus){
+  constructor(store){
+    super()
     this._store = store
     this._category = null
-    this._events = eventBus
-
-    this.addListeners()
   }
 
   get categories(){
@@ -26,10 +22,6 @@ class Service implements ICategoryService {
 
   get deleteCategoryImage(){
     return this._store.deleteImage
-  }
-
-  addListeners(){
-    this._events.add('get:categories', this.onGetCategories.bind(this))
   }
 
   setAsCurrent(category: Maybe<ICategory>){
@@ -65,10 +57,10 @@ class Service implements ICategoryService {
   async uploadCategoryImage(files){
     if (!files.length) return
 
-    const { formData, fileName } = await this._events.emit('create:data', files)
+    const { formData, fileName } = await this.emit('create:data', files)
     const ownerId = this._category!._id
 
-    const asset = await this._events.emit(
+    const asset = await this.emit(
       'upload:file',
       { ownerId, fileName, formData }
     )
@@ -83,16 +75,10 @@ class Service implements ICategoryService {
   async deleteImageHandler(url){
     const ownerId = this._category!._id
 
-    await this._events.emit('delete:file', { ownerId, url })
+    await this.emit('delete:file', { ownerId, url })
     return this.updateCategory({ _id: ownerId, image: null })
   }
 }
 
-export const useCategoryService = () => {
-  useFilesService()
-
-  return new Service(
-    useCategoryStore(),
-    useEventBus()
-  )
-}
+const service = new Service(useCategoryStore())
+export const useCategoryService = () => service

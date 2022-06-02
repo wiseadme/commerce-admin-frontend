@@ -4,26 +4,16 @@ type CategorySeo = {
   keywords?: Maybe<string>
 }
 
-declare interface ICategoryModel {
-  title: string
-  url: string
-  image: Maybe<string>
-  parent: Maybe<string>
-  children: Maybe<Array<ICategory>>
-  order: number
-  seo: CategorySeo
-  isVisible: boolean
-}
-
-declare type ICategory = {
+declare interface ICategory {
   _id: string
   title: string
   url: string
   image: Maybe<string>
-  parent: ICategory
-  children: Array<ICategory>
+  parent: Maybe<string | ICategory>
+  children: Maybe<Array<ICategory>>
   order: number
   seo: CategorySeo
+  isVisible: boolean
 }
 
 declare interface ICategoryUpdates {
@@ -43,7 +33,7 @@ declare interface ICategoryState {
 }
 
 declare interface ICategoryActions {
-  create(category: ICategoryModel): Promise<ICategory>
+  create(category: ICategory): Promise<ICategory>
 
   update(updates: Partial<ICategoryUpdates>): Promise<ICategory>
 
@@ -57,7 +47,7 @@ declare interface ICategoryActions {
 }
 
 declare interface ICategoryService {
-  createCategory(category: ICategoryModel): void
+  createCategory(category: ICategory): void
 
   // updateParent: (category: ICategory) => Promise<ICategory> | undefined
 }

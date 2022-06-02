@@ -1,24 +1,15 @@
 import { Store } from 'vuezone'
-import { useAttributeStore } from '@modules/attribute/store'
-import { useEventBus } from '@shared/composables/use-event-bus'
+import { useAttributeStore } from '@/modules/attribute/store'
 
 export class Service {
   private _store: Store<IAttributeState, IAttributesActions>
-  private _events: ReturnType<typeof useEventBus>
 
-  constructor(store, eventBus){
+  constructor(store){
     this._store = store
-    this._events = eventBus
-
-    this.addListeners()
   }
 
   get attributes(){
     return this._store.state.attributes
-  }
-
-  addListeners(){
-    this._events.add('get:attributes', this.onGetAttributes.bind(this))
   }
 
   updateAttribute(updates){
@@ -38,13 +29,11 @@ export class Service {
     return this._store.read().catch(err => console.log(err))
   }
 
-  onGetAttributes() {
+  onGetAttributes(){
     if (this.attributes) return this.attributes
     return this.getAttributes()
   }
 }
 
-export const useAttributeService = () => new Service(
-  useAttributeStore(),
-  useEventBus()
-)
+const service = new Service(useAttributeStore())
+export const useAttributeService = () => service

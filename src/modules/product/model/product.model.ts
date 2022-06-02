@@ -1,19 +1,21 @@
-export class ProductModel implements IProductModel {
-  name: IProductModel['name']
-  price: IProductModel['price']
-  count: IProductModel['count']
-  unit: IProductModel['unit']
-  isVisible: IProductModel['isVisible']
-  categories: IProductModel['categories']
-  description: IProductModel['description']
-  image: IProductModel['image']
-  assets: IProductModel['assets']
-  attributes: IProductModel['attributes']
-  variants: IProductModel['variants']
-  seo: IProductModel['seo']
-  url: IProductModel['url']
+export class Product implements IProduct {
+  _id: IProduct['_id']
+  name: IProduct['name']
+  price: IProduct['price']
+  count: IProduct['count']
+  unit: IProduct['unit']
+  isVisible: IProduct['isVisible']
+  categories: IProduct['categories']
+  description: IProduct['description']
+  image: IProduct['image']
+  assets: IProduct['assets']
+  attributes: IProduct['attributes']
+  variants: IProduct['variants']
+  seo: IProduct['seo']
+  url: IProduct['url']
 
   constructor({
+    _id = '',
     name = '',
     price = 0,
     count = 0,
@@ -32,6 +34,7 @@ export class ProductModel implements IProductModel {
       keywords: ''
     }
   }){
+    this._id = _id
     this.name = name
     this.price = price
     this.count = count
@@ -48,6 +51,6 @@ export class ProductModel implements IProductModel {
   }
 
   static create(product = {}){
-    return new ProductModel(product)
+    return new Product(product)
   }
 }

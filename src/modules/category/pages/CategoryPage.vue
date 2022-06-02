@@ -1,7 +1,7 @@
 <script lang="ts">
   import { defineComponent, ref, computed } from 'vue'
-  import { useCategoryService } from '@modules/category/service/category.service'
-  import { CategoryModel } from '@modules/category/model/category.model'
+  import { useCategoryService } from '@/modules/category/service/category.service'
+  import { Category } from '@/modules/category/model/category.model'
   import { getDifferences, clone } from '@shared/helpers'
 
   import { CategoryActionsModal } from '../components/CategoryActionsModal'
@@ -12,7 +12,7 @@
     },
 
     async setup(){
-      const categoryModel = ref<ICategoryModel>(CategoryModel.create({}))
+      const categoryModel = ref<ICategory>(Category.create())
       const categoryUpdates = ref<Maybe<ICategory>>(null)
 
       const isEditMode = ref<boolean>(false)
@@ -20,7 +20,7 @@
 
       const service = useCategoryService()
 
-      const model = computed<Maybe<ICategory> | ICategoryModel>(() => {
+      const model = computed<Maybe<ICategory>>(() => {
         if (isEditMode.value) return categoryUpdates.value
         return categoryModel.value
       })
@@ -53,12 +53,12 @@
 
         service.setAsCurrent(null)
 
-        categoryModel.value = CategoryModel.create({})
+        categoryModel.value = Category.create({})
       }
 
       const onCreate = () => {
         service.createCategory(model.value)
-          .then(() => categoryModel.value = CategoryModel.create({}))
+          .then(() => categoryModel.value = Category.create({}))
           .then(() => showModal.value = false)
       }
 
@@ -80,7 +80,6 @@
             isEditMode.value = false
             categoryUpdates.value = null
           })
-
       }
 
       const cols = ref([

@@ -3,7 +3,7 @@ declare interface IProductState {
 }
 
 declare interface IProductActions {
-  create(product: IProductModel): Promise<IProduct>
+  create(product: IProduct): Promise<IProduct>
 
   read(id?: string): Promise<Array<IProduct>>
 
@@ -31,7 +31,8 @@ declare interface IProductVariant {
   options: Array<any>
 }
 
-declare interface IProductModel {
+declare interface IProduct {
+  _id: string
   name: string
   price: number
   count: number
@@ -50,5 +51,3 @@ declare interface IProductModel {
     keywords?: string
   },
 }
-
-declare type IProduct = IProductModel & { _id: string }

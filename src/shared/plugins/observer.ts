@@ -1,4 +1,4 @@
-export class EventBus {
+export class Observer {
   subscribers: { [key: string]: Function }
 
   constructor(){
@@ -15,7 +15,3 @@ export class EventBus {
     return await this.subscribers[event](args)
   }
 }
-
-const eventBus = new EventBus()
-export const useEventBus = () => eventBus
-

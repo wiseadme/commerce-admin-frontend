@@ -2,9 +2,9 @@
   import { defineComponent, ref, watch } from 'vue'
   import { ProductActionsModal } from '../components/ProductActionsModal'
   // Services
-  import { useProductService } from '@modules/product/service/product.service'
+  import { useProductService } from '@/modules/product/service/product.service'
   // Model
-  import { ProductModel } from '@modules/product/model/product.model'
+  import { Product } from '@/modules/product/model/product.model'
   import { getDifferences } from '@shared/helpers'
 
   import { clone } from '@shared/helpers'
@@ -13,7 +13,7 @@
     components: { ProductActionsModal },
 
     async setup(){
-      const model = ref<IProductModel>(ProductModel.create())
+      const model = ref<IProduct>(Product.create())
       const showCreateModal = ref<boolean>(false)
       const isEditMode = ref(false)
 
@@ -97,22 +97,24 @@
       const onCreate = () => {
         service.createProduct(model.value)
           .then(() => showCreateModal.value = false)
-          .then(() => model.value = ProductModel.create())
+          .then(() => model.value = Product.create())
       }
 
       const onAdd = () => {
         showCreateModal.value = true
         isEditMode.value = false
 
-        model.value = ProductModel.create()
+        model.value = Product.create()
         model.value.attributes = clone(service.attributes)
       }
 
       const onUpdate = () => {
         const updates: Maybe<IProduct> = getDifferences(
           model.value,
-          productService.product
+          service.product
         ) as IProduct
+
+        !!updates && (updates._id = model.value._id)
 
         !!updates && service.updateProduct(updates)
           .then(() => {
@@ -145,10 +147,10 @@
 
       watch(
         () => service.product,
-        to => model.value = ProductModel.create(to!)
+        to => model.value = Product.create(to!)
       )
 
-      await Promise.all([
+      Promise.all([
         service.getCategories(),
         service.getAttributes(),
         service.getProducts()
