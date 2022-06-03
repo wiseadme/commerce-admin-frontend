@@ -3,8 +3,8 @@ const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const { VueLoaderPlugin } = require('vue-loader')
-// const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin')
 
 const resolve = pathStr => path.resolve(__dirname, pathStr)
 
@@ -56,18 +56,18 @@ module.exports = (env = {}) => {
       ],
       splitChunks: {
         chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /node_modules/,
-            name(module) {
-              const packageName = module.context.match(
-                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-              )?.[1]
-
-              return `npm.${ packageName?.replace('@', '') }`
-            }
-          }
-        }
+        // cacheGroups: {
+        //   vendor: {
+        //     test: /node_modules/,
+        //     name(module) {
+        //       const packageName = module.context.match(
+        //         /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+        //       )?.[1]
+        //
+        //       return `npm.${ packageName?.replace('@', '') }`
+        //     }
+        //   }
+        // }
       }
     },
     module: {
@@ -105,7 +105,7 @@ module.exports = (env = {}) => {
             MiniCssExtractPlugin.loader,
             {
               loader: 'css-loader',
-              options: { sourceMap: true}
+              options: { sourceMap: true }
             },
             {
               loader: 'postcss-loader',
@@ -151,7 +151,7 @@ module.exports = (env = {}) => {
     plugins: [
       new MiniCssExtractPlugin({
         filename: `css/[name].${ env.dev ? '' : '[hash]' }.css`,
-        chunkFilename: `css/chunk.[name].css`,
+        chunkFilename: `css/chunk.[name].css`
       }),
       new HtmlWebpackPlugin({
         title: 'ecommerce-admin',
@@ -170,7 +170,10 @@ module.exports = (env = {}) => {
         __VUE_OPTIONS_API__: false,
         __VUE_PROD_DEVTOOLS__: false
       }),
-      new VueLoaderPlugin()
+      new VueLoaderPlugin(),
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'server'
+      })
     ]
   }
 }

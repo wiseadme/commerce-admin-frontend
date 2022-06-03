@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
+  import { defineComponent, ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
 
   export default defineComponent({
@@ -29,15 +29,19 @@
         }
       ]
 
-      let current = ref<Maybe<number>>(null)
-
-      current.value = items.findIndex(it => {
-        return it.path === $router.currentRoute.value.path
-      })
+      const current = ref<Maybe<number>>(null)
 
       const onSelect = (it) => {
         $router.push(it.path)
       }
+
+      onMounted(() => {
+        current.value = items.findIndex(it => {
+          return it.path === $router.currentRoute.value.path
+        })
+
+        console.log(current.value)
+      })
 
       return {
         current,
