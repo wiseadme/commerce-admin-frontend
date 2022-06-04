@@ -39,8 +39,6 @@
         current.value = items.findIndex(it => {
           return it.path === $router.currentRoute.value.path
         })
-
-        console.log(current.value)
       })
 
       return {
