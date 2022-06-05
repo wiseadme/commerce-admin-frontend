@@ -36,10 +36,10 @@ declare interface IProduct {
   name: string
   price: number
   count: number
-  unit: string
   url: string
   description: string
   isVisible?: boolean
+  unit: Maybe<IUnit>
   categories: Array<ICategory>
   image: Maybe<IProductAsset>
   assets: Maybe<Array<IProductAsset>>

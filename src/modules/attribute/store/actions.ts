@@ -2,7 +2,6 @@ import { useAttributeRepository } from '@/modules/attribute/repository/attribute
 
 const repository = useAttributeRepository()
 
-
 export const actions: IAttributesActions = {
   async create(attribute: IAttribute){
     try {
@@ -35,7 +34,7 @@ export const actions: IAttributesActions = {
         (a, b) => a.order - b.order
       )
 
-      return this.state.attributes
+      return this.attributes
     } catch (err) {
       return Promise.reject(err)
     }
@@ -44,7 +43,7 @@ export const actions: IAttributesActions = {
   async delete(id: string){
     try {
       const { data } = await repository.delete(id)
-      this.attributes = this.state.attributes.filter(it => it._id !== id)
+      this.attributes = this.attributes.filter(it => it._id !== id)
       return data.data
     } catch (err) {
       return Promise.reject(err)

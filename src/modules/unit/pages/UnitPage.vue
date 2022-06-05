@@ -27,6 +27,10 @@
         model.value = Unit.create()
       }
 
+      const onChange = () => {
+        console.log('change')
+      }
+
       watch(
         () => service.units,
         to => units.value = clone(to),
@@ -41,6 +45,7 @@
         service,
         onCreate,
         onDelete,
+        onChange,
         clearForm
       }
     }

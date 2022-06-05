@@ -22,7 +22,7 @@
         <v-card-content
           class="grey lighten-3"
           width="100%"
-          style="height: 70vh; max-height: 70vh; overflow: auto"
+          style="height: 80vh; max-height: 80vh; overflow: auto"
         >
           <v-row class="white my-4 pa-4 elevation-2">
             <v-col xl="6">
@@ -58,6 +58,7 @@
                 label="Единица измерения"
                 color="#272727"
                 value-key="value"
+                active-class="green white--text"
                 text-color="#272727"
               />
             </v-col>
@@ -114,9 +115,10 @@
               lg="6"
               md="6"
               sm="12"
-              class="mr-2 mb-4 pa-2 white elevation-2 d-flex justify-center align-center"
+              class="image mr-2 mb-4 pa-2 white elevation-2 d-flex justify-center align-center"
               :class="{'main': it.main}"
               style="overflow: hidden; position: relative"
+              @contextmenu.prevent="onImagesContextMenu($event, it)"
             >
               <img
                 style="height: 100px; width: auto"
@@ -131,6 +133,36 @@
                 fas fa-times
               </v-icon>
             </v-col>
+            <v-menu
+              v-model="imagesContextMenu.show"
+              :position-x="imagesContextMenu.positionX"
+              :position-y="imagesContextMenu.positionY"
+              width="200"
+              absolute
+              open-on-click
+              @hide="imagesContextMenu.show = false"
+            >
+              <v-list
+                class="images-menu white"
+              >
+                <v-list-item
+                  class="images-menu__item"
+                  @click="setAsMainImage"
+                >
+                  <v-list-item-title>
+                    установить главным
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                  class="images-menu__item"
+                  @click="onDeleteImage(currentImage)"
+                >
+                  <v-list-item-title>
+                    удалить
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </v-row>
           <v-row>
             <v-col class="elevation-2 white mb-4">
@@ -219,12 +251,18 @@
                     @change="onAttributesUpdate"
                   >
                     <template #item="{element}">
-                      <v-row class="my-2 elevation-2 pa-2">
+                      <v-row class="my-2 elevation-2 pa-2 attribute">
                         <v-col
                           class="d-flex justify-start align-center"
                           cols="6"
                         >
-                          <div class="attr-title white py-2">
+                          <v-icon
+                            class="mr-3"
+                            color="grey lighten-2"
+                          >
+                            fas fa-grip-vertical
+                          </v-icon>
+                          <div class="attr-title py-2">
                             {{ element.key }}
                           </div>
                           <v-spacer
@@ -239,6 +277,15 @@
                             color="#272727"
                             @input="onAttributesUpdate"
                           />
+                          <v-icon
+                            class="mr-3"
+                            color="grey lighten-2"
+                            clickable
+                            style="position: absolute; top: 0; right: 0"
+                            @click="onDeleteAttribute(element)"
+                          >
+                            fas fa-trash-alt
+                          </v-icon>
                         </v-col>
                       </v-row>
                     </template>
@@ -294,7 +341,26 @@
     font-weight: 700;
   }
 
+  .image {
+    border: 2px solid transparent;
+  }
+
   .main {
-    border: 2px solid green;
+    border-color: #05b105;
+  }
+
+  .attribute:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
+
+  .images-menu {
+    &__item {
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
   }
 </style>

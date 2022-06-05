@@ -1,4 +1,4 @@
-import { defineComponent, ref, toRaw, computed, PropType, watch } from 'vue'
+import { defineComponent, ref, reactive, toRaw, computed, PropType, watch } from 'vue'
 import { TextEditor } from '@shared/components/TextEditor'
 import { clone } from '@shared/helpers'
 import draggable from 'vuedraggable'
@@ -18,7 +18,7 @@ export const productActionsModal = defineComponent({
     description: String,
     price: Number,
     count: Number,
-    unit: String,
+    unit: Object as PropType<IUnit>,
     isVisible: Boolean,
     image: String,
     seo: Object,
@@ -57,6 +57,22 @@ export const productActionsModal = defineComponent({
     const attributesArray = ref<Array<IAttribute>>([])
     const content = ref<string>('')
 
+    let currentImage: Maybe<IProductAsset> = null
+
+    const imagesContextMenu = reactive({
+      show: false,
+      positionX: 0,
+      positionY: 0,
+      currentImage: null as Maybe<IProductAsset>
+    })
+
+    const onImagesContextMenu = (event, asset) => {
+      imagesContextMenu.show = true
+      imagesContextMenu.positionX = event.clientX
+      imagesContextMenu.positionY = event.clientY
+      currentImage = clone(asset)
+    }
+
     const toggleCategory = (ctg) => {
       if (ctgMap.value.get(ctg._id)) {
         ctgMap.value.delete(ctg._id)
@@ -94,21 +110,21 @@ export const productActionsModal = defineComponent({
       }
     })
 
+    const computedUnit = computed<IUnit>({
+      get(){
+        return props.unit!
+      },
+      set(val){
+        emit('update:unit', val)
+      }
+    })
+
     const computedCount = computed<number>({
       get(){
         return props.count!
       },
       set(val){
         emit('update:count', +val)
-      }
-    })
-
-    const computedUnit = computed<string>({
-      get(){
-        return props.unit!
-      },
-      set(val){
-        emit('update:unit', val)
       }
     })
 
@@ -135,6 +151,7 @@ export const productActionsModal = defineComponent({
         return props.assets!
       },
       set(val){
+        console.log(val)
         emit('update:assets', val)
       }
     })
@@ -226,6 +243,21 @@ export const productActionsModal = defineComponent({
       emit('delete:image', asset.url)
     }
 
+    const onDeleteAttribute = (attr) => {
+      attributesArray.value = attributesArray.value.filter(it => it.key !== attr.key)
+      emit('update:attributes', attributesArray.value)
+    }
+
+    const setAsMainImage = () => {
+      computedImage.value = currentImage!.url
+
+      computedAssets.value = clone(computedAssets.value).reduce((acc, it) => {
+        it.main = it._id === currentImage!._id
+        acc.push(it)
+        return acc
+      }, [] as any[]) as IProductAsset[]
+    }
+
     watch(() => props.modelValue, to => {
       ctgMap.value.clear()
 
@@ -259,11 +291,16 @@ export const productActionsModal = defineComponent({
       files,
       attributesArray,
       content,
+      imagesContextMenu,
+      currentImage,
       toggleCategory,
+      onImagesContextMenu,
       onLoadImage,
       onSubmit,
       onDeleteImage,
-      onAttributesUpdate
+      onAttributesUpdate,
+      onDeleteAttribute,
+      setAsMainImage
     }
   }
 })

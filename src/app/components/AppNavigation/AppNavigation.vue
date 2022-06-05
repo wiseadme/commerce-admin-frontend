@@ -52,7 +52,7 @@
 <template>
   <v-navigation
     fixed
-    expand
+    :on-hover="true"
     color="#272727"
     offset-top="56"
     class="elevation-2"
@@ -66,6 +66,7 @@
       <v-list-item
         v-for="it in items"
         :key="it.title"
+        class="pl-1"
         @click="onSelect(it)"
       >
         <v-list-item-icon>

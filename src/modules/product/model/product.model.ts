@@ -19,7 +19,7 @@ export class Product implements IProduct {
     name = '',
     price = 0,
     count = 0,
-    unit = '',
+    unit = null,
     categories = [],
     description = '',
     image = null,

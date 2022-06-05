@@ -150,6 +150,8 @@
         to => model.value = Product.create(to!)
       )
 
+      watch(model, to => console.log(to), { deep: true })
+
       Promise.all([
         service.getCategories(),
         service.getAttributes(),
@@ -263,6 +265,7 @@
       v-model:price="model.price"
       v-model:count="model.count"
       v-model:assets="model.assets"
+      v-model:image="model.image"
       v-model:url="model.url"
       v-model:unit="model.unit"
       v-model:description="model.description"
