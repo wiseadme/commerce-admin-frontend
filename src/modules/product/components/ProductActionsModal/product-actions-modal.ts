@@ -12,6 +12,7 @@ export const productActionsModal = defineComponent({
     modelValue: Boolean,
     isUpdate: Boolean,
     categoryItems: Array,
+    unitItems: Array,
     name: String,
     url: String,
     description: String,

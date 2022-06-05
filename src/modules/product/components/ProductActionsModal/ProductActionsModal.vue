@@ -54,9 +54,10 @@
             <v-col xl="6">
               <v-select
                 v-model="computedUnit"
-                :items="['штук', 'упаковок', 'килограмм', 'грамм']"
+                :items="unitItems"
                 label="Единица измерения"
                 color="#272727"
+                value-key="value"
                 text-color="#272727"
               />
             </v-col>

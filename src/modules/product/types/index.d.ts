@@ -1,5 +1,5 @@
 declare interface IProductState {
-  products: Array<IProduct>
+  products: Maybe<Array<IProduct>>
 }
 
 declare interface IProductActions {

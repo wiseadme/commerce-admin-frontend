@@ -2,13 +2,8 @@ import { rest } from '@shared/api'
 import { IRest, IRepository } from '@shared/types/app'
 
 class Repository implements IRepository {
-  rest: IRest
-  baseUrl: string
-
-  constructor(rest, baseUrl){
-    this.rest = rest
-    this.baseUrl = baseUrl
-  }
+  rest: IRest = rest
+  baseUrl: string = '/v1/products'
 
   create(product){
     return rest.post(this.baseUrl, product)
@@ -27,4 +22,4 @@ class Repository implements IRepository {
   }
 }
 
-export const useProductRepository = () => new Repository(rest, '/v1/product')
+export const useProductRepository = () => new Repository()

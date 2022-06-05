@@ -1,10 +1,11 @@
+import { Store } from 'pinia'
 import { useCategoryStore } from '@/modules/category/store'
-import { Store } from 'vuezone'
 import { Observer } from '@shared/plugins/observer'
 
 class Service extends Observer implements ICategoryService {
-  private _store: Store<ICategoryState, ICategoryActions>
+  private _store: Store<string, ICategoryState, {}, ICategoryActions>
   private _category: Maybe<ICategory>
+  static instance: Service
 
   constructor(store){
     super()
@@ -13,15 +14,11 @@ class Service extends Observer implements ICategoryService {
   }
 
   get categories(){
-    return this._store.state.categories
+    return this._store.categories
   }
 
   get category(){
     return this._category
-  }
-
-  get deleteCategoryImage(){
-    return this._store.deleteImage
   }
 
   setAsCurrent(category: Maybe<ICategory>){
@@ -78,7 +75,12 @@ class Service extends Observer implements ICategoryService {
     await this.emit('delete:file', { ownerId, url })
     return this.updateCategory({ _id: ownerId, image: null })
   }
+
+  static create(){
+    if (Service.instance) return Service.instance
+    Service.instance = new Service(useCategoryStore())
+    return Service.instance
+  }
 }
 
-const service = new Service(useCategoryStore())
-export const useCategoryService = () => service
+export const useCategoryService = () => Service.create()

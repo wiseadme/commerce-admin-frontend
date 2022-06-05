@@ -1,15 +1,16 @@
-import { Store } from 'vuezone'
+import { Store } from 'pinia'
 import { useAttributeStore } from '@/modules/attribute/store'
 
 export class Service {
-  private _store: Store<IAttributeState, IAttributesActions>
+  static instance: Service
+  private _store: Store<string, IAttributeState, {}, IAttributesActions>
 
   constructor(store){
     this._store = store
   }
 
   get attributes(){
-    return this._store.state.attributes
+    return this._store.attributes
   }
 
   updateAttribute(updates){
@@ -33,7 +34,12 @@ export class Service {
     if (this.attributes) return this.attributes
     return this.getAttributes()
   }
+
+  static create(){
+    if (Service.instance) return Service.instance
+    Service.instance = new Service(useAttributeStore())
+    return Service.instance
+  }
 }
 
-const service = new Service(useAttributeStore())
-export const useAttributeService = () => service
+export const useAttributeService = () => Service.create()

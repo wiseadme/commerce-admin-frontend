@@ -1,13 +1,15 @@
-import { Store } from 'vuezone'
+import { Store } from 'pinia'
 import { useProductStore } from '@/modules/product/store'
 import { ref, Ref } from 'vue'
 import { Observer } from '@shared/plugins/observer'
 
 class Service extends Observer {
-  private _store: Store<IProductState, IProductActions>
+  private _store: Store<string, IProductState, {}, IProductActions>
   private _product: Ref<Maybe<IProduct>>
   private _attributes: Maybe<Array<IProductAttribute>>
   private _categories: Maybe<Array<ICategory>>
+  private _units: Maybe<Array<IUnit>>
+  static instance: Service
 
   constructor(store){
     super()
@@ -15,10 +17,11 @@ class Service extends Observer {
     this._product = ref(null)
     this._attributes = null
     this._categories = null
+    this._units = null
   }
 
   get products(){
-    return this._store.state.products
+    return this._store.products
   }
 
   get product(){
@@ -33,8 +36,16 @@ class Service extends Observer {
     return this._categories
   }
 
+  get units() {
+    return this._units
+  }
+
   async getAttributes(){
     this._attributes = await this.emit('get:attributes')
+  }
+
+  async getUnits() {
+    this._units = await this.emit('get:units')
   }
 
   async getCategories(){
@@ -117,7 +128,12 @@ class Service extends Observer {
       assets
     })
   }
+
+  static create(){
+    if (Service.instance) return Service.instance
+    Service.instance = new Service(useProductStore())
+    return Service.instance
+  }
 }
 
-const service = new Service(useProductStore())
-export const useProductService = () => service
+export const useProductService = () => Service.create()

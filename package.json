@@ -60,10 +60,10 @@
   "dependencies": {
     "@vueup/vue-quill": "^1.0.0-beta.8",
     "axios": "^0.27.2",
+    "pinia": "^2.0.14",
     "vue": "^3.2.1",
     "vue-router": "^4.0.15",
     "vuedraggable": "^4.1.0",
-    "vueland": "github:vueland/vueland-next",
-    "vuezone": "github:wiseadme/vuezone"
+    "vueland": "github:vueland/vueland-next"
   }
 }

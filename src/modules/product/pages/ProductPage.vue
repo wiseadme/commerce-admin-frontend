@@ -153,7 +153,8 @@
       Promise.all([
         service.getCategories(),
         service.getAttributes(),
-        service.getProducts()
+        service.getProducts(),
+        service.getUnits()
       ])
 
       return {
@@ -271,6 +272,7 @@
       v-model:variants="model.variants"
       v-model:is-visible="model.isVisible"
       :category-items="service.categories"
+      :unit-items="service.units"
       :is-update="isEditMode"
       @create="onCreate"
       @update="onUpdate"

@@ -1,8 +1,8 @@
-import { defineStore } from 'vuezone'
+import { defineStore } from 'pinia'
 import { actions } from '@/modules/attribute/store/actions'
 import { state } from '@/modules/attribute/store/state'
 
-export const useAttributeStore = defineStore<IAttributeState, IAttributesActions>('attribute', {
+export const useAttributeStore = defineStore<string, IAttributeState, {}, IAttributesActions>('attribute', {
   state,
   actions
 })

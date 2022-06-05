@@ -24,8 +24,8 @@ export const actions = {
   async read(id?: string){
     try {
       const { data } = await categoryRepository.read(id)
-      !id && (this.state.categories = data.data)
-      id && (this.state.category = data.data)
+      !id && (this.categories = data.data)
+      id && (this.category = data.data)
       return data.data
     } catch (err) {
       return Promise.reject(err)

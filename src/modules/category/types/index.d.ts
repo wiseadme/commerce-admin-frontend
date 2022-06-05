@@ -40,10 +40,6 @@ declare interface ICategoryActions {
   read(id?: string): Promise<Array<ICategory>>
 
   delete(category: ICategory): Promise<boolean>
-
-  uploadImage(id: string, fileName: string, data: FormData): Promise<{ url: string }>
-
-  deleteImage(id: string, fileName: string): Promise<boolean>
 }
 
 declare interface ICategoryService {

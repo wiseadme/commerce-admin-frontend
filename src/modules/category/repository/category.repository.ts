@@ -1,14 +1,9 @@
 import { rest } from '@shared/api'
 import { IRest, IRepository } from '@shared/types/app'
 
-export class Repository implements IRepository {
-  rest: IRest
-  baseUrl: string
-
-  constructor(rest, path){
-    this.rest = rest
-    this.baseUrl = path
-  }
+class Repository implements IRepository {
+  rest: IRest = rest
+  baseUrl: string = '/v1/categories'
 
   create(category){
     return this.rest.post(this.baseUrl, category)
@@ -27,4 +22,4 @@ export class Repository implements IRepository {
   }
 }
 
-export const useCategoryRepository = () => new Repository(rest, '/v1/category')
+export const useCategoryRepository = () => new Repository()

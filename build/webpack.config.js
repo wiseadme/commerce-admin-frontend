@@ -138,7 +138,7 @@ module.exports = (env = {}) => {
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: `css/[name].${ env.dev ? '' : '[hash]' }.css`,
+        filename: `css/[name].${ env.dev ? '' : '[hash].' }css`,
         chunkFilename: `css/chunk.[name].css`
       }),
       new HtmlWebpackPlugin({
