@@ -1,5 +1,5 @@
 import { Store } from 'pinia'
-import { useProductStore } from '@/modules/product/store'
+import { useProductStore } from '@modules/product/store'
 import { ref, Ref } from 'vue'
 import { Observer } from '@shared/plugins/observer'
 

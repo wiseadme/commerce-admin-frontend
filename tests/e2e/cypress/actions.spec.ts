@@ -1,5 +1,5 @@
 import { mount } from '@cypress/vue'
-import { AppHeader } from '@app/components/AppHeader'
+import { AppHeader } from '../../../src/app/components/AppHeader'
 
 describe('AppHeader', () => {
   it('mount component and test element', () => {

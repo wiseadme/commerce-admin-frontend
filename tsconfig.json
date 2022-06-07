@@ -18,8 +18,8 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": ".",
-    "outDir": ".",
+    "baseUrl": "./commerce-admin-frontend",
+    "outDir": "./commerce-admin-frontend",
     "paths": {
       "@/*": [
         "src/*"
@@ -50,7 +50,7 @@
       "@vue/reactivity/dist/reactivity",
       "@vue/runtime-core/dist/runtime-core",
       "@vue/runtime-dom/dist/runtime-dom",
-      "cypress",
+      "cypress"
     ]
   },
   "include": [

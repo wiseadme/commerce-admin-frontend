@@ -1,7 +1,7 @@
 <script lang="ts">
   import { defineComponent, ref, computed } from 'vue'
-  import { useCategoryService } from '@/modules/category/service/category.service'
-  import { Category } from '@/modules/category/model/category.model'
+  import { useCategoryService } from '@modules/category/service/category.service'
+  import { Category } from '@modules/category/model/category.model'
   import { getDifferences, clone } from '@shared/helpers'
 
   import { CategoryActionsModal } from '../components/CategoryActionsModal'

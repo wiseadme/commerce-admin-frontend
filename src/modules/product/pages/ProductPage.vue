@@ -2,9 +2,9 @@
   import { defineComponent, ref, watch } from 'vue'
   import { ProductActionsModal } from '../components/ProductActionsModal'
   // Services
-  import { useProductService } from '@/modules/product/service/product.service'
+  import { useProductService } from '@modules/product/service/product.service'
   // Model
-  import { Product } from '@/modules/product/model/product.model'
+  import { Product } from '@modules/product/model/product.model'
   import { getDifferences } from '@shared/helpers'
 
   import { clone } from '@shared/helpers'

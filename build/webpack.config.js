@@ -160,7 +160,7 @@ module.exports = (env = {}) => {
       }),
       new VueLoaderPlugin(),
       new BundleAnalyzerPlugin({
-        analyzerMode: 'server'
+        analyzerMode: 'none'
       })
     ]
   }

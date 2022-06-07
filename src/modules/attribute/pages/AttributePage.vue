@@ -3,7 +3,7 @@
   import draggable from 'vuedraggable'
   import { useAttributeService } from '../service/attribute.service'
   import { clone } from '@shared/helpers'
-  import { Attribute } from '@/modules/attribute/model/attribute.model'
+  import { Attribute } from '@modules/attribute/model/attribute.model'
 
   export default defineComponent({
     name: 'attribute-page',

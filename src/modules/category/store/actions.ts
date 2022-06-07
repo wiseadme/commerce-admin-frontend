@@ -1,4 +1,4 @@
-import { useCategoryRepository } from '@/modules/category/repository/category.repository'
+import { useCategoryRepository } from '@modules/category/repository/category.repository'
 
 const categoryRepository = useCategoryRepository()
 

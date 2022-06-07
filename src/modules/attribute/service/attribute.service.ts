@@ -1,5 +1,5 @@
 import { Store } from 'pinia'
-import { useAttributeStore } from '@/modules/attribute/store'
+import { useAttributeStore } from '@modules/attribute/store'
 
 export class Service {
   static instance: Service

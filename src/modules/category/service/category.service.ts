@@ -1,5 +1,5 @@
 import { Store } from 'pinia'
-import { useCategoryStore } from '@/modules/category/store'
+import { useCategoryStore } from '@modules/category/store'
 import { Observer } from '@shared/plugins/observer'
 
 class Service extends Observer implements ICategoryService {
