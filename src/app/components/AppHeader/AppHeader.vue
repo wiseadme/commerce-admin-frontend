@@ -15,7 +15,6 @@ defineProps({
     class="elevation-3"
   >
     <v-toolbar-content>
-      <v-toolbar-nav-btn class="white--text text--base" />
     </v-toolbar-content>
   </v-toolbar>
 </template>

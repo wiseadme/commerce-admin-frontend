@@ -56,21 +56,19 @@ export const productActionsModal = defineComponent({
     const files = ref<Array<File>>([])
     const attributesArray = ref<Array<IAttribute>>([])
     const content = ref<string>('')
-
-    let currentImage: Maybe<IProductAsset> = null
+    const currentImage = ref<Maybe<IProductAsset>>(null)
 
     const imagesContextMenu = reactive({
       show: false,
       positionX: 0,
       positionY: 0,
-      currentImage: null as Maybe<IProductAsset>
     })
 
     const onImagesContextMenu = (event, asset) => {
       imagesContextMenu.show = true
       imagesContextMenu.positionX = event.clientX
       imagesContextMenu.positionY = event.clientY
-      currentImage = clone(asset)
+      currentImage.value = clone(asset)
     }
 
     const toggleCategory = (ctg) => {
@@ -249,10 +247,10 @@ export const productActionsModal = defineComponent({
     }
 
     const setAsMainImage = () => {
-      computedImage.value = currentImage!.url
+      computedImage.value = currentImage.value!.url
 
       computedAssets.value = clone(computedAssets.value).reduce((acc, it) => {
-        it.main = it._id === currentImage!._id
+        it.main = it._id === currentImage.value!._id
         acc.push(it)
         return acc
       }, [] as any[]) as IProductAsset[]
